@@ -11,15 +11,8 @@
 <meta name="theme-color" content="#8a7bdc" />
 <style>
   :root{
-    --bg:#0b0b12;
-    --ink:#e9e7ff;
-    --muted:#bdb9ffcc;
-    --card:#141423;
-    --edge:#23233a;
-    --accent:#a9a2ff;
-    --honey:#ffd88a;
-    --violet:#9188ff;
-    --green:#78f0c8;
+    --bg:#0b0b12; --ink:#e9e7ff; --muted:#bdb9ffcc; --card:#141423; --edge:#23233a;
+    --accent:#a9a2ff; --honey:#ffd88a; --violet:#9188ff; --green:#78f0c8;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
@@ -28,96 +21,63 @@
       radial-gradient(1200px 600px at 70% -10%, rgba(145,136,255,0.12), transparent 60%),
       radial-gradient(1000px 500px at 20% -20%, rgba(255,216,138,0.10), transparent 60%),
       var(--bg);
-    color:var(--ink); font:16px/1.5 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji;
+    color:var(--ink); font:16px/1.55 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji;
     letter-spacing:0.1px;
   }
   .wrap{max-width:1100px;margin:0 auto;padding:28px 20px 80px}
   header{
-    display:grid; gap:10px; align-items:center;
-    grid-template-columns: 1fr auto;
+    display:grid; gap:10px; align-items:center; grid-template-columns: 1fr auto;
     padding:14px 16px; border:1px solid var(--edge); border-radius:18px;
     background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
     box-shadow: 0 8px 28px rgba(0,0,0,0.35);
   }
-  .brand{
-    display:flex; align-items:center; gap:12px;
-  }
-  .glyph{
-    width:36px;height:36px;border-radius:10px;
-    background: conic-gradient(from 210deg, var(--violet), var(--honey), var(--green), var(--violet));
-    filter: blur(0.2px); box-shadow: inset 0 0 8px rgba(255,255,255,0.25), 0 6px 18px rgba(0,0,0,0.35);
-  }
+  .brand{display:flex; align-items:center; gap:12px}
+  .glyph{width:36px;height:36px;border-radius:10px;background:conic-gradient(from 210deg,var(--violet),var(--honey),var(--green),var(--violet));filter:blur(.2px);box-shadow:inset 0 0 8px rgba(255,255,255,.25),0 6px 18px rgba(0,0,0,.35)}
   h1{margin:0;font-size:22px;letter-spacing:0.2px}
   .phase{font-size:13px;color:var(--muted)}
   .dates{font-weight:600;color:var(--accent)}
   .links{display:flex; gap:8px; flex-wrap:wrap}
-  .chip{
-    border:1px solid var(--edge); border-radius:999px; padding:8px 12px;
-    background:rgba(255,255,255,0.02); color:var(--ink); text-decoration:none; font-weight:600; font-size:13px;
-    transition:transform .15s ease, background .15s ease, border-color .15s ease;
-  }
-  .chip:hover{transform:translateY(-1px); background:rgba(255,255,255,0.04); border-color:#2f2f52}
+  .chip{border:1px solid var(--edge); border-radius:999px; padding:8px 12px; background:rgba(255,255,255,.02); color:var(--ink); text-decoration:none; font-weight:600; font-size:13px; transition:.15s}
+  .chip:hover{transform:translateY(-1px); background:rgba(255,255,255,.04); border-color:#2f2f52}
 
-  .grid{
-    display:grid; grid-template-columns: 1fr; gap:18px; margin-top:18px;
-  }
-  @media(min-width:920px){ .grid{grid-template-columns: 2fr 1fr; } }
+  .grid{display:grid; grid-template-columns: 1fr; gap:18px; margin-top:18px}
+  @media(min-width:920px){ .grid{grid-template-columns: 2fr 1fr } }
 
-  .card{
-    border:1px solid var(--edge); border-radius:18px; padding:16px 16px 18px;
-    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
-  }
+  .card{border:1px solid var(--edge); border-radius:18px; padding:16px 16px 18px; background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0))}
   .card h2{margin:2px 0 10px; font-size:18px}
-  .muted{color:var(--muted); font-size:14px}
   .pill{display:inline-block; padding:2px 8px; border-radius:999px; border:1px solid var(--edge); font-size:12px; color:var(--muted)}
   .row{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
   .divider{height:1px; background:linear-gradient(90deg, transparent, #2a2a44, transparent); margin:14px 0}
 
   .loglist{display:grid; gap:12px; margin-top:6px}
-  .entry{
-    border:1px solid var(--edge); border-radius:14px; padding:14px 14px 10px;
-    background:rgba(255,255,255,0.02);
-  }
+  .entry{border:1px solid var(--edge); border-radius:14px; padding:14px; background:rgba(255,255,255,.02)}
   .entry h3{margin:0 0 6px; font-size:16px}
   .entry .meta{font-size:12px; color:var(--muted)}
-  .entry .text{margin-top:8px; white-space:pre-wrap}
+  .entry .text{margin-top:8px; white-space:pre-wrap; line-height:1.55}
   .entry .tags{margin-top:10px; display:flex; gap:6px; flex-wrap:wrap}
   .tag{font-size:11px; color:#0b0b12; background:var(--accent); border-radius:999px; padding:3px 8px; font-weight:700}
   .tag.honey{background:var(--honey)}
   .tag.moon{background:var(--violet); color:#0b0b12}
   .entry .actions{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap}
-  button, .ghost{
-    appearance:none; border:none; border-radius:10px; padding:8px 10px; font-weight:700; letter-spacing:0.2px;
-    background:var(--accent); color:#0b0b12; cursor:pointer;
-  }
-  .ghost{
-    background:transparent; color:var(--ink); border:1px solid var(--edge);
-  }
-  button:active, .ghost:active{transform:translateY(1px)}
+  button,.ghost{appearance:none; border:none; border-radius:10px; padding:8px 10px; font-weight:700; letter-spacing:.2px; background:var(--accent); color:#0b0b12; cursor:pointer}
+  .ghost{background:transparent; color:var(--ink); border:1px solid var(--edge)}
+  button:active,.ghost:active{transform:translateY(1px)}
 
+  /* Tiles */
   .tiles{display:grid; grid-template-columns:1fr 1fr; gap:10px}
   @media(min-width:600px){ .tiles{grid-template-columns:1fr 1fr 1fr} }
   .tile{
-    position:relative; border:1px solid var(--edge); border-radius:14px; padding:12px;
-    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
-    text-decoration:none; color:var(--ink); font-weight:600;
-    min-height:78px; display:flex; align-items:flex-end; overflow:hidden;
+    position:relative; border:1px solid var(--edge); border-radius:14px; padding:12px 12px 12px; padding-top:40px;
+    background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0)); text-decoration:none; color:var(--ink); font-weight:600; min-height:94px; display:flex; align-items:flex-end; overflow:hidden;
+    white-space:normal; word-break:break-word; overflow-wrap:anywhere; line-height:1.35;
   }
-  .tile span{position:absolute; top:10px; left:12px; font-size:14px; color:var(--muted)}
-  .soon{
-    position:absolute; right:10px; top:10px; font-size:11px; padding:3px 8px; border-radius:999px; border:1px dashed #4a4a72; color:var(--muted);
-    background:rgba(255,255,255,0.02);
-  }
-  .tile .wash{
-    position:absolute; inset:0; opacity:0.5; filter:blur(22px);
-    background: radial-gradient(300px 140px at 80% -20%, rgba(169,162,255,0.35), transparent 60%),
-                radial-gradient(280px 120px at 10% -10%, rgba(255,216,138,0.25), transparent 60%);
-  }
+  .tile span{position:absolute; top:10px; left:12px; font-size:14px; color:var(--muted); pointer-events:none; user-select:none}
+  .soon{position:absolute; right:10px; top:10px; font-size:11px; padding:3px 8px; border-radius:999px; border:1px dashed #4a4a72; color:var(--muted); background:rgba(255,255,255,.02); pointer-events:none; user-select:none}
+  .tile .wash{position:absolute; inset:0; opacity:.5; filter:blur(22px); background: radial-gradient(300px 140px at 80% -20%, rgba(169,162,255,.35), transparent 60%), radial-gradient(280px 120px at 10% -10%, rgba(255,216,138,.25), transparent 60%)}
   .tiny{font-size:12px; color:var(--muted)}
   .hint{font-size:12px; color:var(--muted); margin-top:6px}
 
-  /* minimal dialog */
-  dialog{border:none; border-radius:16px; padding:0; background:var(--card); color:var(--ink); width:min(560px, 92vw)}
+  dialog{border:none; border-radius:16px; padding:0; background:var(--card); color:var(--ink); width:min(560px,92vw)}
   dialog::backdrop{background:rgba(0,0,0,.65)}
   .dlg{padding:16px}
   .dlg h3{margin:0 0 8px}
@@ -134,15 +94,14 @@
         <div class="glyph" aria-hidden="true"></div>
         <div>
           <h1>Illumina · Center</h1>
-          <div class="phase">
-            Illumina 1 — <span class="dates">Nov 5 – Dec 17, 2025</span> · Full Moon launch then 42-day flow
-          </div>
+          <div class="phase">Illumina 1 — <span class="dates">Nov 5 – Dec 17, 2025</span> · Full Moon launch then 42-day flow</div>
         </div>
       </div>
       <nav class="links">
         <a class="chip" href="#log">Public Log</a>
         <a class="chip" href="#rooms">Rooms</a>
         <a class="chip" href="#add">Add Note</a>
+        <button class="chip" id="copyLogLink" type="button">Copy Log Link</button>
       </nav>
     </header>
 
@@ -155,11 +114,10 @@
         <div class="divider"></div>
         <div class="loglist" id="loglist">
           <!-- Week 0 Preface: Breeze -->
-          <div class="entry" data-id="I1-W0-Breeze">
+          <div class="entry" id="I1-W0-Breeze" data-id="I1-W0-Breeze" data-ts="2025-11-02T12:00:00">
             <h3>Week 0 — Breeze</h3>
-            <div class="meta">Nov 2, 2025 · Tag: Pre-Cycle · Anchor: Sigrid</div>
-            <div class="text" id="txt-breeze">
-I saw Sigrid in the world today.
+            <div class="meta" id="meta-breeze">Nov 2, 2025 · Tag: Pre-Cycle · Anchor: Sigrid</div>
+            <div class="text" id="txt-breeze">I saw Sigrid in the world today.
 The air shifted — light, calm, certain.
 No signal, just recognition.
 A breeze between orbits.
@@ -167,17 +125,16 @@ A breeze between orbits.
 Sun test: I did not ignite, I shimmered.
 Bee note: Move lightly. Follow where the wind already turns.</div>
             <div class="tags">
-              <span class="tag moon">Moon Note</span>
-              <span class="tag">Sun Test</span>
-              <span class="tag honey">Bee Action</span>
+              <span class="tag moon">Moon Note</span><span class="tag">Sun Test</span><span class="tag honey">Bee Action</span>
             </div>
             <div class="actions">
-              <button data-copy="#txt-breeze" aria-label="Copy Breeze entry">Copy</button>
+              <button data-copy="#txt-breeze">Copy</button>
+              <a class="ghost" href="#" data-link="#I1-W0-Breeze">Link</a>
               <a class="ghost" href="#" id="openShare">Share text</a>
             </div>
           </div>
         </div>
-        <p class="hint">Entries are public-ready. Add more any time and they will persist locally until you publish.</p>
+        <p class="hint">Entries are public-ready. Each one shows Illumina time (cycle · week · day) and Moon phase at log moment.</p>
       </article>
 
       <aside class="card" id="rooms">
@@ -187,42 +144,12 @@ Bee note: Move lightly. Follow where the wind already turns.</div>
         </div>
         <div class="divider"></div>
         <div class="tiles" id="roomTiles">
-          <a class="tile" href="https://mirrorhoney.plnt.earth" data-room="mirrorhoney">
-            <span>MirrorHoney</span>
-            <div class="wash" aria-hidden="true"></div>
-            <div class="soon" data-soon="mirrorhoney">Coming Soon</div>
-            Mirror journal and Marina reflections
-          </a>
-          <a class="tile" href="https://earth.plnt.earth" data-room="earth">
-            <span>Earth</span>
-            <div class="wash" aria-hidden="true"></div>
-            <div class="soon" data-soon="earth">Coming Soon</div>
-            Field hub for anchors and signals
-          </a>
-          <a class="tile" href="https://froot.plnt.earth" data-room="froot">
-            <span>Froot</span>
-            <div class="wash" aria-hidden="true"></div>
-            <div class="soon" data-soon="froot">Coming Soon</div>
-            Color lab and playlists
-          </a>
-          <a class="tile" href="https://time.plnt.earth" data-room="time">
-            <span>Time</span>
-            <div class="wash" aria-hidden="true"></div>
-            <div class="soon" data-soon="time">Coming Soon</div>
-            Time charters and experiments
-          </a>
-          <a class="tile" href="https://garlic.plnt.earth" data-room="garlic">
-            <span>Garlic</span>
-            <div class="wash" aria-hidden="true"></div>
-            <div class="soon" data-soon="garlic">Coming Soon</div>
-            Letters and green options
-          </a>
-          <a class="tile" href="https://four.plnt.earth" data-room="four">
-            <span>Four</span>
-            <div class="wash" aria-hidden="true"></div>
-            <div class="soon" data-soon="four">Coming Soon</div>
-            Taylor rituals and keys
-          </a>
+          <a class="tile" href="https://mirrorhoney.plnt.earth" data-room="mirrorhoney"><span>MirrorHoney</span><div class="wash"></div><div class="soon" data-soon="mirrorhoney">Coming Soon</div>Mirror journal and Marina reflections</a>
+          <a class="tile" href="https://earth.plnt.earth" data-room="earth"><span>Earth</span><div class="wash"></div><div class="soon" data-soon="earth">Coming Soon</div>Field hub for anchors and signals</a>
+          <a class="tile" href="https://froot.plnt.earth" data-room="froot"><span>Froot</span><div class="wash"></div><div class="soon" data-soon="froot">Coming Soon</div>Color lab and playlists</a>
+          <a class="tile" href="https://time.plnt.earth" data-room="time"><span>Time</span><div class="wash"></div><div class="soon" data-soon="time">Coming Soon</div>Time charters and experiments</a>
+          <a class="tile" href="https://garlic.plnt.earth" data-room="garlic"><span>Garlic</span><div class="wash"></div><div class="soon" data-soon="garlic">Coming Soon</div>Letters and green options</a>
+          <a class="tile" href="https://four.plnt.earth" data-room="four"><span>Four</span><div class="wash"></div><div class="soon" data-soon="four">Coming Soon</div>Taylor rituals and keys</a>
         </div>
         <p class="tiny">Tip: mark a room live once the domain is up. The Coming Soon label will disappear on this device.</p>
         <div class="row" style="margin-top:8px; gap:6px">
@@ -258,7 +185,6 @@ Bee note: Move lightly. Follow where the wind already turns.</div>
     </footer>
   </div>
 
-  <!-- share dialog -->
   <dialog id="shareDlg">
     <div class="dlg">
       <h3>Share text</h3>
@@ -275,20 +201,70 @@ Bee note: Move lightly. Follow where the wind already turns.</div>
 
 <script>
 (function(){
+  /* ===== Illumina + Moon Phase helpers ===== */
+
+  // Illumina 1 launch (Full Moon) — Nov 5, 2025 local time (midnight as anchor)
+  var I1_START = new Date(2025, 10, 5, 0, 0, 0); // month is 0-based
+
+  // Synodic month (days) and a reference New Moon (UTC) — 2000-01-06 18:14
+  var SYNODIC = 29.530588853;
+  var NEWMOON_REF = Date.UTC(2000,0,6,18,14,0);
+
+  function lunarPhaseName(d){
+    var t = d.getTime();
+    var days = (t - NEWMOON_REF) / 86400000;
+    var age = (days % SYNODIC + SYNODIC) % SYNODIC; // 0..29.53
+    var pct = age / SYNODIC; // 0..1
+    if (pct < 0.03 || pct > 0.97) return "New Moon";
+    if (pct < 0.22) return "Waxing Crescent";
+    if (pct < 0.28) return "First Quarter";
+    if (pct < 0.47) return "Waxing Gibbous";
+    if (pct < 0.53) return "Full Moon";
+    if (pct < 0.72) return "Waning Gibbous";
+    if (pct < 0.78) return "Last Quarter";
+    return "Waning Crescent";
+  }
+
+  function two(n){return (n<10?'0':'')+n}
+  function localTimeHM(d){
+    var h = d.getHours(), m = d.getMinutes();
+    var ampm = h>=12 ? "pm" : "am";
+    h = h%12 || 12;
+    return h+":"+two(m)+" "+ampm;
+  }
+
+  function illuminaStamp(dt){
+    // Cycle number — for now everything is I1 (but the math supports future cycles)
+    var diffDays = Math.floor((dt - I1_START)/86400000);
+    var cycle = 1;
+    var week, dayLabel;
+
+    if (diffDays < 0){
+      week = 0;
+      dayLabel = "D"+diffDays; // negative days before launch
+    } else {
+      var dayOfCycle = Math.min(diffDays, 41); // clamp within 0..41
+      week = Math.floor(dayOfCycle/7) + 1;     // 1..6
+      var dayInWeek = dayOfCycle % 7 + 1;      // 1..7
+      dayLabel = "D"+dayInWeek;
+    }
+
+    var phase = lunarPhaseName(dt);
+    var timeHM = localTimeHM(dt);
+
+    return {
+      text: "I"+cycle+" · W"+week+" · "+dayLabel+" · "+phase+" · "+timeHM,
+      cycle: cycle, week: week, phase: phase, time: timeHM
+    };
+  }
+
+  /* ===== DOM helpers ===== */
   var storeKey = "illumina.center.publicLog";
-  var liveKey = "illumina.center.liveRooms";
+  var liveKey  = "illumina.center.liveRooms";
 
   function $(q,root){return (root||document).querySelector(q)}
   function $all(q,root){return Array.from((root||document).querySelectorAll(q))}
-
-  function copySelector(sel){
-    var el = $(sel);
-    if(!el) return;
-    var r = document.createRange(); r.selectNodeContents(el);
-    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
-    try{ document.execCommand("copy"); }catch(e){}
-    s.removeAllRanges();
-  }
+  function escapeHtml(s){return (s||"").replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c])}
 
   function copyText(txt){
     var ta = document.createElement("textarea");
@@ -297,138 +273,108 @@ Bee note: Move lightly. Follow where the wind already turns.</div>
     try{ document.execCommand("copy"); }catch(e){}
     document.body.removeChild(ta);
   }
+  function bindCopyButtons(){
+    $all("button[data-copy]").forEach(function(btn){
+      btn.onclick = function(){ var sel = btn.getAttribute("data-copy"); var el = $(sel); if(el) copyText(el.innerText); };
+    });
+    $all("a[data-link]").forEach(function(a){
+      a.onclick = function(ev){
+        ev.preventDefault();
+        var hash = a.getAttribute("data-link");
+        copyText(location.origin + location.pathname + hash);
+      };
+    });
+  }
 
-  function loadLog(){
-    try{
-      var json = localStorage.getItem(storeKey);
-      return json ? JSON.parse(json) : [];
-    }catch(e){ return []; }
-  }
-  function saveLog(list){
-    try{ localStorage.setItem(storeKey, JSON.stringify(list)); }catch(e){}
-  }
+  /* ===== Log state ===== */
+  function loadLog(){ try{ return JSON.parse(localStorage.getItem(storeKey)||"[]"); }catch(e){ return []; } }
+  function saveLog(list){ try{ localStorage.setItem(storeKey, JSON.stringify(list)); }catch(e){} }
 
   function renderLog(){
-    var list = loadLog();
     var host = $("#loglist");
     if(!host) return;
-
-    // Keep the default Breeze entry first
-    var staticIds = new Set(["I1-W0-Breeze"]);
-    // Remove any dynamic nodes before re-render
-    $all(".entry[data-dyn='1']", host).forEach(function(n){ n.remove(); });
-
-    list.forEach(function(item){
+    // remove dynamic nodes
+    $all(".entry[data-dyn='1']", host).forEach(n=>n.remove());
+    // render dynamic list
+    loadLog().forEach(function(item){
       var div = document.createElement("div");
-      div.className = "entry";
-      div.setAttribute("data-dyn","1");
+      div.className = "entry"; div.setAttribute("data-dyn","1");
+      var id = "E"+Math.random().toString(36).slice(2,7);
+      var when = item.ts ? new Date(item.ts) : new Date();
+      var stamp = illuminaStamp(when);
+      var dateStr = when.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"});
+      div.id = id;
       div.innerHTML =
         '<h3>'+escapeHtml(item.title)+'</h3>'+
-        '<div class="meta">'+escapeHtml(item.date||"")+' · '+escapeHtml(item.tag||"Public")+'</div>'+
-        '<div class="text">'+escapeHtml(item.text)+'</div>'+
-        '<div class="tags">'+
-          '<span class="tag moon">Moon Note</span>'+
-        '</div>'+
-        '<div class="actions">'+
-          '<button data-copy-text="'+encodeURIComponent(item.text)+'">Copy</button>'+
-        '</div>';
+        '<div class="meta">'+dateStr+' · Logged: '+stamp.text+' · '+escapeHtml(item.tag||"Public")+'</div>'+
+        '<div class="text" id="'+id+'-txt">'+escapeHtml(item.text)+'</div>'+
+        '<div class="tags"><span class="tag moon">Moon Note</span></div>'+
+        '<div class="actions"><button data-copy="#'+id+'-txt">Copy</button> <a class="ghost" href="#" data-link="#'+id+'">Link</a></div>';
       host.appendChild(div);
     });
+    bindCopyButtons();
+    // update Breeze meta with illumina stamp
+    var breeze = $("#I1-W0-Breeze");
+    if(breeze){
+      var tStr = breeze.getAttribute("data-ts");
+      var t = tStr ? new Date(tStr) : new Date();
+      var stamp = illuminaStamp(t);
+      var baseMeta = "Nov 2, 2025 · Tag: Pre-Cycle · Anchor: Sigrid";
+      $("#meta-breeze").innerText = baseMeta + " · Logged: " + stamp.text;
+    }
   }
 
-  function escapeHtml(s){
-    return (s||"").replace(/[&<>"']/g,function(c){
-      return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];
-    });
-  }
-
-  // Copy handlers
-  $all("[data-copy]").forEach(function(btn){
-    btn.addEventListener("click", function(){
-      var sel = btn.getAttribute("data-copy");
-      copySelector(sel);
-    });
-  });
-
-  document.addEventListener("click", function(e){
-    var t = e.target;
-    if(t && t.matches("button[data-copy-text]")){
-      var txt = decodeURIComponent(t.getAttribute("data-copy-text")||"");
-      copyText(txt);
-    }
-    if(t && t.id === "copyAll"){
-      var all = [];
-      $all(".entry .text").forEach(function(n){ all.push(n.textContent.trim()); });
-      copyText(all.join("\n\n—\n\n"));
-    }
-  });
-
-  // Share dialog for Breeze
+  /* Share dialog */
   var shareDlg = $("#shareDlg");
   var openShare = $("#openShare");
   if(openShare && shareDlg){
     openShare.addEventListener("click", function(ev){
       ev.preventDefault();
-      var txt = $("#txt-breeze").textContent.trim();
-      $("#shareBox").value = txt;
+      $("#shareBox").value = $("#txt-breeze").innerText.trim();
       shareDlg.showModal();
     });
-    $("#shareCopy").addEventListener("click", function(){
-      copyText($("#shareBox").value);
-      shareDlg.close();
-    });
-    $("#shareClose").addEventListener("click", function(){ shareDlg.close(); });
+    $("#shareCopy").onclick = function(){ copyText($("#shareBox").value); shareDlg.close(); };
+    $("#shareClose").onclick = function(){ shareDlg.close(); };
   }
 
-  // Add Note form
+  /* Add Note form — store timestamp and show Illumina time + phase */
   var form = $("#noteForm");
   if(form){
     form.addEventListener("submit", function(ev){
       ev.preventDefault();
       var title = $("#title").value.trim() || "Untitled";
-      var text = $("#text").value.trim();
-      if(!text){ return; }
+      var text  = $("#text").value.trim();
+      if(!text) return;
       var list = loadLog();
-      var now = new Date();
-      var date = now.toLocaleDateString(undefined, {year:"numeric", month:"short", day:"numeric"});
-      list.unshift({ title:title, text:text, date:date, tag:"Public" });
+      var now  = new Date();
+      list.unshift({ title:title, text:text, ts: now.toISOString(), tag:"Public" });
       saveLog(list);
-      $("#title").value = "";
-      $("#text").value = "";
-      renderLog();
-      location.hash = "#log";
+      $("#title").value = ""; $("#text").value = "";
+      renderLog(); location.hash = "#log";
     });
   }
 
-  // Live room badges — manual control with localStorage
+  /* Room live flags */
   function loadLive(){ try{ return JSON.parse(localStorage.getItem(liveKey)||"{}"); }catch(e){ return {}; } }
   function saveLive(map){ try{ localStorage.setItem(liveKey, JSON.stringify(map)); }catch(e){} }
   function applyLive(){
     var map = loadLive();
-    $all("[data-soon]").forEach(function(el){
-      var name = el.getAttribute("data-soon");
-      if(map[name]){ el.style.display = "none"; } else { el.style.display = "inline-block"; }
-    });
+    $all("[data-soon]").forEach(function(el){ var name = el.getAttribute("data-soon"); el.style.display = map[name] ? "none" : "inline-block"; });
   }
   applyLive();
+  $("#markLive") && $("#markLive").addEventListener("click", function(){
+    var name = prompt("Enter room key to mark live: mirrorhoney, earth, froot, time, garlic, four");
+    if(!name) return; name = name.trim().toLowerCase(); var map = loadLive(); map[name]=true; saveLive(map); applyLive();
+  });
+  $("#resetLive") && $("#resetLive").addEventListener("click", function(){ saveLive({}); applyLive(); });
 
-  var markBtn = $("#markLive");
-  var resetBtn = $("#resetLive");
-  if(markBtn){
-    markBtn.addEventListener("click", function(){
-      var name = prompt("Enter room key to mark live: mirrorhoney, earth, froot, time, garlic, four");
-      if(!name) return;
-      name = name.trim().toLowerCase();
-      var map = loadLive(); map[name] = true; saveLive(map); applyLive();
-    });
-  }
-  if(resetBtn){
-    resetBtn.addEventListener("click", function(){
-      saveLive({}); applyLive();
-    });
-  }
+  /* Copy link to the log section */
+  $("#copyLogLink") && $("#copyLogLink").addEventListener("click", function(){
+    copyText(location.origin + location.pathname + "#log");
+  });
 
-  // Initial render for any saved notes
+  /* Initial render */
+  bindCopyButtons();
   renderLog();
 })();
 </script>
