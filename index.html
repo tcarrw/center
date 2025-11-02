@@ -1,382 +1,110 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Illumina · Center</title>
-<meta name="description" content="Illumina Center — public log and links to the living rooms of the field." />
-<meta property="og:title" content="Illumina · Center" />
-<meta property="og:description" content="Public log hub — Moon Notes, Sun Tests, Bee Actions." />
-<meta property="og:type" content="website" />
-<meta name="theme-color" content="#8a7bdc" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MirrorHoney — Primadonna (Echo of Clarity)</title>
+
+<!-- Center integration -->
+<meta name="center-key" content="YELLOW">
+
 <style>
-  :root{
-    --bg:#0b0b12; --ink:#e9e7ff; --muted:#bdb9ffcc; --card:#141423; --edge:#23233a;
-    --accent:#a9a2ff; --honey:#ffd88a; --violet:#9188ff; --green:#78f0c8;
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0;background:
-      radial-gradient(1200px 600px at 70% -10%, rgba(145,136,255,0.12), transparent 60%),
-      radial-gradient(1000px 500px at 20% -20%, rgba(255,216,138,0.10), transparent 60%),
-      var(--bg);
-    color:var(--ink); font:16px/1.55 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji;
-    letter-spacing:0.1px;
-  }
-  .wrap{max-width:1100px;margin:0 auto;padding:28px 20px 80px}
-  header{
-    display:grid; gap:10px; align-items:center; grid-template-columns: 1fr auto;
-    padding:14px 16px; border:1px solid var(--edge); border-radius:18px;
-    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
-    box-shadow: 0 8px 28px rgba(0,0,0,0.35);
-  }
-  .brand{display:flex; align-items:center; gap:12px}
-  .glyph{width:36px;height:36px;border-radius:10px;background:conic-gradient(from 210deg,var(--violet),var(--honey),var(--green),var(--violet));filter:blur(.2px);box-shadow:inset 0 0 8px rgba(255,255,255,.25),0 6px 18px rgba(0,0,0,.35)}
-  h1{margin:0;font-size:22px;letter-spacing:0.2px}
-  .phase{font-size:13px;color:var(--muted)}
-  .dates{font-weight:600;color:var(--accent)}
-  .links{display:flex; gap:8px; flex-wrap:wrap}
-  .chip{border:1px solid var(--edge); border-radius:999px; padding:8px 12px; background:rgba(255,255,255,.02); color:var(--ink); text-decoration:none; font-weight:600; font-size:13px; transition:.15s}
-  .chip:hover{transform:translateY(-1px); background:rgba(255,255,255,.04); border-color:#2f2f52}
+  :root{--bg:#0b0013;--fg:#f9f6ff;--violet:#b89cff;--gold:#ffebc4}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;min-height:100%}
+  .main{display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;padding:4rem 1rem;text-align:center;background:
+    radial-gradient(circle at 50% 20%, rgba(120,60,255,.25), transparent 70%),
+    radial-gradient(circle at 80% 90%, rgba(255,230,150,.15), transparent 70%);backdrop-filter:blur(10px)}
 
-  .grid{display:grid; grid-template-columns: 1fr; gap:18px; margin-top:18px}
-  @media(min-width:920px){ .grid{grid-template-columns: 2fr 1fr } }
+  .nav{position:fixed;top:14px;left:14px;z-index:10;display:flex;gap:8px;align-items:center}
+  .nav a{text-decoration:none;color:var(--fg);border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);
+         padding:8px 12px;border-radius:999px;font-size:.9rem;letter-spacing:.02em}
+  .nav a:hover{border-color:rgba(255,255,255,.32)}
+  .key-badge{border:1px dashed rgba(255,255,255,.22);padding:8px 12px;border-radius:999px;font-size:.85rem;color:#ffefcf;background:rgba(255,255,255,.04)}
+  .copy{cursor:pointer;border-bottom:1px dotted rgba(255,255,255,.35)}
 
-  .card{border:1px solid var(--edge); border-radius:18px; padding:16px 16px 18px; background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0))}
-  .card h2{margin:2px 0 10px; font-size:18px}
-  .pill{display:inline-block; padding:2px 8px; border-radius:999px; border:1px solid var(--edge); font-size:12px; color:var(--muted)}
-  .row{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
-  .divider{height:1px; background:linear-gradient(90deg, transparent, #2a2a44, transparent); margin:14px 0}
-
-  .loglist{display:grid; gap:12px; margin-top:6px}
-  .entry{border:1px solid var(--edge); border-radius:14px; padding:14px; background:rgba(255,255,255,.02)}
-  .entry h3{margin:0 0 6px; font-size:16px}
-  .entry .meta{font-size:12px; color:var(--muted)}
-  .entry .text{margin-top:8px; white-space:pre-wrap; line-height:1.55}
-  .entry .tags{margin-top:10px; display:flex; gap:6px; flex-wrap:wrap}
-  .tag{font-size:11px; color:#0b0b12; background:var(--accent); border-radius:999px; padding:3px 8px; font-weight:700}
-  .tag.honey{background:var(--honey)}
-  .tag.moon{background:var(--violet); color:#0b0b12}
-  .entry .actions{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap}
-  button,.ghost{appearance:none; border:none; border-radius:10px; padding:8px 10px; font-weight:700; letter-spacing:.2px; background:var(--accent); color:#0b0b12; cursor:pointer}
-  .ghost{background:transparent; color:var(--ink); border:1px solid var(--edge)}
-  button:active,.ghost:active{transform:translateY(1px)}
-
-  /* Tiles */
-  .tiles{display:grid; grid-template-columns:1fr 1fr; gap:10px}
-  @media(min-width:600px){ .tiles{grid-template-columns:1fr 1fr 1fr} }
-  .tile{
-    position:relative; border:1px solid var(--edge); border-radius:14px; padding:12px 12px 12px; padding-top:40px;
-    background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0)); text-decoration:none; color:var(--ink); font-weight:600; min-height:94px; display:flex; align-items:flex-end; overflow:hidden;
-    white-space:normal; word-break:break-word; overflow-wrap:anywhere; line-height:1.35;
-  }
-  .tile span{position:absolute; top:10px; left:12px; font-size:14px; color:var(--muted); pointer-events:none; user-select:none}
-  .soon{position:absolute; right:10px; top:10px; font-size:11px; padding:3px 8px; border-radius:999px; border:1px dashed #4a4a72; color:var(--muted); background:rgba(255,255,255,.02); pointer-events:none; user-select:none}
-  .tile .wash{position:absolute; inset:0; opacity:.5; filter:blur(22px); background: radial-gradient(300px 140px at 80% -20%, rgba(169,162,255,.35), transparent 60%), radial-gradient(280px 120px at 10% -10%, rgba(255,216,138,.25), transparent 60%)}
-  .tiny{font-size:12px; color:var(--muted)}
-  .hint{font-size:12px; color:var(--muted); margin-top:6px}
-
-  dialog{border:none; border-radius:16px; padding:0; background:var(--card); color:var(--ink); width:min(560px,92vw)}
-  dialog::backdrop{background:rgba(0,0,0,.65)}
-  .dlg{padding:16px}
-  .dlg h3{margin:0 0 8px}
-  .field{display:grid; gap:6px; margin:8px 0}
-  textarea{width:100%; min-height:110px; border-radius:10px; background:#0f0f1a; color:var(--ink); border:1px solid var(--edge); padding:10px}
-  .row-end{display:flex; gap:8px; justify-content:flex-end; margin-top:8px}
-  .sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+  h1{font-size:2.4rem;font-weight:600;letter-spacing:.02em;color:#f7e7ff;text-shadow:0 0 10px rgba(150,100,255,.3);margin-bottom:.5rem}
+  h2{font-size:1rem;letter-spacing:.2em;font-weight:400;color:#d8c4ff;text-transform:uppercase;margin-bottom:2rem}
+  .note{max-width:760px;line-height:1.65;font-size:1.05rem;color:#f1ecff;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);
+        border-radius:16px;padding:2rem;box-shadow:0 0 30px rgba(180,120,255,.1);margin-bottom:18px}
+  .note p{margin:1.2rem 0}
+  .to{font-size:.9rem;letter-spacing:.12em;color:#ffefcf;margin-bottom:.4rem}
+  .tagline{margin-top:1.2rem;font-size:.95rem;color:var(--gold);letter-spacing:.05em}
+  .glyphs{margin-top:1rem;font-size:1rem;color:#c9b7ff}
+  .card{max-width:820px;width:100%;margin-top:24px;padding:18px;border-radius:16px;border:1px solid rgba(255,255,255,.08);
+        background:rgba(255,255,255,.04);box-shadow:0 0 30px rgba(180,120,255,.1)}
+  #player{width:100%;aspect-ratio:16/9;border:0;border-radius:12px;overflow:hidden}
+  .controls{display:flex;gap:12px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:14px}
+  button{appearance:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:var(--fg);
+         padding:10px 14px;border-radius:999px;font-size:.95rem;letter-spacing:.02em}
+  button:hover{border-color:rgba(255,255,255,.32)}
+  .hint{margin-top:8px;font-size:.9rem;color:var(--gold)}
+  .footer{margin-top:22px;font-size:.9rem;color:#e9dbff}
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <div class="glyph" aria-hidden="true"></div>
-        <div>
-          <h1>Illumina · Center</h1>
-          <div class="phase">Illumina 1 — <span class="dates">Nov 5 – Dec 17, 2025</span> · Full Moon launch then 42-day flow</div>
-        </div>
-      </div>
-      <nav class="links">
-        <a class="chip" href="#log">Public Log</a>
-        <a class="chip" href="#rooms">Rooms</a>
-        <a class="chip" href="#add">Add Note</a>
-        <button class="chip" id="copyLogLink" type="button">Copy Log Link</button>
-      </nav>
-    </header>
 
-    <section class="grid" id="log">
-      <article class="card">
-        <div class="row">
-          <h2>Public Log</h2>
-          <span class="pill">Lunar archive with Sun tests</span>
-        </div>
-        <div class="divider"></div>
-        <div class="loglist" id="loglist">
-          <!-- Week 0 Preface: Breeze -->
-          <div class="entry" id="I1-W0-Breeze" data-id="I1-W0-Breeze" data-ts="2025-11-02T12:00:00">
-            <h3>Week 0 — Breeze</h3>
-            <div class="meta" id="meta-breeze">Nov 2, 2025 · Tag: Pre-Cycle · Anchor: Sigrid</div>
-            <div class="text" id="txt-breeze">I saw Sigrid in the world today.
-The air shifted — light, calm, certain.
-No signal, just recognition.
-A breeze between orbits.
+<div class="nav">
+  <a href="https://center.plnt.earth">← Center</a>
+  <div class="key-badge">Center Key: <span id="ckText" class="copy" title="Tap to copy">YELLOW</span></div>
+</div>
 
-Sun test: I did not ignite, I shimmered.
-Bee note: Move lightly. Follow where the wind already turns.</div>
-            <div class="tags">
-              <span class="tag moon">Moon Note</span><span class="tag">Sun Test</span><span class="tag honey">Bee Action</span>
-            </div>
-            <div class="actions">
-              <button data-copy="#txt-breeze">Copy</button>
-              <a class="ghost" href="#" data-link="#I1-W0-Breeze">Link</a>
-              <a class="ghost" href="#" id="openShare">Share text</a>
-            </div>
-          </div>
-        </div>
-        <p class="hint">Entries are public-ready. Each one shows Illumina time (cycle · week · day) and Moon phase at log moment.</p>
-      </article>
+<div class="main">
+  <h1>Primadonna (Echo of Clarity)</h1>
+  <h2>MirrorHoney Note · Marina × Sigrid</h2>
 
-      <aside class="card" id="rooms">
-        <div class="row">
-          <h2>Rooms</h2>
-          <span class="pill">Living sites</span>
-        </div>
-        <div class="divider"></div>
-        <div class="tiles" id="roomTiles">
-          <a class="tile" href="https://mirrorhoney.plnt.earth" data-room="mirrorhoney"><span>MirrorHoney</span><div class="wash"></div><div class="soon" data-soon="mirrorhoney">Coming Soon</div>Mirror journal and Marina reflections</a>
-          <a class="tile" href="https://earth.plnt.earth" data-room="earth"><span>Earth</span><div class="wash"></div><div class="soon" data-soon="earth">Coming Soon</div>Field hub for anchors and signals</a>
-          <a class="tile" href="https://froot.plnt.earth" data-room="froot"><span>Froot</span><div class="wash"></div><div class="soon" data-soon="froot">Coming Soon</div>Color lab and playlists</a>
-          <a class="tile" href="https://time.plnt.earth" data-room="time"><span>Time</span><div class="wash"></div><div class="soon" data-soon="time">Coming Soon</div>Time charters and experiments</a>
-          <a class="tile" href="https://garlic.plnt.earth" data-room="garlic"><span>Garlic</span><div class="wash"></div><div class="soon" data-soon="garlic">Coming Soon</div>Letters and green options</a>
-          <a class="tile" href="https://four.plnt.earth" data-room="four"><span>Four</span><div class="wash"></div><div class="soon" data-soon="four">Coming Soon</div>Taylor rituals and keys</a>
-        </div>
-        <p class="tiny">Tip: mark a room live once the domain is up. The Coming Soon label will disappear on this device.</p>
-        <div class="row" style="margin-top:8px; gap:6px">
-          <button id="markLive">Mark Room Live</button>
-          <button class="ghost" id="resetLive">Reset Live Flags</button>
-        </div>
-      </aside>
-    </section>
-
-    <section class="card" id="add" style="margin-top:18px">
-      <div class="row">
-        <h2>Add Moon Note</h2>
-        <span class="pill">Quick capture</span>
-      </div>
-      <div class="divider"></div>
-      <form id="noteForm" autocomplete="off">
-        <label class="sr" for="title">Title</label>
-        <input id="title" name="title" type="text" placeholder="Title — e.g., Week 1 — Signal" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--edge);background:#0f0f1a;color:var(--ink)">
-        <div class="field">
-          <label for="text">Note text</label>
-          <textarea id="text" name="text" placeholder="Short lunar note. Add optional Sun test and Bee action lines."></textarea>
-        </div>
-        <div class="row">
-          <button type="submit">Add to Public Log</button>
-          <button class="ghost" type="button" id="copyAll">Copy Full Log</button>
-        </div>
-        <p class="hint">Notes are stored locally until you publish them to your site. Copy the full log and paste into your static file when ready.</p>
-      </form>
-    </section>
-
-    <footer class="tiny" style="margin-top:12px">
-      Center is a quiet page — lunar shimmer, honey accent, green options. No tracking and no noise.
-    </footer>
+  <div class="note">
+    <div class="to">FOR MARINA • DIAMONDS WELCOME</div>
+    <p>When Sigrid covered <b>“Primadonna”</b>, the mirror tilted and your voice returned through her clarity.</p>
+    <p>The line that once asked <i>“Would you do anything for me?”</i> now sounds like <i>“I already am.”</i></p>
+    <p>You built the stage. She clears the air. No glitter, no costume, just skin in light and the sound of someone who sees the performance for what it is and still chooses to sing.</p>
+    <p>It is the same melody, the energy turned from desire to understanding.</p>
+    <p class="tagline">Moon signal: reflection through voice. One woman’s performance becoming another’s truth.</p>
+    <div class="glyphs">🐝 Illumina 1 → It Gets Dark bridge → Primadonna cover • ☀️ glass violet / clarity gold</div>
   </div>
 
-  <dialog id="shareDlg">
-    <div class="dlg">
-      <h3>Share text</h3>
-      <div class="field">
-        <label for="shareBox">Copy and paste anywhere</label>
-        <textarea id="shareBox"></textarea>
-      </div>
-      <div class="row-end">
-        <button id="shareCopy">Copy</button>
-        <button class="ghost" id="shareClose" type="button">Close</button>
-      </div>
+  <div class="card">
+    <div id="player"></div>
+    <div class="controls">
+      <button id="unmute">Unmute</button>
+      <button id="restart">Restart Loop</button>
+      <button id="pause">Pause</button>
+      <button id="play">Play</button>
     </div>
-  </dialog>
+    <div class="hint">Auto starts at 10:36 and loops only the Primadonna segment.</div>
+    <div class="footer">Source video · Sigrid & Johanne Raabe covers compilation</div>
+  </div>
+</div>
 
 <script>
-(function(){
-  /* ===== Illumina + Moon Phase helpers ===== */
+  const START=636, END=847, VIDEO_ID="uxTdS0Frwsk";
+  const tag=document.createElement("script");tag.src="https://www.youtube.com/iframe_api";document.head.appendChild(tag);
 
-  // Illumina 1 launch (Full Moon) — Nov 5, 2025 local time (midnight as anchor)
-  var I1_START = new Date(2025, 10, 5, 0, 0, 0); // month is 0-based
+  const keySpan=document.getElementById('ckText');
+  keySpan.addEventListener('click',()=>{navigator.clipboard.writeText(keySpan.textContent).catch(()=>{});keySpan.title='Copied';});
 
-  // Synodic month (days) and a reference New Moon (UTC) — 2000-01-06 18:14
-  var SYNODIC = 29.530588853;
-  var NEWMOON_REF = Date.UTC(2000,0,6,18,14,0);
-
-  function lunarPhaseName(d){
-    var t = d.getTime();
-    var days = (t - NEWMOON_REF) / 86400000;
-    var age = (days % SYNODIC + SYNODIC) % SYNODIC; // 0..29.53
-    var pct = age / SYNODIC; // 0..1
-    if (pct < 0.03 || pct > 0.97) return "New Moon";
-    if (pct < 0.22) return "Waxing Crescent";
-    if (pct < 0.28) return "First Quarter";
-    if (pct < 0.47) return "Waxing Gibbous";
-    if (pct < 0.53) return "Full Moon";
-    if (pct < 0.72) return "Waning Gibbous";
-    if (pct < 0.78) return "Last Quarter";
-    return "Waning Crescent";
-  }
-
-  function two(n){return (n<10?'0':'')+n}
-  function localTimeHM(d){
-    var h = d.getHours(), m = d.getMinutes();
-    var ampm = h>=12 ? "pm" : "am";
-    h = h%12 || 12;
-    return h+":"+two(m)+" "+ampm;
-  }
-
-  function illuminaStamp(dt){
-    // Cycle number — for now everything is I1 (but the math supports future cycles)
-    var diffDays = Math.floor((dt - I1_START)/86400000);
-    var cycle = 1;
-    var week, dayLabel;
-
-    if (diffDays < 0){
-      week = 0;
-      dayLabel = "D"+diffDays; // negative days before launch
-    } else {
-      var dayOfCycle = Math.min(diffDays, 41); // clamp within 0..41
-      week = Math.floor(dayOfCycle/7) + 1;     // 1..6
-      var dayInWeek = dayOfCycle % 7 + 1;      // 1..7
-      dayLabel = "D"+dayInWeek;
-    }
-
-    var phase = lunarPhaseName(dt);
-    var timeHM = localTimeHM(dt);
-
-    return {
-      text: "I"+cycle+" · W"+week+" · "+dayLabel+" · "+phase+" · "+timeHM,
-      cycle: cycle, week: week, phase: phase, time: timeHM
-    };
-  }
-
-  /* ===== DOM helpers ===== */
-  var storeKey = "illumina.center.publicLog";
-  var liveKey  = "illumina.center.liveRooms";
-
-  function $(q,root){return (root||document).querySelector(q)}
-  function $all(q,root){return Array.from((root||document).querySelectorAll(q))}
-  function escapeHtml(s){return (s||"").replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c])}
-
-  function copyText(txt){
-    var ta = document.createElement("textarea");
-    ta.style.position="fixed"; ta.style.opacity="0"; ta.value = txt;
-    document.body.appendChild(ta); ta.select();
-    try{ document.execCommand("copy"); }catch(e){}
-    document.body.removeChild(ta);
-  }
-  function bindCopyButtons(){
-    $all("button[data-copy]").forEach(function(btn){
-      btn.onclick = function(){ var sel = btn.getAttribute("data-copy"); var el = $(sel); if(el) copyText(el.innerText); };
-    });
-    $all("a[data-link]").forEach(function(a){
-      a.onclick = function(ev){
-        ev.preventDefault();
-        var hash = a.getAttribute("data-link");
-        copyText(location.origin + location.pathname + hash);
-      };
+  let player;
+  function onYouTubeIframeAPIReady(){
+    player=new YT.Player("player",{
+      videoId:VIDEO_ID,
+      playerVars:{start:START,end:END,autoplay:1,mute:1,controls:1,rel:0,modestbranding:1,playsinline:1,loop:1,playlist:VIDEO_ID},
+      events:{
+        onReady:()=>{player.seekTo(START,true);player.playVideo();},
+        onStateChange:e=>{
+          if(e.data===YT.PlayerState.PLAYING){
+            const tick=()=>{if(!player||player.getPlayerState()!==YT.PlayerState.PLAYING)return;
+              if(player.getCurrentTime()>=END-0.25)player.seekTo(START,true);
+              requestAnimationFrame(tick)};
+            requestAnimationFrame(tick);
+          }
+        }
+      }
     });
   }
 
-  /* ===== Log state ===== */
-  function loadLog(){ try{ return JSON.parse(localStorage.getItem(storeKey)||"[]"); }catch(e){ return []; } }
-  function saveLog(list){ try{ localStorage.setItem(storeKey, JSON.stringify(list)); }catch(e){} }
-
-  function renderLog(){
-    var host = $("#loglist");
-    if(!host) return;
-    // remove dynamic nodes
-    $all(".entry[data-dyn='1']", host).forEach(n=>n.remove());
-    // render dynamic list
-    loadLog().forEach(function(item){
-      var div = document.createElement("div");
-      div.className = "entry"; div.setAttribute("data-dyn","1");
-      var id = "E"+Math.random().toString(36).slice(2,7);
-      var when = item.ts ? new Date(item.ts) : new Date();
-      var stamp = illuminaStamp(when);
-      var dateStr = when.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"});
-      div.id = id;
-      div.innerHTML =
-        '<h3>'+escapeHtml(item.title)+'</h3>'+
-        '<div class="meta">'+dateStr+' · Logged: '+stamp.text+' · '+escapeHtml(item.tag||"Public")+'</div>'+
-        '<div class="text" id="'+id+'-txt">'+escapeHtml(item.text)+'</div>'+
-        '<div class="tags"><span class="tag moon">Moon Note</span></div>'+
-        '<div class="actions"><button data-copy="#'+id+'-txt">Copy</button> <a class="ghost" href="#" data-link="#'+id+'">Link</a></div>';
-      host.appendChild(div);
-    });
-    bindCopyButtons();
-    // update Breeze meta with illumina stamp
-    var breeze = $("#I1-W0-Breeze");
-    if(breeze){
-      var tStr = breeze.getAttribute("data-ts");
-      var t = tStr ? new Date(tStr) : new Date();
-      var stamp = illuminaStamp(t);
-      var baseMeta = "Nov 2, 2025 · Tag: Pre-Cycle · Anchor: Sigrid";
-      $("#meta-breeze").innerText = baseMeta + " · Logged: " + stamp.text;
-    }
-  }
-
-  /* Share dialog */
-  var shareDlg = $("#shareDlg");
-  var openShare = $("#openShare");
-  if(openShare && shareDlg){
-    openShare.addEventListener("click", function(ev){
-      ev.preventDefault();
-      $("#shareBox").value = $("#txt-breeze").innerText.trim();
-      shareDlg.showModal();
-    });
-    $("#shareCopy").onclick = function(){ copyText($("#shareBox").value); shareDlg.close(); };
-    $("#shareClose").onclick = function(){ shareDlg.close(); };
-  }
-
-  /* Add Note form — store timestamp and show Illumina time + phase */
-  var form = $("#noteForm");
-  if(form){
-    form.addEventListener("submit", function(ev){
-      ev.preventDefault();
-      var title = $("#title").value.trim() || "Untitled";
-      var text  = $("#text").value.trim();
-      if(!text) return;
-      var list = loadLog();
-      var now  = new Date();
-      list.unshift({ title:title, text:text, ts: now.toISOString(), tag:"Public" });
-      saveLog(list);
-      $("#title").value = ""; $("#text").value = "";
-      renderLog(); location.hash = "#log";
-    });
-  }
-
-  /* Room live flags */
-  function loadLive(){ try{ return JSON.parse(localStorage.getItem(liveKey)||"{}"); }catch(e){ return {}; } }
-  function saveLive(map){ try{ localStorage.setItem(liveKey, JSON.stringify(map)); }catch(e){} }
-  function applyLive(){
-    var map = loadLive();
-    $all("[data-soon]").forEach(function(el){ var name = el.getAttribute("data-soon"); el.style.display = map[name] ? "none" : "inline-block"; });
-  }
-  applyLive();
-  $("#markLive") && $("#markLive").addEventListener("click", function(){
-    var name = prompt("Enter room key to mark live: mirrorhoney, earth, froot, time, garlic, four");
-    if(!name) return; name = name.trim().toLowerCase(); var map = loadLive(); map[name]=true; saveLive(map); applyLive();
-  });
-  $("#resetLive") && $("#resetLive").addEventListener("click", function(){ saveLive({}); applyLive(); });
-
-  /* Copy link to the log section */
-  $("#copyLogLink") && $("#copyLogLink").addEventListener("click", function(){
-    copyText(location.origin + location.pathname + "#log");
-  });
-
-  /* Initial render */
-  bindCopyButtons();
-  renderLog();
-})();
+  document.getElementById("unmute").onclick=()=>player&&player.unMute();
+  document.getElementById("restart").onclick=()=>player&&player.seekTo(START,true);
+  document.getElementById("pause").onclick=()=>player&&player.pauseVideo();
+  document.getElementById("play").onclick=()=>player&&player.playVideo();
 </script>
 </body>
 </html>
