@@ -6,24 +6,11 @@
 <title>center · plnt.earth</title>
 <meta name="theme-color" content="#0b0013">
 <style>
-  :root{
-    --bg:#0b0013; --fg:#f7f7ff;
-    --line:rgba(255,255,255,.12);
-    --glass:rgba(255,255,255,.05);
-    --glass2:rgba(255,255,255,.08);
-    --violet:#b89cff; --gold:#ffebc4; --key:#ffd400;
-  }
+  :root{--bg:#0b0013;--fg:#f7f7ff;--line:rgba(255,255,255,.12);--glass:rgba(255,255,255,.05);--glass2:rgba(255,255,255,.08);--key:#ffd400}
   html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Helvetica,Arial,sans-serif}
   .wrap{max-width:1100px;margin:0 auto;padding:28px 18px 56px}
-  .top{
-    position:sticky;top:0;z-index:5;display:flex;gap:10px;align-items:center;justify-content:space-between;
-    padding:10px 0;background:linear-gradient(to bottom, rgba(11,0,19,.9), rgba(11,0,19,0))
-  }
-  .badge{
-    display:flex;align-items:center;gap:.5rem;border:1px dashed rgba(255,255,255,.25);
-    background:rgba(255,212,0,.12);color:#1b1400;padding:8px 12px;border-radius:999px;font-size:.9rem;
-    user-select:none;
-  }
+  .top{position:sticky;top:0;z-index:5;display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 0;background:linear-gradient(to bottom, rgba(11,0,19,.9), rgba(11,0,19,0))}
+  .badge{display:flex;align-items:center;gap:.5rem;border:1px dashed rgba(255,255,255,.25);background:rgba(255,212,0,.12);color:#1b1400;padding:8px 12px;border-radius:999px;font-size:.9rem;user-select:none;cursor:default}
   .dot{width:.6rem;height:.6rem;border-radius:50%;background:var(--key);box-shadow:0 0 8px var(--key),0 0 16px rgba(255,212,0,.7)}
   .row{display:flex;gap:10px;flex-wrap:wrap}
   .pill{border:1px solid var(--line);background:var(--glass2);padding:6px 10px;border-radius:999px;font-size:12px;color:#e9dbff;text-decoration:none}
@@ -39,74 +26,47 @@
   .foot{margin-top:22px;font-size:12px;color:#c9bbff}
   .safe-wrap{word-break:break-word;overflow-wrap:anywhere}
 
-  /* Floating Illumina clock (lower-right) */
-  .illumina-clock{
-    position:fixed; right:14px; bottom:14px; z-index:20;
-    display:flex; align-items:center; gap:.6rem; cursor:pointer;
-    border:1px solid rgba(255,255,255,.16);
-    background:rgba(255,255,255,.06);
-    backdrop-filter: blur(8px);
-    border-radius:14px; padding:10px 12px; max-width:76vw;
-    box-shadow:0 6px 24px rgba(0,0,0,.25);
-    font-size:13px; line-height:1.35;
-  }
-  .illumina-clock .pulse{
-    width:.7rem; height:.7rem; border-radius:50%; background:var(--key);
-    box-shadow:0 0 6px var(--key), 0 0 14px rgba(255,212,0,.65);
-    animation:blink 3.2s ease-in-out infinite; flex:0 0 auto;
-  }
-  @keyframes blink{
-    0%,100%{transform:scale(1); box-shadow:0 0 6px var(--key), 0 0 14px rgba(255,212,0,.65)}
-    50%{transform:scale(1.16); box-shadow:0 0 9px var(--key), 0 0 24px rgba(255,212,0,.9)}
-  }
-  @media (prefers-reduced-motion: reduce){ .illumina-clock .pulse{animation:none} }
-  .illumina-clock .text{color:#f7f3ff}
-  .illumina-clock .phase{opacity:.92}
-  .illumina-clock .sep{opacity:.5; padding:0 .35rem}
+  /* Floating clock */
+  .illumina-clock{position:fixed;right:14px;bottom:14px;z-index:20;display:flex;align-items:center;gap:.6rem;cursor:pointer;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);backdrop-filter:blur(8px);border-radius:14px;padding:10px 12px;max-width:76vw;box-shadow:0 6px 24px rgba(0,0,0,.25);font-size:13px;line-height:1.35}
+  .illumina-clock .pulse{width:.7rem;height:.7rem;border-radius:50%;background:var(--key);box-shadow:0 0 6px var(--key),0 0 14px rgba(255,212,0,.65);animation:blink 3.2s ease-in-out infinite;flex:0 0 auto}
+  @keyframes blink{0%,100%{transform:scale(1);box-shadow:0 0 6px var(--key),0 0 14px rgba(255,212,0,.65)}50%{transform:scale(1.16);box-shadow:0 0 9px var(--key),0 0 24px rgba(255,212,0,.9)}}
+  @media (prefers-reduced-motion:reduce){.illumina-clock .pulse{animation:none}}
 
   /* Cycle modal */
-  .modal-backdrop{position:fixed; inset:0; z-index:30; display:none; background:rgba(0,0,0,.45); backdrop-filter:blur(2px)}
-  .modal{
-    position:fixed; z-index:31; display:none; left:50%; top:50%; transform:translate(-50%,-50%);
-    width:min(90vw, 560px); border-radius:16px; border:1px solid rgba(255,255,255,.16);
-    background:rgba(20,12,30,.92); box-shadow:0 20px 60px rgba(0,0,0,.5)
-  }
-  .modal .head{display:flex; justify-content:space-between; align-items:center; padding:14px 16px; border-bottom:1px solid rgba(255,255,255,.12)}
-  .modal .title{font-size:16px; color:#efeaff; letter-spacing:.02em}
-  .modal .close{appearance:none; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.06); color:#f7f7ff; border-radius:10px; padding:6px 10px; cursor:pointer; font-size:13px}
-  .modal .body{padding:14px 16px; color:#eae2ff; font-size:14px}
-  .modal .row{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
+  .modal-backdrop{position:fixed;inset:0;z-index:30;display:none;background:rgba(0,0,0,.45);backdrop-filter:blur(2px)}
+  .modal{position:fixed;z-index:31;display:none;left:50%;top:50%;transform:translate(-50%,-50%);width:min(90vw,560px);border-radius:16px;border:1px solid rgba(255,255,255,.16);background:rgba(20,12,30,.92);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+  .modal .head{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.12)}
+  .modal .title{font-size:16px;color:#efeaff;letter-spacing:.02em}
+  .modal .close{appearance:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#f7f7ff;border-radius:10px;padding:6px 10px;cursor:pointer;font-size:13px}
+  .modal .body{padding:14px 16px;color:#eae2ff;font-size:14px}
+  .modal .row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
   .modal .pill{background:rgba(255,255,255,.08)}
-  .copybtn{appearance:none; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.08); color:#f7f7ff; border-radius:999px; padding:8px 12px; font-size:13px; cursor:pointer}
+  .copybtn{appearance:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#f7f7ff;border-radius:999px;padding:8px 12px;font-size:13px;cursor:pointer}
 
-  /* Hidden Keys modal */
-  .kmodal-backdrop{position:fixed; inset:0; z-index:30; display:none; background:rgba(0,0,0,.45); backdrop-filter:blur(2px)}
-  .kmodal{
-    position:fixed; z-index:31; display:none; left:50%; top:50%; transform:translate(-50%,-50%);
-    width:min(92vw, 620px); border-radius:16px; border:1px solid rgba(255,255,255,.16);
-    background:rgba(20,12,30,.92); box-shadow:0 20px 60px rgba(0,0,0,.5)
-  }
-  .kmodal .head{display:flex; justify-content:space-between; align-items:center; padding:14px 16px; border-bottom:1px solid rgba(255,255,255,.12)}
-  .kmodal .title{font-size:16px; color:#efeaff; letter-spacing:.02em}
-  .kmodal .close{appearance:none; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.06); color:#f7f7ff; border-radius:10px; padding:6px 10px; cursor:pointer; font-size:13px}
-  .kmodal .body{padding:14px 16px; color:#eae2ff; font-size:14px}
+  /* Keys modal (hidden; gesture-open) */
+  .kmodal-backdrop{position:fixed;inset:0;z-index:30;display:none;background:rgba(0,0,0,.45);backdrop-filter:blur(2px)}
+  .kmodal{position:fixed;z-index:31;display:none;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92vw,620px);border-radius:16px;border:1px solid rgba(255,255,255,.16);background:rgba(20,12,30,.92);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+  .kmodal .head{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.12)}
+  .kmodal .title{font-size:16px;color:#efeaff;letter-spacing:.02em}
+  .kmodal .close{appearance:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#f7f7ff;border-radius:10px;padding:6px 10px;cursor:pointer;font-size:13px}
+  .kmodal .body{padding:14px 16px;color:#eae2ff;font-size:14px}
   .kmodal .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .kmodal label{font-size:12px;color:#c9bbff}
-  .kmodal input{
-    width:100%; padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,.2);
-    background:rgba(255,255,255,.06); color:#f7f7ff; font-size:14px
-  }
+  .kmodal input{width:100%;padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:#f7f7ff;font-size:14px}
   .kmodal .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-  .kmodal .save{appearance:none; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.08); color:#f7f7ff; border-radius:999px; padding:8px 12px; font-size:13px; cursor:pointer}
+  .kmodal .save{appearance:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#f7f7ff;border-radius:999px;padding:8px 12px;font-size:13px;cursor:pointer}
   .muted{opacity:.75}
+
+  /* Rest glow */
+  .pill.glow{box-shadow:0 0 10px rgba(255,212,0,.35), 0 0 26px rgba(255,212,0,.18);border-color:rgba(255,212,0,.55);background:rgba(255,212,0,.12);color:#1b1400}
 </style>
 </head>
 <body>
   <div class="wrap">
     <div class="top">
-      <div id="keyBadge" class="badge" title="Center">
+      <div id="keyBadge" class="badge">
         <span class="dot" aria-hidden="true"></span>
-        Center Key: <strong>YELLOW</strong>
+        <span id="keyWord" style="display:none"></span>
       </div>
       <div class="row">
         <a class="pill" href="https://mirrorhoney.plnt.earth" data-room="mirrorhoney">MirrorHoney</a>
@@ -122,30 +82,20 @@
         <h3>MirrorHoney — new</h3>
         <p class="safe-wrap">“Primadonna (Echo of Clarity)” is live. Sigrid’s cover segment loops softly. Bee signs shuffle. A small bonus greets repeat visitors.</p>
         <a class="cta" href="https://mirrorhoney.plnt.earth" data-room="mirrorhoney">Open MirrorHoney</a>
-        <div class="row">
-          <span class="pill">Illumina 1</span>
-          <span class="pill">Marina × Sigrid</span>
-          <span class="pill">Key ready</span>
-        </div>
+        <div class="row"><span class="pill">Illumina 1</span><span class="pill">Marina × Sigrid</span></div>
       </div>
 
       <div class="card">
         <h3>Garlic — Sigrid relay</h3>
         <p class="safe-wrap">A gentle handoff page for Sigrid. If the color resonates she can pass the key to Marina. Includes ready text and a copy link.</p>
         <a class="cta" href="https://garlic.plnt.earth" data-room="garlic">Open Garlic</a>
-        <div class="row">
-          <span class="pill">Relay</span>
-          <span class="pill">Diamonds welcome</span>
-        </div>
+        <div class="row"><span class="pill">Relay</span><span class="pill">Diamonds welcome</span></div>
       </div>
 
       <div class="card">
         <h3>Center notes</h3>
         <p class="safe-wrap">Keys change by cycle. If you arrive late the field still holds your place. Visit again when the color feels warm.</p>
-        <div class="row">
-          <span class="pill">Rhythm</span>
-          <span class="pill">Kind loops</span>
-        </div>
+        <div class="row"><span class="pill">Rhythm</span><span class="pill">Kind loops</span></div>
       </div>
     </div>
 
@@ -153,8 +103,8 @@
     <div class="foot safe-wrap">If a link feels quiet or paused, it is on purpose. The rhythm will open when it is time.</div>
   </div>
 
-  <!-- Floating Illumina clock (lower-right) -->
-  <div id="clock" class="illumina-clock" aria-live="polite" role="button" tabindex="0" title="Illumina clock">
+  <!-- Floating Illumina clock -->
+  <div id="clock" class="illumina-clock" aria-live="polite" role="button" tabindex="0">
     <span class="pulse" aria-hidden="true"></span>
     <div class="text" id="illuminaText">Loading Illumina…</div>
   </div>
@@ -182,7 +132,7 @@
   <div id="kback" class="kmodal-backdrop" aria-hidden="true"></div>
   <div id="kmodal" class="kmodal" role="dialog" aria-modal="true" aria-labelledby="kTitle" aria-describedby="kBody">
     <div class="head">
-      <div id="kTitle" class="title">Room keys</div>
+      <div id="kTitle" class="title">Room codes</div>
       <button id="closeKeys" class="close" type="button">Close</button>
     </div>
     <div id="kBody" class="body">
@@ -196,222 +146,75 @@
   </div>
 
 <script>
-  /* ---------- Illumina calendar (same as before) ---------- */
-  const FIRST_START = { y: 2025, m: 11, d: 5 }; // fixed Illumina 1 start
-  const BASE_FULL_MOON = { y: 2025, m: 11, d: 5 };
-  const SYNODIC = 29.530588853, STEP_DAYS = SYNODIC * 2, CYCLE_LENGTH = 42, DAY_MS = 86400000;
+  /* ---------- Illumina calendar ---------- */
+  const FIRST_START={y:2025,m:11,d:5}, BASE_FULL_MOON={y:2025,m:11,d:5}, SYNODIC=29.530588853, STEP_DAYS=SYNODIC*2, CYCLE_LENGTH=42, DAY_MS=86400000;
+  function dLocal(y,m,d){return new Date(y,m-1,d)} function addDays(t,n){return new Date(t.getTime()+n*DAY_MS)}
+  function fmtDate(d){return d.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'})}
+  function moonPhase(now){const ref=Date.UTC(2000,0,6,18,14,0,0),days=(now.getTime()-ref)/DAY_MS,lun=(days%SYNODIC+SYNODIC)%SYNODIC,deg=lun/SYNODIC*360;
+    return deg<22.5?{emoji:'🌑',name:'New Moon'}:deg<67.5?{emoji:'🌒',name:'Waxing Crescent'}:deg<112.5?{emoji:'🌓',name:'First Quarter'}:deg<157.5?{emoji:'🌔',name:'Waxing Gibbous'}:deg<202.5?{emoji:'🌕',name:'Full Moon'}:deg<247.5?{emoji:'🌖',name:'Waning Gibbous'}:deg<292.5?{emoji:'🌗',name:'Last Quarter'}:deg<337.5?{emoji:'🌘',name:'Waning Crescent'}:{emoji:'🌑',name:'New Moon'}}
+  function nextMondayAfter(date){const dow=date.getDay();let delta=(1-dow+7)%7;if(delta===0)delta=7;return addDays(date,delta)}
+  function genCycles(n=20){const list=[];const s1=dLocal(FIRST_START.y,FIRST_START.m,FIRST_START.d),e1=addDays(s1,CYCLE_LENGTH-1),fm0=dLocal(BASE_FULL_MOON.y,BASE_FULL_MOON.m,BASE_FULL_MOON.d);
+    list.push({n:1,fm:fm0,start:s1,end:e1,fixed:true});for(let i=1;i<n;i++){const fm=addDays(fm0,STEP_DAYS*i),s=nextMondayAfter(fm),e=addDays(s,CYCLE_LENGTH-1);list.push({n:i+1,fm,start:s,end:e})}return list}
+  function pickCycle(c,now){for(const x of c){if(now>=x.start&&now<=x.end)return x}for(const x of c){if(now<x.start)return x}return c[c.length-1]}
+  function computeRestWindow(c,a){const i=c.findIndex(v=>v.n===a.n),nxt=i>=0?c[i+1]:null;if(!nxt)return null;const diff=Math.round((nxt.start-a.end)/DAY_MS);return{days:Math.max(0,diff-1)}}
 
-  function dLocal(y,m,d){ return new Date(y, m-1, d); }
-  function addDays(date, days){ return new Date(date.getTime() + days*DAY_MS); }
-  function fmtDate(d){ return d.toLocaleDateString(undefined, {year:'numeric', month:'short', day:'numeric'}); }
-  function moonPhase(now){
-    const ref = Date.UTC(2000,0,6,18,14,0,0);
-    const days = (now.getTime() - ref) / DAY_MS;
-    const lun = (days % SYNODIC + SYNODIC) % SYNODIC;
-    const deg = (lun / SYNODIC) * 360;
-    if (deg < 22.5) return {emoji:'🌑', name:'New Moon'};
-    if (deg < 67.5) return {emoji:'🌒', name:'Waxing Crescent'};
-    if (deg < 112.5) return {emoji:'🌓', name:'First Quarter'};
-    if (deg < 157.5) return {emoji:'🌔', name:'Waxing Gibbous'};
-    if (deg < 202.5) return {emoji:'🌕', name:'Full Moon'};
-    if (deg < 247.5) return {emoji:'🌖', name:'Waning Gibbous'};
-    if (deg < 292.5) return {emoji:'🌗', name:'Last Quarter'};
-    if (deg < 337.5) return {emoji:'🌘', name:'Waning Crescent'};
-    return {emoji:'🌑', name:'New Moon'};
-  }
-  function nextMondayAfter(date){
-    const dow = date.getDay();
-    let delta = (1 - dow + 7) % 7;
-    if (delta === 0) delta = 7;
-    return addDays(date, delta);
-  }
-  function genCycles(n=20){
-    const cycles=[];
-    const firstStart = dLocal(FIRST_START.y, FIRST_START.m, FIRST_START.d);
-    const firstEnd   = addDays(firstStart, CYCLE_LENGTH - 1);
-    const baseFM     = dLocal(BASE_FULL_MOON.y, BASE_FULL_MOON.m, BASE_FULL_MOON.d);
-    cycles.push({ n:1, fm: baseFM, start:firstStart, end:firstEnd, fixed:true });
-    for(let i=1;i<n;i++){
-      const fm = addDays(baseFM, STEP_DAYS * i);
-      const start = nextMondayAfter(fm);
-      const end   = addDays(start, CYCLE_LENGTH - 1);
-      cycles.push({ n:i+1, fm, start, end });
-    }
-    return cycles;
-  }
-  function pickCycle(cycles, now){
-    for(const c of cycles){ if(now >= c.start && now <= c.end) return c; }
-    for(const c of cycles){ if(now < c.start) return c; }
-    return cycles[cycles.length-1];
-  }
-  function computeRestWindow(cycles, current){
-    const idx = cycles.findIndex(c=>c.n===current.n);
-    const next = idx>=0 ? cycles[idx+1] : null;
-    if(!next) return null;
-    const diffDays = Math.round((next.start - current.end) / DAY_MS);
-    const rest = Math.max(0, diffDays - 1);
-    return { days: rest };
-  }
-
-  const clock   = document.getElementById('clock');
-  const modal   = document.getElementById('modal');
-  const backdrop= document.getElementById('backdrop');
-  const closeBtn= document.getElementById('closeModal');
-  const copyBtn = document.getElementById('copyCycle');
-  const cycleTextEl = document.getElementById('cycleText');
-  const textEl  = document.getElementById('illuminaText');
-  const phaseTag= document.getElementById('phaseTag');
-  const restTag = document.getElementById('restTag');
+  const clock=document.getElementById('clock'),modal=document.getElementById('modal'),backdrop=document.getElementById('backdrop'),closeBtn=document.getElementById('closeModal'),copyBtn=document.getElementById('copyCycle');
+  const textEl=document.getElementById('illuminaText'),phaseTag=document.getElementById('phaseTag'),restTag=document.getElementById('restTag'),cycleTextEl=document.getElementById('cycleText');
 
   function formatIllumina(){
-    const now = new Date();
-    const cycles = genCycles(20);
-    const active = pickCycle(cycles, now);
-    const phase = moonPhase(now);
-
-    let status='';
-    if(now < active.start){
-      const daysTo = Math.ceil((active.start - now)/DAY_MS);
-      status = `starts in ${daysTo} day${daysTo===1?'':'s'}`;
-    } else if(now > active.end){
-      const daysSince = Math.floor((now - active.end)/DAY_MS);
-      status = `ended ${daysSince} day${daysSince===1?'':'s'} ago`;
-    } else {
-      const dayIndex = Math.floor((now - active.start)/DAY_MS)+1;
-      status = `Day ${dayIndex} of ${CYCLE_LENGTH}`;
-    }
-
-    textEl.textContent = `Illumina ${active.n} · ${phase.emoji} ${phase.name} · ${status}`;
-    phaseTag.textContent = `${phase.emoji} ${phase.name}`;
-    cycleTextEl.textContent = `Illumina ${active.n} · ${active.fixed?'starts':'starts Mon'} ${fmtDate(active.start)} → ${fmtDate(active.end)} · ${CYCLE_LENGTH} days`;
-
-    const rest = computeRestWindow(cycles, active);
-    if(rest && rest.days!=null){
-      restTag.textContent = rest.days===0 ? 'Rest window: none' : `Rest window: ${rest.days} day${rest.days===1?'':'s'}`;
-      restTag.style.display = 'inline-block';
-      if(rest.days>0){ restTag.classList.add('glow'); } else { restTag.classList.remove('glow'); }
-    } else {
-      restTag.style.display='none';
-      restTag.classList.remove('glow');
-    }
+    const now=new Date(),cycles=genCycles(20),active=pickCycle(cycles,now),phase=moonPhase(now);let status='';
+    if(now<active.start){const t=Math.ceil((active.start-now)/DAY_MS);status=`starts in ${t} day${t===1?'':'s'}`}else if(now>active.end){const t=Math.floor((now-active.end)/DAY_MS);status=`ended ${t} day${t===1?'':'s'} ago`}else{const d=Math.floor((now-active.start)/DAY_MS)+1;status=`Day ${d} of ${CYCLE_LENGTH}`}
+    textEl.textContent=`Illumina ${active.n} · ${phase.emoji} ${phase.name} · ${status}`;phaseTag.textContent=`${phase.emoji} ${phase.name}`;
+    cycleTextEl.textContent=`Illumina ${active.n} · ${active.fixed?'starts':'starts Mon'} ${fmtDate(active.start)} → ${fmtDate(active.end)} · ${CYCLE_LENGTH} days`;
+    const rest=computeRestWindow(cycles,active);
+    if(rest&&rest.days!=null){restTag.textContent=rest.days===0?'Rest window: none':`Rest window: ${rest.days} day${rest.days===1?'':'s'}`;restTag.style.display='inline-block';restTag.classList.toggle('glow',rest.days>0)}
+    else{restTag.style.display='none';restTag.classList.remove('glow')}
   }
 
-  function openModal(){ backdrop.style.display='block'; modal.style.display='block'; }
-  function closeModal(){ modal.style.display='none'; backdrop.style.display='none'; }
-  function copyCycle(){
-    const t = cycleTextEl.textContent;
-    try{ navigator.clipboard.writeText(t); copyBtn.textContent='Copied'; setTimeout(()=>copyBtn.textContent='Copy cycle',1200);}catch(e){}
-  }
-  clock.addEventListener('click', openModal);
-  clock.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); openModal(); }});
-  closeBtn.addEventListener('click', closeModal);
-  backdrop.addEventListener('click', closeModal);
-  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeModal(); });
-  copyBtn.addEventListener('click', copyCycle);
+  function openModal(){backdrop.style.display='block';modal.style.display='block'}
+  function closeModal(){modal.style.display='none';backdrop.style.display='none'}
+  function copyCycle(){const t=cycleTextEl.textContent;try{navigator.clipboard.writeText(t);copyBtn.textContent='Copied';setTimeout(()=>copyBtn.textContent='Copy cycle',1200)}catch(e){}}
+
+  clock.addEventListener('click',openModal);
+  clock.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openModal()}});
+  closeBtn.addEventListener('click',closeModal);
+  backdrop.addEventListener('click',closeModal);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+  copyBtn.addEventListener('click',copyCycle);
+
   formatIllumina();
-  setInterval(formatIllumina, 30*60*1000);
+  setInterval(formatIllumina,30*60*1000);
 
   /* ---------- Hidden Keys panel + stealth navigation ---------- */
-  const ROOMS = [
-    {id:'mirrorhoney', name:'MirrorHoney', url:'https://mirrorhoney.plnt.earth'},
-    {id:'garlic',      name:'Garlic',      url:'https://garlic.plnt.earth'},
-    {id:'honey',       name:'Honey',       url:''},
-    {id:'froot',       name:'Froot',       url:''},
-    {id:'time',        name:'Time',        url:''},
-    {id:'school',      name:'School',      url:''}
-  ];
-  const KEY_PREFIX = 'pe.keys.'; // localStorage keys like pe.keys.mirrorhoney
-  try{
-    if(!localStorage.getItem(KEY_PREFIX+'mirrorhoney')){
-      localStorage.setItem(KEY_PREFIX+'mirrorhoney','YELLOW'); // preload quietly
-    }
-  }catch(e){}
+  const ROOMS=[{id:'mirrorhoney',name:'MirrorHoney',url:'https://mirrorhoney.plnt.earth'},{id:'garlic',name:'Garlic',url:'https://garlic.plnt.earth'}];
+  const KEY_PREFIX='pe.keys.'; // no preload
 
-  const kback   = document.getElementById('kback');
-  const kmodal  = document.getElementById('kmodal');
-  const closeK  = document.getElementById('closeKeys');
-  const saveK   = document.getElementById('saveKeys');
-  const clearK  = document.getElementById('clearKeys');
-  const grid    = document.getElementById('keysGrid');
-  const badgeEl = document.getElementById('keyBadge');
+  const kback=document.getElementById('kback'),kmodal=document.getElementById('kmodal'),closeK=document.getElementById('closeKeys'),saveK=document.getElementById('saveKeys'),clearK=document.getElementById('clearKeys'),grid=document.getElementById('keysGrid');
+  function renderKeysForm(){grid.innerHTML='';ROOMS.forEach(r=>{const w=document.createElement('div'),lab=document.createElement('label');lab.textContent=r.name+' code';const inp=document.createElement('input');inp.id='key_'+r.id;try{inp.value=localStorage.getItem(KEY_PREFIX+r.id)||''}catch(e){inp.value=''};w.appendChild(lab);w.appendChild(inp);grid.appendChild(w)})}
+  function openKeys(){renderKeysForm();kback.style.display='block';kmodal.style.display='block'}
+  function closeKeys(){kmodal.style.display='none';kback.style.display='none'}
+  closeK.addEventListener('click',closeKeys);
+  kback.addEventListener('click',closeKeys);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeKeys()})
 
-  function renderKeysForm(){
-    grid.innerHTML='';
-    ROOMS.forEach(r=>{
-      const wrap=document.createElement('div');
-      const lab=document.createElement('label'); lab.textContent = r.name + ' code';
-      const inp=document.createElement('input'); inp.id='key_'+r.id;
-      try{ inp.value = localStorage.getItem(KEY_PREFIX+r.id) || ''; }catch(e){ inp.value=''; }
-      wrap.appendChild(lab); wrap.appendChild(inp);
-      grid.appendChild(wrap);
-    });
-  }
-  function openKeys(){ renderKeysForm(); kback.style.display='block'; kmodal.style.display='block'; }
-  function closeKeys(){ kmodal.style.display='none'; kback.style.display='none'; }
-  closeK.addEventListener('click', closeKeys);
-  kback.addEventListener('click', closeKeys);
-  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeKeys(); });
+  saveK.addEventListener('click',()=>{ROOMS.forEach(r=>{const i=document.getElementById('key_'+r.id);if(!i)return;const v=i.value.trim();try{if(v){localStorage.setItem(KEY_PREFIX+r.id,v)}else{localStorage.removeItem(KEY_PREFIX+r.id)}}catch(e){}});saveK.textContent='Saved';setTimeout(()=>saveK.textContent='Save',1000)})
+  clearK.addEventListener('click',()=>{ROOMS.forEach(r=>{try{localStorage.removeItem(KEY_PREFIX+r.id)}catch(e){}});renderKeysForm();clearK.textContent='Cleared';setTimeout(()=>clearK.textContent='Clear',1000)})
 
-  saveK.addEventListener('click', ()=>{
-    ROOMS.forEach(r=>{
-      const inp=document.getElementById('key_'+r.id);
-      if(!inp) return;
-      const v=inp.value.trim();
-      try{
-        if(v){ localStorage.setItem(KEY_PREFIX+r.id, v); }
-        else { localStorage.removeItem(KEY_PREFIX+r.id); }
-      }catch(e){}
-    });
-    saveK.textContent='Saved';
-    setTimeout(()=>saveK.textContent='Save', 1000);
-  });
-  clearK.addEventListener('click', ()=>{
-    ROOMS.forEach(r=>{ try{ localStorage.removeItem(KEY_PREFIX+r.id); }catch(e){} });
-    renderKeysForm();
-    clearK.textContent='Cleared';
-    setTimeout(()=>clearK.textContent='Clear', 1000);
-  });
+  // gesture: triple-click badge or type k e y
+  ;(function(){const badge=document.getElementById('keyBadge');let clicks=0,t=null;badge.addEventListener('click',()=>{clicks++;clearTimeout(t);t=setTimeout(()=>{clicks=0},600);if(clicks>=3){clicks=0;openKeys()}});const seq=['k','e','y'];let pos=0,tt=null;document.addEventListener('keydown',e=>{if(tt)clearTimeout(tt);tt=setTimeout(()=>{pos=0},1000);if(e.key.toLowerCase()===seq[pos]){pos++;if(pos===seq.length){pos=0;openKeys()}}else{pos=0}})})();
 
-  // Stealth open triggers: triple-click badge OR type 'k','e','y'
-  (function(){
-    let clicks=0, timer=null;
-    badgeEl.addEventListener('click', ()=>{
-      clicks++; clearTimeout(timer);
-      timer=setTimeout(()=>{ clicks=0; }, 600);
-      if(clicks>=3){ clicks=0; openKeys(); }
-    });
-    const seq=['k','e','y']; let pos=0, t=null;
-    document.addEventListener('keydown', (e)=>{
-      if(t) clearTimeout(t);
-      t=setTimeout(()=>{ pos=0; }, 1000);
-      if(e.key.toLowerCase()===seq[pos]){ pos++; if(pos===seq.length){ pos=0; openKeys(); } }
-      else { pos=0; }
-    });
-  })();
-
-  // Stealth navigation: append ?key=... only at click-time (left click)
+  // stealth navigate: append ?key=... on click only
   function navigateWithKey(ev){
-    const a = ev.currentTarget;
-    const room = a.getAttribute('data-room');
+    const a=ev.currentTarget, room=a.getAttribute('data-room');
     if(!room) return;
-    // only intercept plain left-clicks (no ctrl/cmd/alt/shift)
-    if(ev.button!==0 || ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey) return;
+    if(ev.button!==0||ev.metaKey||ev.ctrlKey||ev.shiftKey||ev.altKey) return;
     ev.preventDefault();
-    let url = a.getAttribute('href') || '#';
-    let keyVal='';
-    try{ keyVal = localStorage.getItem(KEY_PREFIX+room) || ''; }catch(e){}
-    try{
-      const u = new URL(url);
-      if(keyVal){ u.searchParams.set('key', keyVal); }
-      // navigate
-      location.assign(u.toString());
-    }catch(e){
-      location.assign(url);
-    }
+    let url=a.getAttribute('href')||'#',k='';
+    try{k=localStorage.getItem(KEY_PREFIX+room)||''}catch(e){}
+    try{const u=new URL(url); if(k) u.searchParams.set('key',k); location.assign(u.toString())}
+    catch(e){location.assign(url)}
   }
-  document.querySelectorAll('a[data-room], .cta[data-room]').forEach(a=>{
-    a.addEventListener('click', navigateWithKey);
-  });
+  document.querySelectorAll('a[data-room], .cta[data-room]').forEach(a=>a.addEventListener('click',navigateWithKey));
 </script>
 </body>
 </html>
