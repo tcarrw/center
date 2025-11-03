@@ -14,13 +14,16 @@
   .dot{width:.6rem;height:.6rem;border-radius:50%;background:var(--key);box-shadow:0 0 8px var(--key),0 0 16px rgba(255,212,0,.7)}
   .row{display:flex;gap:10px;flex-wrap:wrap}
   .pill{border:1px solid var(--line);background:var(--glass2);padding:6px 10px;border-radius:999px;font-size:12px;color:#e9dbff;text-decoration:none}
+  .pill.locked{opacity:.55;cursor:not-allowed}
+  .pill.locked:hover{border-color:var(--line)}
   h1{font-size:30px;margin:8px 0 4px;color:#efeaff;letter-spacing:.02em}
   .sub{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#d8c4ff}
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:18px}
   .card{border:1px solid var(--line);background:var(--glass);border-radius:16px;padding:16px;min-height:160px;box-shadow:0 0 24px rgba(184,156,255,.07)}
   .card h3{margin:0 0 8px 0;font-size:18px;color:#f2ecff}
   .card p{margin:8px 0 0 0;line-height:1.6}
-  .cta{display:inline-block;margin-top:12px;padding:10px 14px;border-radius:999px;border:1px solid var(--line);background:var(--glass2);color:var(--fg);text-decoration:none;font-size:14px}
+  .cta{display:inline-block;margin-top:12px;padding:10px 14px;border-radius:999px;border:1px solid var(--line);background:var(--glass2);color:#f7f7ff;text-decoration:none;font-size:14px}
+  .cta[aria-disabled="true"]{opacity:.55;cursor:not-allowed}
   .cta:hover{border-color:rgba(255,255,255,.28)}
   .hr{height:1px;background:var(--line);margin:20px 0}
   .foot{margin-top:22px;font-size:12px;color:#c9bbff}
@@ -42,8 +45,9 @@
   .modal .row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
   .modal .pill{background:rgba(255,255,255,.08)}
   .copybtn{appearance:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#f7f7ff;border-radius:999px;padding:8px 12px;font-size:13px;cursor:pointer}
+  .pill.glow{box-shadow:0 0 10px rgba(255,212,0,.35), 0 0 26px rgba(255,212,0,.18);border-color:rgba(255,212,0,.55);background:rgba(255,212,0,.12);color:#1b1400}
 
-  /* Keys modal (hidden; gesture-open) */
+  /* Hidden Keys modal */
   .kmodal-backdrop{position:fixed;inset:0;z-index:30;display:none;background:rgba(0,0,0,.45);backdrop-filter:blur(2px)}
   .kmodal{position:fixed;z-index:31;display:none;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92vw,620px);border-radius:16px;border:1px solid rgba(255,255,255,.16);background:rgba(20,12,30,.92);box-shadow:0 20px 60px rgba(0,0,0,.5)}
   .kmodal .head{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.12)}
@@ -55,22 +59,26 @@
   .kmodal input{width:100%;padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:#f7f7ff;font-size:14px}
   .kmodal .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
   .kmodal .save{appearance:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#f7f7ff;border-radius:999px;padding:8px 12px;font-size:13px;cursor:pointer}
-  .muted{opacity:.75}
 
-  /* Rest glow */
-  .pill.glow{box-shadow:0 0 10px rgba(255,212,0,.35), 0 0 26px rgba(255,212,0,.18);border-color:rgba(255,212,0,.55);background:rgba(255,212,0,.12);color:#1b1400}
+  /* Earn panel */
+  .earn{position:fixed;right:14px;top:14px;z-index:25;display:none;gap:8px;align-items:center;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);backdrop-filter:blur(8px);border-radius:12px;padding:10px 12px;box-shadow:0 6px 24px rgba(0,0,0,.25);font-size:13px}
+  .earn input{border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.07);color:#f7f7ff;border-radius:8px;padding:6px 8px;font-size:13px;min-width:140px}
+  .earn button{appearance:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#f7f7ff;border-radius:999px;padding:6px 10px;font-size:12px;cursor:pointer}
+  .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:40;display:none;background:rgba(20,12,30,.92);color:#f7f7ff;border:1px solid rgba(255,255,255,.16);padding:10px 14px;border-radius:10px;font-size:13px;box-shadow:0 8px 30px rgba(0,0,0,.45)}
 </style>
 </head>
 <body>
   <div class="wrap">
     <div class="top">
+      <!-- Dot only; word hidden until entered -->
       <div id="keyBadge" class="badge">
         <span class="dot" aria-hidden="true"></span>
         <span id="keyWord" style="display:none"></span>
       </div>
       <div class="row">
         <a class="pill" href="https://mirrorhoney.plnt.earth" data-room="mirrorhoney">MirrorHoney</a>
-        <a class="pill" href="https://garlic.plnt.earth" data-room="garlic">Garlic</a>
+        <a id="garlicLink" class="pill locked" href="https://garlic.plnt.earth" data-room="garlic" aria-disabled="true">Garlic</a>
+        <a class="pill" href="https://four.plnt.earth">Four</a>
       </div>
     </div>
 
@@ -87,15 +95,16 @@
 
       <div class="card">
         <h3>Garlic — Sigrid relay</h3>
-        <p class="safe-wrap">A gentle handoff page for Sigrid. If the color resonates she can pass the key to Marina. Includes ready text and a copy link.</p>
-        <a class="cta" href="https://garlic.plnt.earth" data-room="garlic">Open Garlic</a>
-        <div class="row"><span class="pill">Relay</span><span class="pill">Diamonds welcome</span></div>
+        <p class="safe-wrap">A gentle handoff page for Sigrid. If the color resonates she can pass the key to Marina.</p>
+        <a id="garlicCta" class="cta" href="https://garlic.plnt.earth" data-room="garlic" aria-disabled="true">Open Garlic</a>
+        <div class="row"><span id="garlicStatus" class="pill locked">Locked</span></div>
       </div>
 
       <div class="card">
-        <h3>Center notes</h3>
-        <p class="safe-wrap">Keys change by cycle. If you arrive late the field still holds your place. Visit again when the color feels warm.</p>
-        <div class="row"><span class="pill">Rhythm</span><span class="pill">Kind loops</span></div>
+        <h3>Four — earn a Center code</h3>
+        <p class="safe-wrap">Four can send a quiet visitor here. If they bring the word, Center unlocks more rooms.</p>
+        <a class="cta" href="https://four.plnt.earth">Open Four</a>
+        <div class="row"><span class="pill">Clean link</span><span class="pill">No spoilers</span></div>
       </div>
     </div>
 
@@ -145,8 +154,18 @@
     </div>
   </div>
 
+  <!-- Earn Center code (from Four) -->
+  <div id="earn" class="earn" aria-live="polite">
+    <span>Center code:</span>
+    <input id="earnInput" type="text" placeholder="enter word">
+    <button id="earnSave" type="button">Save</button>
+  </div>
+
+  <!-- Soft toast -->
+  <div id="toast" class="toast">This room unlocks after you enter the Center code.</div>
+
 <script>
-  /* ---------- Illumina calendar ---------- */
+  /* ---------- Illumina calendar (same logic as before) ---------- */
   const FIRST_START={y:2025,m:11,d:5}, BASE_FULL_MOON={y:2025,m:11,d:5}, SYNODIC=29.530588853, STEP_DAYS=SYNODIC*2, CYCLE_LENGTH=42, DAY_MS=86400000;
   function dLocal(y,m,d){return new Date(y,m-1,d)} function addDays(t,n){return new Date(t.getTime()+n*DAY_MS)}
   function fmtDate(d){return d.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'})}
@@ -166,51 +185,77 @@
     if(now<active.start){const t=Math.ceil((active.start-now)/DAY_MS);status=`starts in ${t} day${t===1?'':'s'}`}else if(now>active.end){const t=Math.floor((now-active.end)/DAY_MS);status=`ended ${t} day${t===1?'':'s'} ago`}else{const d=Math.floor((now-active.start)/DAY_MS)+1;status=`Day ${d} of ${CYCLE_LENGTH}`}
     textEl.textContent=`Illumina ${active.n} · ${phase.emoji} ${phase.name} · ${status}`;phaseTag.textContent=`${phase.emoji} ${phase.name}`;
     cycleTextEl.textContent=`Illumina ${active.n} · ${active.fixed?'starts':'starts Mon'} ${fmtDate(active.start)} → ${fmtDate(active.end)} · ${CYCLE_LENGTH} days`;
-    const rest=computeRestWindow(cycles,active);
-    if(rest&&rest.days!=null){restTag.textContent=rest.days===0?'Rest window: none':`Rest window: ${rest.days} day${rest.days===1?'':'s'}`;restTag.style.display='inline-block';restTag.classList.toggle('glow',rest.days>0)}
-    else{restTag.style.display='none';restTag.classList.remove('glow')}
+    const rest=computeRestWindow(cycles,active);if(rest&&rest.days!=null){restTag.textContent=rest.days===0?'Rest window: none':`Rest window: ${rest.days} day${rest.days===1?'':'s'}`;restTag.style.display='inline-block';restTag.classList.toggle('glow',rest.days>0)}else{restTag.style.display='none';restTag.classList.remove('glow')}
   }
-
   function openModal(){backdrop.style.display='block';modal.style.display='block'}
   function closeModal(){modal.style.display='none';backdrop.style.display='none'}
   function copyCycle(){const t=cycleTextEl.textContent;try{navigator.clipboard.writeText(t);copyBtn.textContent='Copied';setTimeout(()=>copyBtn.textContent='Copy cycle',1200)}catch(e){}}
-
-  clock.addEventListener('click',openModal);
-  clock.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openModal()}});
-  closeBtn.addEventListener('click',closeModal);
-  backdrop.addEventListener('click',closeModal);
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
-  copyBtn.addEventListener('click',copyCycle);
-
-  formatIllumina();
-  setInterval(formatIllumina,30*60*1000);
+  clock.addEventListener('click',openModal);clock.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openModal()}});closeBtn.addEventListener('click',closeModal);backdrop.addEventListener('click',closeModal);document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});copyBtn.addEventListener('click',copyCycle);formatIllumina();setInterval(formatIllumina,30*60*1000);
 
   /* ---------- Hidden Keys panel + stealth navigation ---------- */
   const ROOMS=[{id:'mirrorhoney',name:'MirrorHoney',url:'https://mirrorhoney.plnt.earth'},{id:'garlic',name:'Garlic',url:'https://garlic.plnt.earth'}];
-  const KEY_PREFIX='pe.keys.'; // no preload
+  const KEY_PREFIX='pe.keys.'; // room keys
+  const CENTER_CODE_KEY='pe.center.code'; // center code
 
-  const kback=document.getElementById('kback'),kmodal=document.getElementById('kmodal'),closeK=document.getElementById('closeKeys'),saveK=document.getElementById('saveKeys'),clearK=document.getElementById('clearKeys'),grid=document.getElementById('keysGrid');
+  // Hidden keys modal (triple-click dot or type k e y)
+  const kback=document.getElementById('kback'),kmodal=document.getElementById('kmodal'),closeK=document.getElementById('closeKeys'),saveK=document.getElementById('saveKeys'),clearK=document.getElementById('clearKeys'),grid=document.getElementById('keysGrid'),badge=document.getElementById('keyBadge'),keyWord=document.getElementById('keyWord');
   function renderKeysForm(){grid.innerHTML='';ROOMS.forEach(r=>{const w=document.createElement('div'),lab=document.createElement('label');lab.textContent=r.name+' code';const inp=document.createElement('input');inp.id='key_'+r.id;try{inp.value=localStorage.getItem(KEY_PREFIX+r.id)||''}catch(e){inp.value=''};w.appendChild(lab);w.appendChild(inp);grid.appendChild(w)})}
   function openKeys(){renderKeysForm();kback.style.display='block';kmodal.style.display='block'}
   function closeKeys(){kmodal.style.display='none';kback.style.display='none'}
-  closeK.addEventListener('click',closeKeys);
-  kback.addEventListener('click',closeKeys);
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeKeys()})
-
+  closeK.addEventListener('click',closeKeys);kback.addEventListener('click',closeKeys);document.addEventListener('keydown',e=>{if(e.key==='Escape')closeKeys()})
+  ;(function(){let clicks=0,t=null;badge.addEventListener('click',()=>{clicks++;clearTimeout(t);t=setTimeout(()=>{clicks=0},600);if(clicks>=3){clicks=0;openKeys()}});const seq=['k','e','y'];let pos=0,tt=null;document.addEventListener('keydown',e=>{if(tt)clearTimeout(tt);tt=setTimeout(()=>{pos=0},1000);if(e.key.toLowerCase()===seq[pos]){pos++;if(pos===seq.length){pos=0;openKeys()}}else{pos=0}})})()
   saveK.addEventListener('click',()=>{ROOMS.forEach(r=>{const i=document.getElementById('key_'+r.id);if(!i)return;const v=i.value.trim();try{if(v){localStorage.setItem(KEY_PREFIX+r.id,v)}else{localStorage.removeItem(KEY_PREFIX+r.id)}}catch(e){}});saveK.textContent='Saved';setTimeout(()=>saveK.textContent='Save',1000)})
   clearK.addEventListener('click',()=>{ROOMS.forEach(r=>{try{localStorage.removeItem(KEY_PREFIX+r.id)}catch(e){}});renderKeysForm();clearK.textContent='Cleared';setTimeout(()=>clearK.textContent='Clear',1000)})
 
-  // gesture: triple-click badge or type k e y
-  ;(function(){const badge=document.getElementById('keyBadge');let clicks=0,t=null;badge.addEventListener('click',()=>{clicks++;clearTimeout(t);t=setTimeout(()=>{clicks=0},600);if(clicks>=3){clicks=0;openKeys()}});const seq=['k','e','y'];let pos=0,tt=null;document.addEventListener('keydown',e=>{if(tt)clearTimeout(tt);tt=setTimeout(()=>{pos=0},1000);if(e.key.toLowerCase()===seq[pos]){pos++;if(pos===seq.length){pos=0;openKeys()}}else{pos=0}})})();
+  // Earn Center code (shown when coming from Four)
+  const earn=document.getElementById('earn'),earnInput=document.getElementById('earnInput'),earnSave=document.getElementById('earnSave');
+  (function(){
+    const url=new URL(location.href); const from=url.searchParams.get('from'); const ref=document.referrer;
+    // Show earn panel if from=four or referrer has four.plnt.earth and no code yet
+    let hasCode=false; try{hasCode=!!localStorage.getItem(CENTER_CODE_KEY)}catch(e){}
+    if(!hasCode && (from==='four' || /\/\/four\.plnt\.earth\/?/i.test(ref))){ earn.style.display='flex'; }
+  })();
+  earnSave.addEventListener('click',()=>{
+    const v=(earnInput.value||'').trim(); if(!v) return;
+    try{ localStorage.setItem(CENTER_CODE_KEY, v); }catch(e){}
+    earn.style.display='none';
+    // reveal word softly near the dot (center-only; optional)
+    keyWord.textContent=v; keyWord.style.display='inline';
+    updateGarlicGate();
+  });
 
-  // stealth navigate: append ?key=... on click only
+  // Gate Garlic: require center code before allowing navigation
+  const garlicLink=document.getElementById('garlicLink'), garlicCta=document.getElementById('garlicCta'), garlicStatus=document.getElementById('garlicStatus'), toast=document.getElementById('toast');
+  function showToast(msg){ toast.textContent=msg; toast.style.display='block'; setTimeout(()=>{toast.style.display='none'}, 1400); }
+  function updateGarlicGate(){
+    let hasCode=false; try{hasCode=!!localStorage.getItem(CENTER_CODE_KEY)}catch(e){}
+    [garlicLink, garlicCta].forEach(a=>{
+      if(!a) return;
+      if(hasCode){ a.classList.remove('locked'); a.setAttribute('aria-disabled','false'); }
+      else { a.classList.add('locked'); a.setAttribute('aria-disabled','true'); }
+    });
+    if(garlicStatus){
+      garlicStatus.textContent = hasCode ? 'Unlocked' : 'Locked';
+      garlicStatus.classList.toggle('locked', !hasCode);
+    }
+  }
+  updateGarlicGate();
+
+  // Stealth navigation: append room key on click; but block Garlic if no center code
   function navigateWithKey(ev){
     const a=ev.currentTarget, room=a.getAttribute('data-room');
     if(!room) return;
+    const isGarlic = room==='garlic';
+    let hasCode=false; try{hasCode=!!localStorage.getItem(CENTER_CODE_KEY)}catch(e){}
+    if(isGarlic && !hasCode){
+      ev.preventDefault();
+      showToast('This room unlocks after you enter the Center code.');
+      return;
+    }
     if(ev.button!==0||ev.metaKey||ev.ctrlKey||ev.shiftKey||ev.altKey) return;
     ev.preventDefault();
     let url=a.getAttribute('href')||'#',k='';
-    try{k=localStorage.getItem(KEY_PREFIX+room)||''}catch(e){}
+    try{k=localStorage.getItem('pe.keys.'+room)||''}catch(e){}
     try{const u=new URL(url); if(k) u.searchParams.set('key',k); location.assign(u.toString())}
     catch(e){location.assign(url)}
   }
