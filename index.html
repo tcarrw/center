@@ -60,7 +60,7 @@
   .kmodal .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
   .kmodal .save{appearance:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#f7f7ff;border-radius:999px;padding:8px 12px;font-size:13px;cursor:pointer}
 
-  /* Earn panel */
+  /* Earn Center code */
   .earn{position:fixed;right:14px;top:14px;z-index:25;display:none;gap:8px;align-items:center;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);backdrop-filter:blur(8px);border-radius:12px;padding:10px 12px;box-shadow:0 6px 24px rgba(0,0,0,.25);font-size:13px}
   .earn input{border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.07);color:#f7f7ff;border-radius:8px;padding:6px 8px;font-size:13px;min-width:140px}
   .earn button{appearance:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#f7f7ff;border-radius:999px;padding:6px 10px;font-size:12px;cursor:pointer}
@@ -78,6 +78,8 @@
       <div class="row">
         <a class="pill" href="https://mirrorhoney.plnt.earth" data-room="mirrorhoney">MirrorHoney</a>
         <a id="garlicLink" class="pill locked" href="https://garlic.plnt.earth" data-room="garlic" aria-disabled="true">Garlic</a>
+        <a class="pill" href="https://earth.plnt.earth" data-room="earth">Earth</a>
+        <a id="dagnyLink" class="pill locked" href="https://earth.plnt.earth/dagny" data-room="dagny" aria-disabled="true">Dagny</a>
         <a class="pill" href="https://four.plnt.earth">Four</a>
       </div>
     </div>
@@ -98,6 +100,20 @@
         <p class="safe-wrap">A gentle handoff page for Sigrid. If the color resonates she can pass the key to Marina.</p>
         <a id="garlicCta" class="cta" href="https://garlic.plnt.earth" data-room="garlic" aria-disabled="true">Open Garlic</a>
         <div class="row"><span id="garlicStatus" class="pill locked">Locked</span></div>
+      </div>
+
+      <div class="card">
+        <h3>Earth — open</h3>
+        <p class="safe-wrap">Public landing. Clean previews and handoffs.</p>
+        <a class="cta" href="https://earth.plnt.earth" data-room="earth">Open Earth</a>
+        <div class="row"><span class="pill">Public</span><span class="pill">No key</span></div>
+      </div>
+
+      <div class="card">
+        <h3>Dagny — intentional entry</h3>
+        <p class="safe-wrap">Opens after a Center code or a Dagny code. Keeps her path deliberate.</p>
+        <a id="dagnyCta" class="cta" href="https://earth.plnt.earth/dagny" data-room="dagny" aria-disabled="true">Open Dagny</a>
+        <div class="row"><span id="dagnyStatus" class="pill locked">Locked</span></div>
       </div>
 
       <div class="card">
@@ -133,7 +149,7 @@
         <span id="phaseTag" class="pill">Phase</span>
         <span id="restTag" class="pill">Rest window</span>
       </div>
-      <div class="hint muted" style="margin-top:8px">Rest window = days between one cycle ending and the next beginning.</div>
+      <div class="hint" style="margin-top:8px;opacity:.7">Rest window = days between one cycle ending and the next beginning.</div>
     </div>
   </div>
 
@@ -145,7 +161,7 @@
       <button id="closeKeys" class="close" type="button">Close</button>
     </div>
     <div id="kBody" class="body">
-      <p class="muted" style="margin-top:0">Set a code per room. Saved only on this device. Applied on click.</p>
+      <p style="margin-top:0;opacity:.75">Set a code per room. Saved only on this device. Applied on click.</p>
       <div class="grid" id="keysGrid"></div>
       <div class="row">
         <button id="saveKeys" class="save" type="button">Save</button>
@@ -154,7 +170,7 @@
     </div>
   </div>
 
-  <!-- Earn Center code (from Four) -->
+  <!-- Earn Center code (appears from Four/referrer) -->
   <div id="earn" class="earn" aria-live="polite">
     <span>Center code:</span>
     <input id="earnInput" type="text" placeholder="enter word">
@@ -162,10 +178,10 @@
   </div>
 
   <!-- Soft toast -->
-  <div id="toast" class="toast">This room unlocks after you enter the Center code.</div>
+  <div id="toast" class="toast">This room unlocks after you enter the code.</div>
 
 <script>
-  /* ---------- Illumina calendar (same logic as before) ---------- */
+  /* ---------- Illumina calendar ---------- */
   const FIRST_START={y:2025,m:11,d:5}, BASE_FULL_MOON={y:2025,m:11,d:5}, SYNODIC=29.530588853, STEP_DAYS=SYNODIC*2, CYCLE_LENGTH=42, DAY_MS=86400000;
   function dLocal(y,m,d){return new Date(y,m-1,d)} function addDays(t,n){return new Date(t.getTime()+n*DAY_MS)}
   function fmtDate(d){return d.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'})}
@@ -182,36 +198,54 @@
 
   function formatIllumina(){
     const now=new Date(),cycles=genCycles(20),active=pickCycle(cycles,now),phase=moonPhase(now);let status='';
-    if(now<active.start){const t=Math.ceil((active.start-now)/DAY_MS);status=`starts in ${t} day${t===1?'':'s'}`}else if(now>active.end){const t=Math.floor((now-active.end)/DAY_MS);status=`ended ${t} day${t===1?'':'s'} ago`}else{const d=Math.floor((now-active.start)/DAY_MS)+1;status=`Day ${d} of ${CYCLE_LENGTH}`}
-    textEl.textContent=`Illumina ${active.n} · ${phase.emoji} ${phase.name} · ${status}`;phaseTag.textContent=`${phase.emoji} ${phase.name}`;
+    if(now<active.start){const t=Math.ceil((active.start-now)/DAY_MS);status=`starts in ${t} day${t===1?'':'s'}`}
+    else if(now>active.end){const t=Math.floor((now-active.end)/DAY_MS);status=`ended ${t} day${t===1?'':'s'} ago`}
+    else{const d=Math.floor((now-active.start)/DAY_MS)+1;status=`Day ${d} of ${CYCLE_LENGTH}`}
+    textEl.textContent=`Illumina ${active.n} · ${phase.emoji} ${phase.name} · ${status}`;
+    phaseTag.textContent=`${phase.emoji} ${phase.name}`;
     cycleTextEl.textContent=`Illumina ${active.n} · ${active.fixed?'starts':'starts Mon'} ${fmtDate(active.start)} → ${fmtDate(active.end)} · ${CYCLE_LENGTH} days`;
-    const rest=computeRestWindow(cycles,active);if(rest&&rest.days!=null){restTag.textContent=rest.days===0?'Rest window: none':`Rest window: ${rest.days} day${rest.days===1?'':'s'}`;restTag.style.display='inline-block';restTag.classList.toggle('glow',rest.days>0)}else{restTag.style.display='none';restTag.classList.remove('glow')}
+    const rest=computeRestWindow(cycles,active);
+    if(rest&&rest.days!=null){restTag.textContent=rest.days===0?'Rest window: none':`Rest window: ${rest.days} day${rest.days===1?'':'s'}`;restTag.style.display='inline-block';restTag.classList.toggle('glow',rest.days>0)}
+    else{restTag.style.display='none';restTag.classList.remove('glow')}
   }
   function openModal(){backdrop.style.display='block';modal.style.display='block'}
   function closeModal(){modal.style.display='none';backdrop.style.display='none'}
   function copyCycle(){const t=cycleTextEl.textContent;try{navigator.clipboard.writeText(t);copyBtn.textContent='Copied';setTimeout(()=>copyBtn.textContent='Copy cycle',1200)}catch(e){}}
-  clock.addEventListener('click',openModal);clock.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openModal()}});closeBtn.addEventListener('click',closeModal);backdrop.addEventListener('click',closeModal);document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});copyBtn.addEventListener('click',copyCycle);formatIllumina();setInterval(formatIllumina,30*60*1000);
+  clock.addEventListener('click',openModal);
+  clock.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openModal()}});
+  closeBtn.addEventListener('click',closeModal);
+  backdrop.addEventListener('click',closeModal);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+  copyBtn.addEventListener('click',copyCycle);
+  formatIllumina();
+  setInterval(formatIllumina,30*60*1000);
 
   /* ---------- Hidden Keys panel + stealth navigation ---------- */
-  const ROOMS=[{id:'mirrorhoney',name:'MirrorHoney',url:'https://mirrorhoney.plnt.earth'},{id:'garlic',name:'Garlic',url:'https://garlic.plnt.earth'}];
-  const KEY_PREFIX='pe.keys.'; // room keys
-  const CENTER_CODE_KEY='pe.center.code'; // center code
+  const ROOMS=[
+    {id:'mirrorhoney',name:'MirrorHoney',url:'https://mirrorhoney.plnt.earth'},
+    {id:'garlic',     name:'Garlic',     url:'https://garlic.plnt.earth'},
+    {id:'earth',      name:'Earth',      url:'https://earth.plnt.earth'},
+    {id:'dagny',      name:'Dagny',      url:'https://earth.plnt.earth/dagny'}
+  ];
+  const KEY_PREFIX='pe.keys.';
+  const CENTER_CODE_KEY='pe.center.code';
 
-  // Hidden keys modal (triple-click dot or type k e y)
   const kback=document.getElementById('kback'),kmodal=document.getElementById('kmodal'),closeK=document.getElementById('closeKeys'),saveK=document.getElementById('saveKeys'),clearK=document.getElementById('clearKeys'),grid=document.getElementById('keysGrid'),badge=document.getElementById('keyBadge'),keyWord=document.getElementById('keyWord');
+
   function renderKeysForm(){grid.innerHTML='';ROOMS.forEach(r=>{const w=document.createElement('div'),lab=document.createElement('label');lab.textContent=r.name+' code';const inp=document.createElement('input');inp.id='key_'+r.id;try{inp.value=localStorage.getItem(KEY_PREFIX+r.id)||''}catch(e){inp.value=''};w.appendChild(lab);w.appendChild(inp);grid.appendChild(w)})}
   function openKeys(){renderKeysForm();kback.style.display='block';kmodal.style.display='block'}
   function closeKeys(){kmodal.style.display='none';kback.style.display='none'}
-  closeK.addEventListener('click',closeKeys);kback.addEventListener('click',closeKeys);document.addEventListener('keydown',e=>{if(e.key==='Escape')closeKeys()})
-  ;(function(){let clicks=0,t=null;badge.addEventListener('click',()=>{clicks++;clearTimeout(t);t=setTimeout(()=>{clicks=0},600);if(clicks>=3){clicks=0;openKeys()}});const seq=['k','e','y'];let pos=0,tt=null;document.addEventListener('keydown',e=>{if(tt)clearTimeout(tt);tt=setTimeout(()=>{pos=0},1000);if(e.key.toLowerCase()===seq[pos]){pos++;if(pos===seq.length){pos=0;openKeys()}}else{pos=0}})})()
-  saveK.addEventListener('click',()=>{ROOMS.forEach(r=>{const i=document.getElementById('key_'+r.id);if(!i)return;const v=i.value.trim();try{if(v){localStorage.setItem(KEY_PREFIX+r.id,v)}else{localStorage.removeItem(KEY_PREFIX+r.id)}}catch(e){}});saveK.textContent='Saved';setTimeout(()=>saveK.textContent='Save',1000)})
-  clearK.addEventListener('click',()=>{ROOMS.forEach(r=>{try{localStorage.removeItem(KEY_PREFIX+r.id)}catch(e){}});renderKeysForm();clearK.textContent='Cleared';setTimeout(()=>clearK.textContent='Clear',1000)})
+  closeK.addEventListener('click',closeKeys);
+  kback.addEventListener('click',closeKeys);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeKeys()});
+  (function(){let clicks=0,t=null;badge.addEventListener('click',()=>{clicks++;clearTimeout(t);t=setTimeout(()=>{clicks=0},600);if(clicks>=3){clicks=0;openKeys()}});const seq=['k','e','y'];let pos=0,tt=null;document.addEventListener('keydown',e=>{if(tt)clearTimeout(tt);tt=setTimeout(()=>{pos=0},1000);if(e.key.toLowerCase()===seq[pos]){pos++;if(pos===seq.length){pos=0;openKeys()}}else{pos=0}})})();
+  saveK.addEventListener('click',()=>{ROOMS.forEach(r=>{const i=document.getElementById('key_'+r.id);if(!i)return;const v=i.value.trim();try{if(v){localStorage.setItem(KEY_PREFIX+r.id,v)}else{localStorage.removeItem(KEY_PREFIX+r.id)}}catch(e){}});saveK.textContent='Saved';setTimeout(()=>saveK.textContent='Save',1000)});
+  clearK.addEventListener('click',()=>{ROOMS.forEach(r=>{try{localStorage.removeItem(KEY_PREFIX+r.id)}catch(e){}});renderKeysForm();clearK.textContent='Cleared';setTimeout(()=>clearK.textContent='Clear',1000)});
 
-  // Earn Center code (shown when coming from Four)
+  /* ---------- Earn Center code (from Four/referrer) ---------- */
   const earn=document.getElementById('earn'),earnInput=document.getElementById('earnInput'),earnSave=document.getElementById('earnSave');
   (function(){
     const url=new URL(location.href); const from=url.searchParams.get('from'); const ref=document.referrer;
-    // Show earn panel if from=four or referrer has four.plnt.earth and no code yet
     let hasCode=false; try{hasCode=!!localStorage.getItem(CENTER_CODE_KEY)}catch(e){}
     if(!hasCode && (from==='four' || /\/\/four\.plnt\.earth\/?/i.test(ref))){ earn.style.display='flex'; }
   })();
@@ -219,45 +253,67 @@
     const v=(earnInput.value||'').trim(); if(!v) return;
     try{ localStorage.setItem(CENTER_CODE_KEY, v); }catch(e){}
     earn.style.display='none';
-    // reveal word softly near the dot (center-only; optional)
+    // quietly show word by the dot on this device
     keyWord.textContent=v; keyWord.style.display='inline';
-    updateGarlicGate();
+    updateGarlicGate(); updateDagnyGate();
   });
 
-  // Gate Garlic: require center code before allowing navigation
-  const garlicLink=document.getElementById('garlicLink'), garlicCta=document.getElementById('garlicCta'), garlicStatus=document.getElementById('garlicStatus'), toast=document.getElementById('toast');
-  function showToast(msg){ toast.textContent=msg; toast.style.display='block'; setTimeout(()=>{toast.style.display='none'}, 1400); }
-  function updateGarlicGate(){
-    let hasCode=false; try{hasCode=!!localStorage.getItem(CENTER_CODE_KEY)}catch(e){}
-    [garlicLink, garlicCta].forEach(a=>{
-      if(!a) return;
-      if(hasCode){ a.classList.remove('locked'); a.setAttribute('aria-disabled','false'); }
-      else { a.classList.add('locked'); a.setAttribute('aria-disabled','true'); }
-    });
-    if(garlicStatus){
-      garlicStatus.textContent = hasCode ? 'Unlocked' : 'Locked';
-      garlicStatus.classList.toggle('locked', !hasCode);
-    }
-  }
-  updateGarlicGate();
+  /* ---------- Gates ---------- */
+  const garlicLink=document.getElementById('garlicLink'), garlicCta=document.getElementById('garlicCta'), garlicStatus=document.getElementById('garlicStatus');
+  const dagnyLink=document.getElementById('dagnyLink'), dagnyCta=document.getElementById('dagnyCta'), dagnyStatus=document.getElementById('dagnyStatus');
+  const toast=document.getElementById('toast');
 
-  // Stealth navigation: append room key on click; but block Garlic if no center code
+  function showToast(msg){ toast.textContent=msg; toast.style.display='block'; setTimeout(()=>{toast.style.display='none'}, 1400); }
+  function hasCenterCode(){ try{ return !!localStorage.getItem(CENTER_CODE_KEY); }catch(e){ return false; } }
+  function hasDagnyKey(){ try{ return !!localStorage.getItem(KEY_PREFIX+'dagny'); }catch(e){ return false; } }
+
+  function setLocked(el, locked){
+    if(!el) return;
+    if(locked){ el.classList.add('locked'); el.setAttribute('aria-disabled','true'); }
+    else      { el.classList.remove('locked'); el.setAttribute('aria-disabled','false'); }
+  }
+  function updateGarlicGate(){
+    const ok = hasCenterCode();
+    [garlicLink, garlicCta].forEach(el=>setLocked(el, !ok));
+    if(garlicStatus){ garlicStatus.textContent = ok ? 'Unlocked' : 'Locked'; garlicStatus.classList.toggle('locked', !ok); }
+  }
+  function updateDagnyGate(){
+    const ok = hasCenterCode() || hasDagnyKey();
+    [dagnyLink, dagnyCta].forEach(el=>setLocked(el, !ok));
+    if(dagnyStatus){ dagnyStatus.textContent = ok ? 'Unlocked' : 'Locked'; dagnyStatus.classList.toggle('locked', !ok); }
+  }
+  updateGarlicGate(); updateDagnyGate();
+
+  /* ---------- Stealth navigation (append ?key=... on click) ---------- */
   function navigateWithKey(ev){
     const a=ev.currentTarget, room=a.getAttribute('data-room');
     if(!room) return;
+
+    // block if gated
     const isGarlic = room==='garlic';
-    let hasCode=false; try{hasCode=!!localStorage.getItem(CENTER_CODE_KEY)}catch(e){}
-    if(isGarlic && !hasCode){
+    const isDagny  = room==='dagny';
+    let blocked=false;
+    if(isGarlic) blocked = !hasCenterCode();
+    if(isDagny)  blocked = !(hasCenterCode() || hasDagnyKey());
+    if(blocked){
       ev.preventDefault();
-      showToast('This room unlocks after you enter the Center code.');
+      showToast('This room unlocks after you enter the code.');
       return;
     }
-    if(ev.button!==0||ev.metaKey||ev.ctrlKey||ev.shiftKey||ev.altKey) return;
+
+    // only left-click without modifiers
+    if(ev.button!==0 || ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey) return;
     ev.preventDefault();
-    let url=a.getAttribute('href')||'#',k='';
-    try{k=localStorage.getItem('pe.keys.'+room)||''}catch(e){}
-    try{const u=new URL(url); if(k) u.searchParams.set('key',k); location.assign(u.toString())}
-    catch(e){location.assign(url)}
+
+    let url=a.getAttribute('href')||'#', k='';
+    try{ k = localStorage.getItem(KEY_PREFIX+room) || ''; }catch(e){}
+    try{
+      const u=new URL(url);
+      if(k) u.searchParams.set('key', k);
+      location.assign(u.toString());
+    }catch(e){
+      location.assign(url);
+    }
   }
   document.querySelectorAll('a[data-room], .cta[data-room]').forEach(a=>a.addEventListener('click',navigateWithKey));
 </script>
