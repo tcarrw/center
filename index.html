@@ -1,321 +1,360 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>center · plnt.earth</title>
-<meta name="theme-color" content="#0b0013">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Center · Index</title>
+<meta name="theme-color" content="#7d66ff" />
+<meta name="description" content="Center · Keys and rooms across Illumina." />
 <style>
-  :root{--bg:#0b0013;--fg:#f7f7ff;--line:rgba(255,255,255,.12);--glass:rgba(255,255,255,.05);--glass2:rgba(255,255,255,.08);--key:#ffd400}
-  html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Helvetica,Arial,sans-serif}
-  .wrap{max-width:1100px;margin:0 auto;padding:28px 18px 56px}
-  .top{position:sticky;top:0;z-index:5;display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 0;background:linear-gradient(to bottom, rgba(11,0,19,.9), rgba(11,0,19,0))}
-  .badge{display:flex;align-items:center;gap:.5rem;border:1px dashed rgba(255,255,255,.25);background:rgba(255,212,0,.12);color:#1b1400;padding:8px 12px;border-radius:999px;font-size:.9rem;user-select:none;cursor:default}
-  .dot{width:.6rem;height:.6rem;border-radius:50%;background:var(--key);box-shadow:0 0 8px var(--key),0 0 16px rgba(255,212,0,.7)}
-  .row{display:flex;gap:10px;flex-wrap:wrap}
-  .pill{border:1px solid var(--line);background:var(--glass2);padding:6px 10px;border-radius:999px;font-size:12px;color:#e9dbff;text-decoration:none}
-  .pill.locked{opacity:.55;cursor:not-allowed}
-  .pill.locked:hover{border-color:var(--line)}
-  h1{font-size:30px;margin:8px 0 4px;color:#efeaff;letter-spacing:.02em}
-  .sub{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#d8c4ff}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:18px}
-  .card{border:1px solid var(--line);background:var(--glass);border-radius:16px;padding:16px;min-height:160px;box-shadow:0 0 24px rgba(184,156,255,.07)}
-  .card h3{margin:0 0 8px 0;font-size:18px;color:#f2ecff}
-  .card p{margin:8px 0 0 0;line-height:1.6}
-  .cta{display:inline-block;margin-top:12px;padding:10px 14px;border-radius:999px;border:1px solid var(--line);background:var(--glass2);color:#f7f7ff;text-decoration:none;font-size:14px}
-  .cta[aria-disabled="true"]{opacity:.55;cursor:not-allowed}
-  .cta:hover{border-color:rgba(255,255,255,.28)}
-  .hr{height:1px;background:var(--line);margin:20px 0}
-  .foot{margin-top:22px;font-size:12px;color:#c9bbff}
-  .safe-wrap{word-break:break-word;overflow-wrap:anywhere}
+  :root{
+    --bg-0:#0f0b1a; --bg-1:#181334; --bg-2:#231c44;
+    --ink:#e8e6ff; --ink-d:#cfcaff; --accent:#a48cff; --pearl:#faf8ff;
+  }
+  html,body{height:100%;margin:0}
+  body{
+    min-height:100%;
+    background:
+      radial-gradient(900px 600px at 70% 10%, #2d225d 0%, var(--bg-2) 38%, var(--bg-1) 64%, var(--bg-0) 100%),
+      linear-gradient(180deg, #0b0916, #0f0b1a);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Helvetica Neue", Helvetica;
+    color:var(--ink);
+    -webkit-font-smoothing: antialiased;
+    letter-spacing:.15px;
+    display:flex; flex-direction:column;
+  }
+  header, footer{
+    padding: clamp(12px, 3vw, 22px);
+    color: var(--ink-d);
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+  }
+  .brand{font-weight:700; color:var(--pearl)}
+  .crumbs a{color:var(--ink-d); text-decoration:none; border-bottom:1px dotted #cfc9ff66}
 
-  /* Floating clock */
-  .illumina-clock{position:fixed;right:14px;bottom:14px;z-index:20;display:flex;align-items:center;gap:.6rem;cursor:pointer;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);backdrop-filter:blur(8px);border-radius:14px;padding:10px 12px;max-width:76vw;box-shadow:0 6px 24px rgba(0,0,0,.25);font-size:13px;line-height:1.35}
-  .illumina-clock .pulse{width:.7rem;height:.7rem;border-radius:50%;background:var(--key);box-shadow:0 0 6px var(--key),0 0 14px rgba(255,212,0,.65);animation:blink 3.2s ease-in-out infinite;flex:0 0 auto}
-  @keyframes blink{0%,100%{transform:scale(1);box-shadow:0 0 6px var(--key),0 0 14px rgba(255,212,0,.65)}50%{transform:scale(1.16);box-shadow:0 0 9px var(--key),0 0 24px rgba(255,212,0,.9)}}
-  @media (prefers-reduced-motion:reduce){.illumina-clock .pulse{animation:none}}
+  .grid{
+    width:min(1100px, 94vw);
+    margin: 0 auto;
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: clamp(12px, 2.4vw, 22px);
+    padding: clamp(12px, 3vw, 28px);
+  }
 
-  /* Cycle modal */
-  .modal-backdrop{position:fixed;inset:0;z-index:30;display:none;background:rgba(0,0,0,.45);backdrop-filter:blur(2px)}
-  .modal{position:fixed;z-index:31;display:none;left:50%;top:50%;transform:translate(-50%,-50%);width:min(90vw,560px);border-radius:16px;border:1px solid rgba(255,255,255,.16);background:rgba(20,12,30,.92);box-shadow:0 20px 60px rgba(0,0,0,.5)}
-  .modal .head{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.12)}
-  .modal .title{font-size:16px;color:#efeaff;letter-spacing:.02em}
-  .modal .close{appearance:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#f7f7ff;border-radius:10px;padding:6px 10px;cursor:pointer;font-size:13px}
-  .modal .body{padding:14px 16px;color:#eae2ff;font-size:14px}
-  .modal .row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-  .modal .pill{background:rgba(255,255,255,.08)}
-  .copybtn{appearance:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#f7f7ff;border-radius:999px;padding:8px 12px;font-size:13px;cursor:pointer}
-  .pill.glow{box-shadow:0 0 10px rgba(255,212,0,.35), 0 0 26px rgba(255,212,0,.18);border-color:rgba(255,212,0,.55);background:rgba(255,212,0,.12);color:#1b1400}
+  /* Tile (shared styles) */
+  .tile{
+    position:relative;
+    border-radius:20px;
+    padding:18px;
+    background: linear-gradient(180deg, #ffffff10, #ffffff07);
+    border:1px solid #ffffff1f;
+    box-shadow: 0 18px 60px #00000085, inset 0 0 0 1px #ffffff16, inset 0 0 120px #a48cff12;
+    backdrop-filter: blur(8px) saturate(115%);
+    -webkit-backdrop-filter: blur(8px) saturate(115%);
+    overflow:hidden; isolation:isolate;
+  }
+  .tile::before{
+    content:""; position:absolute; inset:0;
+    background:
+      linear-gradient(118deg, transparent 0 38%, #ffffff14 40%, #ffffff08 43%, transparent 46% 100%),
+      radial-gradient(800px 360px at 70% -14%, #e7e3ff0f 0%, transparent 62%);
+    mix-blend-mode: screen; pointer-events:none;
+    animation: sheen 14s ease-in-out infinite;
+  }
+  @keyframes sheen{0%,100%{transform:translateX(-1%)}50%{transform:translateX(1%)}}
 
-  /* Hidden Keys modal */
-  .kmodal-backdrop{position:fixed;inset:0;z-index:30;display:none;background:rgba(0,0,0,.45);backdrop-filter:blur(2px)}
-  .kmodal{position:fixed;z-index:31;display:none;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92vw,620px);border-radius:16px;border:1px solid rgba(255,255,255,.16);background:rgba(20,12,30,.92);box-shadow:0 20px 60px rgba(0,0,0,.5)}
-  .kmodal .head{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.12)}
-  .kmodal .title{font-size:16px;color:#efeaff;letter-spacing:.02em}
-  .kmodal .close{appearance:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#f7f7ff;border-radius:10px;padding:6px 10px;cursor:pointer;font-size:13px}
-  .kmodal .body{padding:14px 16px;color:#eae2ff;font-size:14px}
-  .kmodal .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .kmodal label{font-size:12px;color:#c9bbff}
-  .kmodal input{width:100%;padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:#f7f7ff;font-size:14px}
-  .kmodal .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-  .kmodal .save{appearance:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#f7f7ff;border-radius:999px;padding:8px 12px;font-size:13px;cursor:pointer}
+  .row{display:flex; align-items:center; justify-content:space-between; gap:10px}
+  .name{font-weight:700; font-size: clamp(16px, 2.8vw, 20px); color:var(--pearl); text-shadow:0 6px 20px #a48cff2a}
+  .tag{font-size:12px; padding:6px 10px; border-radius:999px; border:1px solid #ffffff33; background:linear-gradient(180deg,#ffffff14,#ffffff08)}
+  .hint{margin:8px 0 0; color:var(--ink-d); font-size:13px}
 
-  /* Earn Center code */
-  .earn{position:fixed;right:14px;top:14px;z-index:25;display:none;gap:8px;align-items:center;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);backdrop-filter:blur(8px);border-radius:12px;padding:10px 12px;box-shadow:0 6px 24px rgba(0,0,0,.25);font-size:13px}
-  .earn input{border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.07);color:#f7f7ff;border-radius:8px;padding:6px 8px;font-size:13px;min-width:140px}
-  .earn button{appearance:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#f7f7ff;border-radius:999px;padding:6px 10px;font-size:12px;cursor:pointer}
-  .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:40;display:none;background:rgba(20,12,30,.92);color:#f7f7ff;border:1px solid rgba(255,255,255,.16);padding:10px 14px;border-radius:10px;font-size:13px;box-shadow:0 8px 30px rgba(0,0,0,.45)}
+  .plate{
+    margin-top:14px; position:relative; height:160px; border-radius:16px;
+    border:1px solid #ffffff26;
+    background: radial-gradient(110% 100% at 60% 10%, #ffffff10 0%, #ffffff05 45%, transparent 70%),
+                linear-gradient(180deg,#ffffff0f,#ffffff06);
+    overflow:hidden;
+  }
+
+  /* locked overlay */
+  .lock{
+    position:absolute; inset:0; display:grid; place-items:center;
+    background: linear-gradient(180deg, #0a0715aa, #0a071577);
+    transition: opacity .35s ease;
+  }
+  .lock .msg{
+    padding:10px 14px; border-radius:12px; border:1px solid #ffffff2a;
+    background: linear-gradient(180deg,#ffffff12,#ffffff07);
+    font-size:14px; color:var(--ink);
+    text-align:center; max-width:280px;
+  }
+  .lock a{color:var(--ink); text-decoration:none; border-bottom:1px dotted #cfc9ff8a}
+
+  /* unlocked aura */
+  .aura{
+    position:absolute; inset:0; pointer-events:none; opacity:0;
+    background:
+      radial-gradient(160px 120px at 30% 38%, #b9a9ff33 0%, transparent 70%),
+      radial-gradient(220px 160px at 70% 32%, #9fe7ff33 0%, transparent 72%);
+    filter: blur(6px) saturate(110%);
+    transition: opacity .45s ease;
+  }
+
+  /* gate button */
+  .gate{
+    position:absolute; bottom:10px; right:10px;
+    display:inline-flex; align-items:center; gap:10px;
+    padding:10px 14px; border-radius:12px;
+    border:1px solid #ffffff2a; background: linear-gradient(180deg,#ffffff16,#ffffff09);
+    color:var(--ink); text-decoration:none; user-select:none;
+  }
+  .keyicon{ width:16px; height:16px; border-radius:3px;
+    background: radial-gradient(circle at 30% 30%, #fff, #d9d1ff 40%, #9b86ff 72%, #5f4fb9);
+    box-shadow:0 2px 10px #a48cff55;
+  }
+
+  /* states */
+  .unlocked .aura{ opacity:1 }
+  .unlocked .lock{ opacity:0; pointer-events:none }
+  .unlocked .tag{ border-color:#9fe7ff88; box-shadow:0 0 18px #9fe7ff44 inset }
+
+  /* floating corner badge (lower right) */
+  .badge{
+    position:fixed; right:14px; bottom:14px; z-index:30;
+    font-size:12px; color:var(--ink);
+    padding:8px 12px; border-radius:999px;
+    border:1px solid #ffffff2a;
+    background:linear-gradient(180deg,#ffffff18,#ffffff0b);
+    box-shadow:0 10px 30px #00000066;
+    opacity:.9;
+  }
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="top">
-      <!-- Dot only; word hidden until entered -->
-      <div id="keyBadge" class="badge">
-        <span class="dot" aria-hidden="true"></span>
-        <span id="keyWord" style="display:none"></span>
-      </div>
+  <header>
+    <div class="brand">Center</div>
+    <div class="crumbs"><a href="/">home</a> / index</div>
+  </header>
+
+  <main class="grid" aria-label="Center grid">
+    <!-- Forgiveness Gate (Four · interactive door) -->
+    <article class="tile" id="tile-forgood" aria-label="Forgiveness Gate">
       <div class="row">
-        <a class="pill" href="https://mirrorhoney.plnt.earth" data-room="mirrorhoney">MirrorHoney</a>
-        <a id="garlicLink" class="pill locked" href="https://garlic.plnt.earth" data-room="garlic" aria-disabled="true">Garlic</a>
-        <a class="pill" href="https://earth.plnt.earth" data-room="earth">Earth</a>
-        <a id="dagnyLink" class="pill locked" href="https://earth.plnt.earth/dagny" data-room="dagny" aria-disabled="true">Dagny</a>
-        <a class="pill" href="https://four.plnt.earth">Four</a>
+        <div class="name">Forgiveness Gate</div>
+        <span class="tag" id="stateTag-forgood">Locked</span>
       </div>
-    </div>
-
-    <h1 class="safe-wrap">center</h1>
-    <div class="sub">home of the field · clean links · current signals</div>
-
-    <div class="grid">
-      <div class="card">
-        <h3>MirrorHoney — new</h3>
-        <p class="safe-wrap">“Primadonna (Echo of Clarity)” is live. Sigrid’s cover segment loops softly. Bee signs shuffle. A small bonus greets repeat visitors.</p>
-        <a class="cta" href="https://mirrorhoney.plnt.earth" data-room="mirrorhoney">Open MirrorHoney</a>
-        <div class="row"><span class="pill">Illumina 1</span><span class="pill">Marina × Sigrid</span></div>
+      <p class="hint" id="hint-forgood">Touch the lesson once at School. The gate will remember.</p>
+      <div class="plate">
+        <div class="aura" id="aura-forgood" aria-hidden="true"></div>
+        <div class="lock" id="lock-forgood">
+          <div class="msg">
+            Study the key at
+            <a href="https://school.plnt.earth/keys/for-good" aria-label="Open School · For Good">School · For Good</a>.<br/>
+            When you return, this tile will glow.
+          </div>
+        </div>
+        <a class="gate" id="go-forgood" href="#">
+          <span class="keyicon" aria-hidden="true"></span>
+          <span id="goText-forgood">Visit School</span>
+        </a>
       </div>
+    </article>
 
-      <div class="card">
-        <h3>Garlic — Sigrid relay</h3>
-        <p class="safe-wrap">A gentle handoff page for Sigrid. If the color resonates she can pass the key to Marina.</p>
-        <a id="garlicCta" class="cta" href="https://garlic.plnt.earth" data-room="garlic" aria-disabled="true">Open Garlic</a>
-        <div class="row"><span id="garlicStatus" class="pill locked">Locked</span></div>
-      </div>
-
-      <div class="card">
-        <h3>Earth — open</h3>
-        <p class="safe-wrap">Public landing. Clean previews and handoffs.</p>
-        <a class="cta" href="https://earth.plnt.earth" data-room="earth">Open Earth</a>
-        <div class="row"><span class="pill">Public</span><span class="pill">No key</span></div>
-      </div>
-
-      <div class="card">
-        <h3>Dagny — intentional entry</h3>
-        <p class="safe-wrap">Opens after a Center code or a Dagny code. Keeps her path deliberate.</p>
-        <a id="dagnyCta" class="cta" href="https://earth.plnt.earth/dagny" data-room="dagny" aria-disabled="true">Open Dagny</a>
-        <div class="row"><span id="dagnyStatus" class="pill locked">Locked</span></div>
-      </div>
-
-      <div class="card">
-        <h3>Four — earn a Center code</h3>
-        <p class="safe-wrap">Four can send a quiet visitor here. If they bring the word, Center unlocks more rooms.</p>
-        <a class="cta" href="https://four.plnt.earth">Open Four</a>
-        <div class="row"><span class="pill">Clean link</span><span class="pill">No spoilers</span></div>
-      </div>
-    </div>
-
-    <div class="hr"></div>
-    <div class="foot safe-wrap">If a link feels quiet or paused, it is on purpose. The rhythm will open when it is time.</div>
-  </div>
-
-  <!-- Floating Illumina clock -->
-  <div id="clock" class="illumina-clock" aria-live="polite" role="button" tabindex="0">
-    <span class="pulse" aria-hidden="true"></span>
-    <div class="text" id="illuminaText">Loading Illumina…</div>
-  </div>
-
-  <!-- Cycle modal -->
-  <div id="backdrop" class="modal-backdrop" aria-hidden="true"></div>
-  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalBody">
-    <div class="head">
-      <div id="modalTitle" class="title">Illumina cycle details</div>
-      <button id="closeModal" class="close" type="button">Close</button>
-    </div>
-    <div id="modalBody" class="body">
-      <div id="cycleText">Cycle dates will appear here.</div>
-      <div class="row" style="margin-top:12px">
-        <button id="copyCycle" class="copybtn" type="button">Copy cycle</button>
-        <span class="pill">Local time</span>
-        <span id="phaseTag" class="pill">Phase</span>
-        <span id="restTag" class="pill">Rest window</span>
-      </div>
-      <div class="hint" style="margin-top:8px;opacity:.7">Rest window = days between one cycle ending and the next beginning.</div>
-    </div>
-  </div>
-
-  <!-- Hidden Keys modal -->
-  <div id="kback" class="kmodal-backdrop" aria-hidden="true"></div>
-  <div id="kmodal" class="kmodal" role="dialog" aria-modal="true" aria-labelledby="kTitle" aria-describedby="kBody">
-    <div class="head">
-      <div id="kTitle" class="title">Room codes</div>
-      <button id="closeKeys" class="close" type="button">Close</button>
-    </div>
-    <div id="kBody" class="body">
-      <p style="margin-top:0;opacity:.75">Set a code per room. Saved only on this device. Applied on click.</p>
-      <div class="grid" id="keysGrid"></div>
+    <!-- MirrorHoney · For Good (mirror page) -->
+    <article class="tile" id="tile-mirror" aria-label="MirrorHoney · For Good">
       <div class="row">
-        <button id="saveKeys" class="save" type="button">Save</button>
-        <button id="clearKeys" class="save" type="button">Clear</button>
+        <div class="name">MirrorHoney · For Good</div>
+        <span class="tag" id="stateTag-mirror">Locked</span>
       </div>
-    </div>
-  </div>
+      <p class="hint" id="hint-mirror">When the School key is learned, the mirror glows.</p>
+      <div class="plate">
+        <div class="aura" id="aura-mirror" aria-hidden="true"></div>
+        <div class="lock" id="lock-mirror">
+          <div class="msg">
+            Learn it at <a href="https://school.plnt.earth/keys/for-good">School</a>,<br/> then visit the mirror.
+          </div>
+        </div>
+        <a class="gate" id="go-mirror" href="https://mirrorhoney.plnt.earth/keys/for-good" aria-label="Open MirrorHoney · For Good">
+          <span class="keyicon" aria-hidden="true"></span>
+          Open Mirror
+        </a>
+      </div>
+    </article>
 
-  <!-- Earn Center code (appears from Four/referrer) -->
-  <div id="earn" class="earn" aria-live="polite">
-    <span>Center code:</span>
-    <input id="earnInput" type="text" placeholder="enter word">
-    <button id="earnSave" type="button">Save</button>
-  </div>
+    <!-- Four · Castle (map/portal) -->
+    <article class="tile" id="tile-four" aria-label="Four · Castle">
+      <div class="row">
+        <div class="name">Four · Castle</div>
+        <span class="tag" id="stateTag-four">Portal</span>
+      </div>
+      <p class="hint" id="hint-four">The castle map. Glows brighter after any key is touched.</p>
+      <div class="plate">
+        <div class="aura" id="aura-four" aria-hidden="true"></div>
+        <div class="lock" id="lock-four" style="opacity:0;pointer-events:none;">
+          <div class="msg">—</div>
+        </div>
+        <a class="gate" id="go-four" href="https://four.plnt.earth/castle" aria-label="Open Four · Castle">
+          <span class="keyicon" aria-hidden="true"></span>
+          Enter Castle
+        </a>
+      </div>
+    </article>
 
-  <!-- Soft toast -->
-  <div id="toast" class="toast">This room unlocks after you enter the code.</div>
+    <!-- Voice (Ariana) · For Good (whisper talisman) -->
+    <article class="tile" id="tile-voice" aria-label="Voice · For Good">
+      <div class="row">
+        <div class="name">Voice · For Good</div>
+        <span class="tag" id="stateTag-voice">Locked</span>
+      </div>
+      <p class="hint" id="hint-voice">After the lesson, take the whisper with you.</p>
+      <div class="plate">
+        <div class="aura" id="aura-voice" aria-hidden="true"></div>
+        <div class="lock" id="lock-voice">
+          <div class="msg">
+            Learn it at <a href="https://school.plnt.earth/keys/for-good">School</a>,<br/> then carry the whisper.
+          </div>
+        </div>
+        <a class="gate" id="go-voice" href="https://voice.plnt.earth/keys/for-good" aria-label="Open Voice · For Good">
+          <span class="keyicon" aria-hidden="true"></span>
+          Play Whisper
+        </a>
+      </div>
+    </article>
+
+  </main>
+
+  <div class="badge">Center · Keys</div>
+
+  <footer>
+    <div>© Center · Illumina</div>
+    <div>Violet-pearl mode</div>
+  </footer>
 
 <script>
-  /* ---------- Illumina calendar ---------- */
-  const FIRST_START={y:2025,m:11,d:5}, BASE_FULL_MOON={y:2025,m:11,d:5}, SYNODIC=29.530588853, STEP_DAYS=SYNODIC*2, CYCLE_LENGTH=42, DAY_MS=86400000;
-  function dLocal(y,m,d){return new Date(y,m-1,d)} function addDays(t,n){return new Date(t.getTime()+n*DAY_MS)}
-  function fmtDate(d){return d.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'})}
-  function moonPhase(now){const ref=Date.UTC(2000,0,6,18,14,0,0),days=(now.getTime()-ref)/DAY_MS,lun=(days%SYNODIC+SYNODIC)%SYNODIC,deg=lun/SYNODIC*360;
-    return deg<22.5?{emoji:'🌑',name:'New Moon'}:deg<67.5?{emoji:'🌒',name:'Waxing Crescent'}:deg<112.5?{emoji:'🌓',name:'First Quarter'}:deg<157.5?{emoji:'🌔',name:'Waxing Gibbous'}:deg<202.5?{emoji:'🌕',name:'Full Moon'}:deg<247.5?{emoji:'🌖',name:'Waning Gibbous'}:deg<292.5?{emoji:'🌗',name:'Last Quarter'}:deg<337.5?{emoji:'🌘',name:'Waning Crescent'}:{emoji:'🌑',name:'New Moon'}}
-  function nextMondayAfter(date){const dow=date.getDay();let delta=(1-dow+7)%7;if(delta===0)delta=7;return addDays(date,delta)}
-  function genCycles(n=20){const list=[];const s1=dLocal(FIRST_START.y,FIRST_START.m,FIRST_START.d),e1=addDays(s1,CYCLE_LENGTH-1),fm0=dLocal(BASE_FULL_MOON.y,BASE_FULL_MOON.m,BASE_FULL_MOON.d);
-    list.push({n:1,fm:fm0,start:s1,end:e1,fixed:true});for(let i=1;i<n;i++){const fm=addDays(fm0,STEP_DAYS*i),s=nextMondayAfter(fm),e=addDays(s,CYCLE_LENGTH-1);list.push({n:i+1,fm,start:s,end:e})}return list}
-  function pickCycle(c,now){for(const x of c){if(now>=x.start&&now<=x.end)return x}for(const x of c){if(now<x.start)return x}return c[c.length-1]}
-  function computeRestWindow(c,a){const i=c.findIndex(v=>v.n===a.n),nxt=i>=0?c[i+1]:null;if(!nxt)return null;const diff=Math.round((nxt.start-a.end)/DAY_MS);return{days:Math.max(0,diff-1)}}
-
-  const clock=document.getElementById('clock'),modal=document.getElementById('modal'),backdrop=document.getElementById('backdrop'),closeBtn=document.getElementById('closeModal'),copyBtn=document.getElementById('copyCycle');
-  const textEl=document.getElementById('illuminaText'),phaseTag=document.getElementById('phaseTag'),restTag=document.getElementById('restTag'),cycleTextEl=document.getElementById('cycleText');
-
-  function formatIllumina(){
-    const now=new Date(),cycles=genCycles(20),active=pickCycle(cycles,now),phase=moonPhase(now);let status='';
-    if(now<active.start){const t=Math.ceil((active.start-now)/DAY_MS);status=`starts in ${t} day${t===1?'':'s'}`}
-    else if(now>active.end){const t=Math.floor((now-active.end)/DAY_MS);status=`ended ${t} day${t===1?'':'s'} ago`}
-    else{const d=Math.floor((now-active.start)/DAY_MS)+1;status=`Day ${d} of ${CYCLE_LENGTH}`}
-    textEl.textContent=`Illumina ${active.n} · ${phase.emoji} ${phase.name} · ${status}`;
-    phaseTag.textContent=`${phase.emoji} ${phase.name}`;
-    cycleTextEl.textContent=`Illumina ${active.n} · ${active.fixed?'starts':'starts Mon'} ${fmtDate(active.start)} → ${fmtDate(active.end)} · ${CYCLE_LENGTH} days`;
-    const rest=computeRestWindow(cycles,active);
-    if(rest&&rest.days!=null){restTag.textContent=rest.days===0?'Rest window: none':`Rest window: ${rest.days} day${rest.days===1?'':'s'}`;restTag.style.display='inline-block';restTag.classList.toggle('glow',rest.days>0)}
-    else{restTag.style.display='none';restTag.classList.remove('glow')}
-  }
-  function openModal(){backdrop.style.display='block';modal.style.display='block'}
-  function closeModal(){modal.style.display='none';backdrop.style.display='none'}
-  function copyCycle(){const t=cycleTextEl.textContent;try{navigator.clipboard.writeText(t);copyBtn.textContent='Copied';setTimeout(()=>copyBtn.textContent='Copy cycle',1200)}catch(e){}}
-  clock.addEventListener('click',openModal);
-  clock.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openModal()}});
-  closeBtn.addEventListener('click',closeModal);
-  backdrop.addEventListener('click',closeModal);
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
-  copyBtn.addEventListener('click',copyCycle);
-  formatIllumina();
-  setInterval(formatIllumina,30*60*1000);
-
-  /* ---------- Hidden Keys panel + stealth navigation ---------- */
-  const ROOMS=[
-    {id:'mirrorhoney',name:'MirrorHoney',url:'https://mirrorhoney.plnt.earth'},
-    {id:'garlic',     name:'Garlic',     url:'https://garlic.plnt.earth'},
-    {id:'earth',      name:'Earth',      url:'https://earth.plnt.earth'},
-    {id:'dagny',      name:'Dagny',      url:'https://earth.plnt.earth/dagny'}
-  ];
-  const KEY_PREFIX='pe.keys.';
-  const CENTER_CODE_KEY='pe.center.code';
-
-  const kback=document.getElementById('kback'),kmodal=document.getElementById('kmodal'),closeK=document.getElementById('closeKeys'),saveK=document.getElementById('saveKeys'),clearK=document.getElementById('clearKeys'),grid=document.getElementById('keysGrid'),badge=document.getElementById('keyBadge'),keyWord=document.getElementById('keyWord');
-
-  function renderKeysForm(){grid.innerHTML='';ROOMS.forEach(r=>{const w=document.createElement('div'),lab=document.createElement('label');lab.textContent=r.name+' code';const inp=document.createElement('input');inp.id='key_'+r.id;try{inp.value=localStorage.getItem(KEY_PREFIX+r.id)||''}catch(e){inp.value=''};w.appendChild(lab);w.appendChild(inp);grid.appendChild(w)})}
-  function openKeys(){renderKeysForm();kback.style.display='block';kmodal.style.display='block'}
-  function closeKeys(){kmodal.style.display='none';kback.style.display='none'}
-  closeK.addEventListener('click',closeKeys);
-  kback.addEventListener('click',closeKeys);
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeKeys()});
-  (function(){let clicks=0,t=null;badge.addEventListener('click',()=>{clicks++;clearTimeout(t);t=setTimeout(()=>{clicks=0},600);if(clicks>=3){clicks=0;openKeys()}});const seq=['k','e','y'];let pos=0,tt=null;document.addEventListener('keydown',e=>{if(tt)clearTimeout(tt);tt=setTimeout(()=>{pos=0},1000);if(e.key.toLowerCase()===seq[pos]){pos++;if(pos===seq.length){pos=0;openKeys()}}else{pos=0}})})();
-  saveK.addEventListener('click',()=>{ROOMS.forEach(r=>{const i=document.getElementById('key_'+r.id);if(!i)return;const v=i.value.trim();try{if(v){localStorage.setItem(KEY_PREFIX+r.id,v)}else{localStorage.removeItem(KEY_PREFIX+r.id)}}catch(e){}});saveK.textContent='Saved';setTimeout(()=>saveK.textContent='Save',1000)});
-  clearK.addEventListener('click',()=>{ROOMS.forEach(r=>{try{localStorage.removeItem(KEY_PREFIX+r.id)}catch(e){}});renderKeysForm();clearK.textContent='Cleared';setTimeout(()=>clearK.textContent='Clear',1000)});
-
-  /* ---------- Earn Center code (from Four/referrer) ---------- */
-  const earn=document.getElementById('earn'),earnInput=document.getElementById('earnInput'),earnSave=document.getElementById('earnSave');
-  (function(){
-    const url=new URL(location.href); const from=url.searchParams.get('from'); const ref=document.referrer;
-    let hasCode=false; try{hasCode=!!localStorage.getItem(CENTER_CODE_KEY)}catch(e){}
-    if(!hasCode && (from==='four' || /\/\/four\.plnt\.earth\/?/i.test(ref))){ earn.style.display='flex'; }
-  })();
-  earnSave.addEventListener('click',()=>{
-    const v=(earnInput.value||'').trim(); if(!v) return;
-    try{ localStorage.setItem(CENTER_CODE_KEY, v); }catch(e){}
-    earn.style.display='none';
-    // quietly show word by the dot on this device
-    keyWord.textContent=v; keyWord.style.display='inline';
-    updateGarlicGate(); updateDagnyGate();
-  });
-
-  /* ---------- Gates ---------- */
-  const garlicLink=document.getElementById('garlicLink'), garlicCta=document.getElementById('garlicCta'), garlicStatus=document.getElementById('garlicStatus');
-  const dagnyLink=document.getElementById('dagnyLink'), dagnyCta=document.getElementById('dagnyCta'), dagnyStatus=document.getElementById('dagnyStatus');
-  const toast=document.getElementById('toast');
-
-  function showToast(msg){ toast.textContent=msg; toast.style.display='block'; setTimeout(()=>{toast.style.display='none'}, 1400); }
-  function hasCenterCode(){ try{ return !!localStorage.getItem(CENTER_CODE_KEY); }catch(e){ return false; } }
-  function hasDagnyKey(){ try{ return !!localStorage.getItem(KEY_PREFIX+'dagny'); }catch(e){ return false; } }
-
-  function setLocked(el, locked){
-    if(!el) return;
-    if(locked){ el.classList.add('locked'); el.setAttribute('aria-disabled','true'); }
-    else      { el.classList.remove('locked'); el.setAttribute('aria-disabled','false'); }
-  }
-  function updateGarlicGate(){
-    const ok = hasCenterCode();
-    [garlicLink, garlicCta].forEach(el=>setLocked(el, !ok));
-    if(garlicStatus){ garlicStatus.textContent = ok ? 'Unlocked' : 'Locked'; garlicStatus.classList.toggle('locked', !ok); }
-  }
-  function updateDagnyGate(){
-    const ok = hasCenterCode() || hasDagnyKey();
-    [dagnyLink, dagnyCta].forEach(el=>setLocked(el, !ok));
-    if(dagnyStatus){ dagnyStatus.textContent = ok ? 'Unlocked' : 'Locked'; dagnyStatus.classList.toggle('locked', !ok); }
-  }
-  updateGarlicGate(); updateDagnyGate();
-
-  /* ---------- Stealth navigation (append ?key=... on click) ---------- */
-  function navigateWithKey(ev){
-    const a=ev.currentTarget, room=a.getAttribute('data-room');
-    if(!room) return;
-
-    // block if gated
-    const isGarlic = room==='garlic';
-    const isDagny  = room==='dagny';
-    let blocked=false;
-    if(isGarlic) blocked = !hasCenterCode();
-    if(isDagny)  blocked = !(hasCenterCode() || hasDagnyKey());
-    if(blocked){
-      ev.preventDefault();
-      showToast('This room unlocks after you enter the code.');
-      return;
-    }
-
-    // only left-click without modifiers
-    if(ev.button!==0 || ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey) return;
-    ev.preventDefault();
-
-    let url=a.getAttribute('href')||'#', k='';
-    try{ k = localStorage.getItem(KEY_PREFIX+room) || ''; }catch(e){}
+(function(){
+  // flags set by your pages:
+  // - School canonical: localStorage['castle.key.for_good'] = 'true'
+  // - Four gate opened: localStorage['castle.gate.for_good.open'] = 'true'
+  function getFlags(){
+    var f = { school:false, gate:false };
     try{
-      const u=new URL(url);
-      if(k) u.searchParams.set('key', k);
-      location.assign(u.toString());
-    }catch(e){
-      location.assign(url);
-    }
+      f.school = localStorage.getItem('castle.key.for_good') === 'true';
+      f.gate   = localStorage.getItem('castle.gate.for_good.open') === 'true';
+    }catch(_){}
+    return f;
   }
-  document.querySelectorAll('a[data-room], .cta[data-room]').forEach(a=>a.addEventListener('click',navigateWithKey));
+
+  function nudgeAura(el, on){
+    if(!el) return;
+    el.style.opacity = on ? '1' : '.65';
+    setTimeout(function(){ el.style.opacity = on ? '1' : '0'; }, 1400);
+  }
+
+  // --- Forgiveness Gate (Four interactive door) ---
+  (function(){
+    var tile   = document.getElementById('tile-forgood');
+    var tag    = document.getElementById('stateTag-forgood');
+    var hint   = document.getElementById('hint-forgood');
+    var lock   = document.getElementById('lock-forgood');
+    var aura   = document.getElementById('aura-forgood');
+    var go     = document.getElementById('go-forgood');
+    var goText = document.getElementById('goText-forgood');
+
+    var f = getFlags();
+    var unlocked = f.school || f.gate;
+
+    function setState(isUnlocked){
+      if(isUnlocked){
+        tile.classList.add('unlocked');
+        tag.textContent = 'Unlocked';
+        hint.textContent = 'You can leave and still keep the light.';
+        go.href = 'https://four.plnt.earth/castle/for-good';
+        if(goText) goText.textContent = 'Open the Gate';
+        lock.style.opacity = '0'; lock.style.pointerEvents = 'none';
+      }else{
+        tile.classList.remove('unlocked');
+        tag.textContent = 'Locked';
+        hint.textContent = 'Touch the lesson once at School. The gate will remember.';
+        go.href = 'https://school.plnt.earth/keys/for-good';
+        if(goText) goText.textContent = 'Visit School';
+        lock.style.opacity = '1'; lock.style.pointerEvents = 'auto';
+      }
+    }
+    setState(unlocked);
+
+    var nudged=false;
+    tile.addEventListener('pointerenter', function(){
+      if(nudged) return; nudged=true; nudgeAura(aura, unlocked);
+    });
+  })();
+
+  // --- MirrorHoney mirror (unlocks when School key is learned) ---
+  (function(){
+    var tile   = document.getElementById('tile-mirror');
+    var tag    = document.getElementById('stateTag-mirror');
+    var hint   = document.getElementById('hint-mirror');
+    var lock   = document.getElementById('lock-mirror');
+    var aura   = document.getElementById('aura-mirror');
+    var f = getFlags();
+    var unlocked = f.school;
+
+    if(unlocked){
+      tile.classList.add('unlocked');
+      tag.textContent = 'Unlocked';
+      hint.textContent = 'Mirror is clear. Walk softly.';
+      lock.style.opacity = '0'; lock.style.pointerEvents = 'none';
+    }
+
+    var nudged=false;
+    tile.addEventListener('pointerenter', function(){
+      if(nudged) return; nudged=true; nudgeAura(aura, unlocked);
+    });
+  })();
+
+  // --- Four portal (always clickable; glow if any key was touched) ---
+  (function(){
+    var tile   = document.getElementById('tile-four');
+    var tag    = document.getElementById('stateTag-four');
+    var hint   = document.getElementById('hint-four');
+    var aura   = document.getElementById('aura-four');
+    var f = getFlags();
+    var bright = f.school || f.gate;
+
+    if(bright){
+      tile.classList.add('unlocked');
+      tag.textContent = 'Portal · Bright';
+      hint.textContent = 'Castle responds to what you’ve learned.';
+      aura.style.opacity = '1';
+    }
+
+    var nudged=false;
+    tile.addEventListener('pointerenter', function(){
+      if(nudged) return; nudged=true; nudgeAura(aura, bright);
+    });
+  })();
+
+  // --- Voice (Ariana) whisper (unlocks when School key is learned) ---
+  (function(){
+    var tile   = document.getElementById('tile-voice');
+    var tag    = document.getElementById('stateTag-voice');
+    var hint   = document.getElementById('hint-voice');
+    var lock   = document.getElementById('lock-voice');
+    var aura   = document.getElementById('aura-voice');
+    var f = getFlags();
+    var unlocked = f.school;
+
+    if(unlocked){
+      tile.classList.add('unlocked');
+      tag.textContent = 'Unlocked';
+      hint.textContent = 'Carry the whisper. It remembers.';
+      lock.style.opacity = '0'; lock.style.pointerEvents = 'none';
+    }
+
+    var nudged=false;
+    tile.addEventListener('pointerenter', function(){
+      if(nudged) return; nudged=true; nudgeAura(aura, unlocked);
+    });
+  })();
+})();
 </script>
 </body>
 </html>
