@@ -1,360 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Center · Index</title>
-<meta name="theme-color" content="#7d66ff" />
-<meta name="description" content="Center · Keys and rooms across Illumina." />
-<style>
-  :root{
-    --bg-0:#0f0b1a; --bg-1:#181334; --bg-2:#231c44;
-    --ink:#e8e6ff; --ink-d:#cfcaff; --accent:#a48cff; --pearl:#faf8ff;
-  }
-  html,body{height:100%;margin:0}
-  body{
-    min-height:100%;
-    background:
-      radial-gradient(900px 600px at 70% 10%, #2d225d 0%, var(--bg-2) 38%, var(--bg-1) 64%, var(--bg-0) 100%),
-      linear-gradient(180deg, #0b0916, #0f0b1a);
-    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Helvetica Neue", Helvetica;
-    color:var(--ink);
-    -webkit-font-smoothing: antialiased;
-    letter-spacing:.15px;
-    display:flex; flex-direction:column;
-  }
-  header, footer{
-    padding: clamp(12px, 3vw, 22px);
-    color: var(--ink-d);
-    display:flex; align-items:center; justify-content:space-between; gap:12px;
-  }
-  .brand{font-weight:700; color:var(--pearl)}
-  .crumbs a{color:var(--ink-d); text-decoration:none; border-bottom:1px dotted #cfc9ff66}
+<!-- Center · Yellow (Sigrid · Primadonna) -->
+<article class="tile" id="tile-yellow" aria-label="Yellow Key · Sigrid">
+  <div class="row">
+    <div class="name">Yellow · Sigrid</div>
+    <span class="tag" id="tag-yellow">Locked</span>
+  </div>
+  <p class="hint" id="hint-yellow">Enter the color keyword to unlock Garlic.</p>
+  <div class="plate">
+    <div class="aura" id="aura-yellow" aria-hidden="true"></div>
 
-  .grid{
-    width:min(1100px, 94vw);
-    margin: 0 auto;
-    display:grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: clamp(12px, 2.4vw, 22px);
-    padding: clamp(12px, 3vw, 28px);
-  }
-
-  /* Tile (shared styles) */
-  .tile{
-    position:relative;
-    border-radius:20px;
-    padding:18px;
-    background: linear-gradient(180deg, #ffffff10, #ffffff07);
-    border:1px solid #ffffff1f;
-    box-shadow: 0 18px 60px #00000085, inset 0 0 0 1px #ffffff16, inset 0 0 120px #a48cff12;
-    backdrop-filter: blur(8px) saturate(115%);
-    -webkit-backdrop-filter: blur(8px) saturate(115%);
-    overflow:hidden; isolation:isolate;
-  }
-  .tile::before{
-    content:""; position:absolute; inset:0;
-    background:
-      linear-gradient(118deg, transparent 0 38%, #ffffff14 40%, #ffffff08 43%, transparent 46% 100%),
-      radial-gradient(800px 360px at 70% -14%, #e7e3ff0f 0%, transparent 62%);
-    mix-blend-mode: screen; pointer-events:none;
-    animation: sheen 14s ease-in-out infinite;
-  }
-  @keyframes sheen{0%,100%{transform:translateX(-1%)}50%{transform:translateX(1%)}}
-
-  .row{display:flex; align-items:center; justify-content:space-between; gap:10px}
-  .name{font-weight:700; font-size: clamp(16px, 2.8vw, 20px); color:var(--pearl); text-shadow:0 6px 20px #a48cff2a}
-  .tag{font-size:12px; padding:6px 10px; border-radius:999px; border:1px solid #ffffff33; background:linear-gradient(180deg,#ffffff14,#ffffff08)}
-  .hint{margin:8px 0 0; color:var(--ink-d); font-size:13px}
-
-  .plate{
-    margin-top:14px; position:relative; height:160px; border-radius:16px;
-    border:1px solid #ffffff26;
-    background: radial-gradient(110% 100% at 60% 10%, #ffffff10 0%, #ffffff05 45%, transparent 70%),
-                linear-gradient(180deg,#ffffff0f,#ffffff06);
-    overflow:hidden;
-  }
-
-  /* locked overlay */
-  .lock{
-    position:absolute; inset:0; display:grid; place-items:center;
-    background: linear-gradient(180deg, #0a0715aa, #0a071577);
-    transition: opacity .35s ease;
-  }
-  .lock .msg{
-    padding:10px 14px; border-radius:12px; border:1px solid #ffffff2a;
-    background: linear-gradient(180deg,#ffffff12,#ffffff07);
-    font-size:14px; color:var(--ink);
-    text-align:center; max-width:280px;
-  }
-  .lock a{color:var(--ink); text-decoration:none; border-bottom:1px dotted #cfc9ff8a}
-
-  /* unlocked aura */
-  .aura{
-    position:absolute; inset:0; pointer-events:none; opacity:0;
-    background:
-      radial-gradient(160px 120px at 30% 38%, #b9a9ff33 0%, transparent 70%),
-      radial-gradient(220px 160px at 70% 32%, #9fe7ff33 0%, transparent 72%);
-    filter: blur(6px) saturate(110%);
-    transition: opacity .45s ease;
-  }
-
-  /* gate button */
-  .gate{
-    position:absolute; bottom:10px; right:10px;
-    display:inline-flex; align-items:center; gap:10px;
-    padding:10px 14px; border-radius:12px;
-    border:1px solid #ffffff2a; background: linear-gradient(180deg,#ffffff16,#ffffff09);
-    color:var(--ink); text-decoration:none; user-select:none;
-  }
-  .keyicon{ width:16px; height:16px; border-radius:3px;
-    background: radial-gradient(circle at 30% 30%, #fff, #d9d1ff 40%, #9b86ff 72%, #5f4fb9);
-    box-shadow:0 2px 10px #a48cff55;
-  }
-
-  /* states */
-  .unlocked .aura{ opacity:1 }
-  .unlocked .lock{ opacity:0; pointer-events:none }
-  .unlocked .tag{ border-color:#9fe7ff88; box-shadow:0 0 18px #9fe7ff44 inset }
-
-  /* floating corner badge (lower right) */
-  .badge{
-    position:fixed; right:14px; bottom:14px; z-index:30;
-    font-size:12px; color:var(--ink);
-    padding:8px 12px; border-radius:999px;
-    border:1px solid #ffffff2a;
-    background:linear-gradient(180deg,#ffffff18,#ffffff0b);
-    box-shadow:0 10px 30px #00000066;
-    opacity:.9;
-  }
-</style>
-</head>
-<body>
-  <header>
-    <div class="brand">Center</div>
-    <div class="crumbs"><a href="/">home</a> / index</div>
-  </header>
-
-  <main class="grid" aria-label="Center grid">
-    <!-- Forgiveness Gate (Four · interactive door) -->
-    <article class="tile" id="tile-forgood" aria-label="Forgiveness Gate">
-      <div class="row">
-        <div class="name">Forgiveness Gate</div>
-        <span class="tag" id="stateTag-forgood">Locked</span>
+    <!-- Locked overlay with an inline key prompt -->
+    <div class="lock" id="lock-yellow">
+      <div class="msg">
+        This path is color-gated. <br/>
+        <button id="btn-yellow" style="margin-top:8px;padding:6px 10px;border-radius:8px;border:1px solid #ffffff44;background:linear-gradient(180deg,#ffffff22,#ffffff10);color:#fff">Enter keyword</button>
       </div>
-      <p class="hint" id="hint-forgood">Touch the lesson once at School. The gate will remember.</p>
-      <div class="plate">
-        <div class="aura" id="aura-forgood" aria-hidden="true"></div>
-        <div class="lock" id="lock-forgood">
-          <div class="msg">
-            Study the key at
-            <a href="https://school.plnt.earth/keys/for-good" aria-label="Open School · For Good">School · For Good</a>.<br/>
-            When you return, this tile will glow.
-          </div>
-        </div>
-        <a class="gate" id="go-forgood" href="#">
-          <span class="keyicon" aria-hidden="true"></span>
-          <span id="goText-forgood">Visit School</span>
-        </a>
-      </div>
-    </article>
+    </div>
 
-    <!-- MirrorHoney · For Good (mirror page) -->
-    <article class="tile" id="tile-mirror" aria-label="MirrorHoney · For Good">
-      <div class="row">
-        <div class="name">MirrorHoney · For Good</div>
-        <span class="tag" id="stateTag-mirror">Locked</span>
-      </div>
-      <p class="hint" id="hint-mirror">When the School key is learned, the mirror glows.</p>
-      <div class="plate">
-        <div class="aura" id="aura-mirror" aria-hidden="true"></div>
-        <div class="lock" id="lock-mirror">
-          <div class="msg">
-            Learn it at <a href="https://school.plnt.earth/keys/for-good">School</a>,<br/> then visit the mirror.
-          </div>
-        </div>
-        <a class="gate" id="go-mirror" href="https://mirrorhoney.plnt.earth/keys/for-good" aria-label="Open MirrorHoney · For Good">
-          <span class="keyicon" aria-hidden="true"></span>
-          Open Mirror
-        </a>
-      </div>
-    </article>
-
-    <!-- Four · Castle (map/portal) -->
-    <article class="tile" id="tile-four" aria-label="Four · Castle">
-      <div class="row">
-        <div class="name">Four · Castle</div>
-        <span class="tag" id="stateTag-four">Portal</span>
-      </div>
-      <p class="hint" id="hint-four">The castle map. Glows brighter after any key is touched.</p>
-      <div class="plate">
-        <div class="aura" id="aura-four" aria-hidden="true"></div>
-        <div class="lock" id="lock-four" style="opacity:0;pointer-events:none;">
-          <div class="msg">—</div>
-        </div>
-        <a class="gate" id="go-four" href="https://four.plnt.earth/castle" aria-label="Open Four · Castle">
-          <span class="keyicon" aria-hidden="true"></span>
-          Enter Castle
-        </a>
-      </div>
-    </article>
-
-    <!-- Voice (Ariana) · For Good (whisper talisman) -->
-    <article class="tile" id="tile-voice" aria-label="Voice · For Good">
-      <div class="row">
-        <div class="name">Voice · For Good</div>
-        <span class="tag" id="stateTag-voice">Locked</span>
-      </div>
-      <p class="hint" id="hint-voice">After the lesson, take the whisper with you.</p>
-      <div class="plate">
-        <div class="aura" id="aura-voice" aria-hidden="true"></div>
-        <div class="lock" id="lock-voice">
-          <div class="msg">
-            Learn it at <a href="https://school.plnt.earth/keys/for-good">School</a>,<br/> then carry the whisper.
-          </div>
-        </div>
-        <a class="gate" id="go-voice" href="https://voice.plnt.earth/keys/for-good" aria-label="Open Voice · For Good">
-          <span class="keyicon" aria-hidden="true"></span>
-          Play Whisper
-        </a>
-      </div>
-    </article>
-
-  </main>
-
-  <div class="badge">Center · Keys</div>
-
-  <footer>
-    <div>© Center · Illumina</div>
-    <div>Violet-pearl mode</div>
-  </footer>
+    <!-- Destination -->
+    <a class="gate" id="go-yellow" href="https://garlic.plnt.earth/sigrid/primadonna/">
+      <span class="keyicon" aria-hidden="true"></span>
+      Go to Garlic
+    </a>
+  </div>
+</article>
 
 <script>
 (function(){
-  // flags set by your pages:
-  // - School canonical: localStorage['castle.key.for_good'] = 'true'
-  // - Four gate opened: localStorage['castle.gate.for_good.open'] = 'true'
-  function getFlags(){
-    var f = { school:false, gate:false };
-    try{
-      f.school = localStorage.getItem('castle.key.for_good') === 'true';
-      f.gate   = localStorage.getItem('castle.gate.for_good.open') === 'true';
-    }catch(_){}
-    return f;
+  var tile = document.getElementById('tile-yellow');
+  var tag  = document.getElementById('tag-yellow');
+  var hint = document.getElementById('hint-yellow');
+  var lock = document.getElementById('lock-yellow');
+  var aura = document.getElementById('aura-yellow');
+  var btn  = document.getElementById('btn-yellow');
+
+  function isUnlocked(){
+    try{ return localStorage.getItem('color.key.yellow') === 'true'; }catch(_){ return false; }
   }
-
-  function nudgeAura(el, on){
-    if(!el) return;
-    el.style.opacity = on ? '1' : '.65';
-    setTimeout(function(){ el.style.opacity = on ? '1' : '0'; }, 1400);
-  }
-
-  // --- Forgiveness Gate (Four interactive door) ---
-  (function(){
-    var tile   = document.getElementById('tile-forgood');
-    var tag    = document.getElementById('stateTag-forgood');
-    var hint   = document.getElementById('hint-forgood');
-    var lock   = document.getElementById('lock-forgood');
-    var aura   = document.getElementById('aura-forgood');
-    var go     = document.getElementById('go-forgood');
-    var goText = document.getElementById('goText-forgood');
-
-    var f = getFlags();
-    var unlocked = f.school || f.gate;
-
-    function setState(isUnlocked){
-      if(isUnlocked){
-        tile.classList.add('unlocked');
-        tag.textContent = 'Unlocked';
-        hint.textContent = 'You can leave and still keep the light.';
-        go.href = 'https://four.plnt.earth/castle/for-good';
-        if(goText) goText.textContent = 'Open the Gate';
-        lock.style.opacity = '0'; lock.style.pointerEvents = 'none';
-      }else{
-        tile.classList.remove('unlocked');
-        tag.textContent = 'Locked';
-        hint.textContent = 'Touch the lesson once at School. The gate will remember.';
-        go.href = 'https://school.plnt.earth/keys/for-good';
-        if(goText) goText.textContent = 'Visit School';
-        lock.style.opacity = '1'; lock.style.pointerEvents = 'auto';
-      }
-    }
-    setState(unlocked);
-
-    var nudged=false;
-    tile.addEventListener('pointerenter', function(){
-      if(nudged) return; nudged=true; nudgeAura(aura, unlocked);
-    });
-  })();
-
-  // --- MirrorHoney mirror (unlocks when School key is learned) ---
-  (function(){
-    var tile   = document.getElementById('tile-mirror');
-    var tag    = document.getElementById('stateTag-mirror');
-    var hint   = document.getElementById('hint-mirror');
-    var lock   = document.getElementById('lock-mirror');
-    var aura   = document.getElementById('aura-mirror');
-    var f = getFlags();
-    var unlocked = f.school;
-
-    if(unlocked){
-      tile.classList.add('unlocked');
+  function setUnlocked(on){
+    if(on){
+      tile.classList.add('unlocked'); if(aura) aura.style.opacity='1';
       tag.textContent = 'Unlocked';
-      hint.textContent = 'Mirror is clear. Walk softly.';
+      hint.textContent = 'Clarity is warm. Garlic is open.';
       lock.style.opacity = '0'; lock.style.pointerEvents = 'none';
     }
+  }
+  setUnlocked(isUnlocked());
 
-    var nudged=false;
-    tile.addEventListener('pointerenter', function(){
-      if(nudged) return; nudged=true; nudgeAura(aura, unlocked);
-    });
-  })();
-
-  // --- Four portal (always clickable; glow if any key was touched) ---
-  (function(){
-    var tile   = document.getElementById('tile-four');
-    var tag    = document.getElementById('stateTag-four');
-    var hint   = document.getElementById('hint-four');
-    var aura   = document.getElementById('aura-four');
-    var f = getFlags();
-    var bright = f.school || f.gate;
-
-    if(bright){
-      tile.classList.add('unlocked');
-      tag.textContent = 'Portal · Bright';
-      hint.textContent = 'Castle responds to what you’ve learned.';
-      aura.style.opacity = '1';
+  btn.addEventListener('click', function(){
+    var k = prompt('Enter color keyword');
+    if(!k) return;
+    if(k.trim().toLowerCase() === 'yellow'){ // your existing key
+      try{ localStorage.setItem('color.key.yellow','true'); }catch(_){}
+      setUnlocked(true);
+    }else{
+      alert('That didn’t match. Try again when ready.');
     }
-
-    var nudged=false;
-    tile.addEventListener('pointerenter', function(){
-      if(nudged) return; nudged=true; nudgeAura(aura, bright);
-    });
-  })();
-
-  // --- Voice (Ariana) whisper (unlocks when School key is learned) ---
-  (function(){
-    var tile   = document.getElementById('tile-voice');
-    var tag    = document.getElementById('stateTag-voice');
-    var hint   = document.getElementById('hint-voice');
-    var lock   = document.getElementById('lock-voice');
-    var aura   = document.getElementById('aura-voice');
-    var f = getFlags();
-    var unlocked = f.school;
-
-    if(unlocked){
-      tile.classList.add('unlocked');
-      tag.textContent = 'Unlocked';
-      hint.textContent = 'Carry the whisper. It remembers.';
-      lock.style.opacity = '0'; lock.style.pointerEvents = 'none';
-    }
-
-    var nudged=false;
-    tile.addEventListener('pointerenter', function(){
-      if(nudged) return; nudged=true; nudgeAura(aura, unlocked);
-    });
-  })();
+  });
 })();
 </script>
-</body>
-</html>
