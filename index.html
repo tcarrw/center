@@ -1,706 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Center · Cube Keys → School Proximity</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>center.plnt.earth — Illumina Network</title>
 <style>
-  :root{
-    --bg: radial-gradient(1200px 800px at 70% -20%, rgba(255,182,193,0.22), transparent),
-          radial-gradient(900px 600px at 0% 120%, rgba(182,139,255,0.18), transparent),
-          radial-gradient(700px 500px at 100% 100%, rgba(255,236,179,0.14), transparent),
-          #0a0a0f;
-    --text:#eef1ff; --muted:#c9cbe4;
-    --pink:#ff7fb7; --gold:#ffd76a; --violet:#b68cff; --blue:#98c8ff; --green:#9af2c9; --yellow:#fff79a;
-  }
-  html,body{height:100%}
-  body{
-    margin:0; background:var(--bg); color:var(--text);
-    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial;
-    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-    display:flex; align-items:flex-start; justify-content:center; padding:34px 14px 14px; /* top padding */
-  }
-  .wrap{width:min(1100px,100%); display:grid; gap:14px}
-  .card{
-    background:linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
-    border:1px solid rgba(255,255,255,0.12);
-    border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06);
-    backdrop-filter: blur(8px);
-  }
-  .eyebrow{font-size:11px; letter-spacing:.25em; text-transform:uppercase; color:var(--muted); margin:12px 12px 4px}
-  .title{
-    font-weight:700; font-size:20px; margin:0 12px 6px;
-    background:linear-gradient(90deg, var(--pink), var(--gold));
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-  }
-  .topline{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:0 12px 8px}
-  .itime{
-    font-size:12.5px; color:#f6f7ff; padding:6px 10px; border-radius:999px;
-    background:linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05));
-    border:1px solid rgba(255,255,255,0.16);
-  }
-
-  .grid{padding:12px; display:grid; grid-template-columns:1.15fr .85fr; gap:12px}
-  @media (max-width:960px){.grid{grid-template-columns:1fr}}
-
-  /* Cube area */
-  .cube-wrap{
-    position:relative; border:1px solid rgba(255,255,255,0.10); border-radius:12px;
-    background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
-    padding:6px;
-    overflow:visible;
-  }
-  svg{width:100%; height:auto; display:block}
-  .face{fill:rgba(255,255,255,0.04); stroke:rgba(255,255,255,0.06)}
-  .edge{stroke:rgba(255,255,255,0.28); stroke-width:1.1}
-  .edge.dim{opacity:.28}
-
-  /* Garlic/Clarity plane visuals */
-  .plane{fill:var(--yellow); opacity:0; fill-opacity:.12; stroke:rgba(255,255,210,.45); stroke-dasharray:5 6; transition:opacity .25s ease}
-  .plane.on{opacity:1}
-  .diag{stroke:var(--yellow); stroke-width:1.6; stroke-linecap:round; opacity:0; filter:url(#g)}
-  .diag.on{opacity:.85}
-
-  /* Vertex links */
-  .node a{cursor:pointer}
-  .node a:hover ~ text.label{filter:brightness(1.1)}
-  .node text.label{font-size:12px; fill:#e9ecff; paint-order:stroke; stroke:#0a0a0f; stroke-width:.6px; letter-spacing:.2px}
-  .node circle{stroke:rgba(255,255,255,0.65); stroke-width:1.1}
-  .node.dim circle{opacity:.35; filter:grayscale(.8)}
-  .glow{filter:url(#g)}
-  .badge-emoji{font-size:14px; paint-order:stroke; stroke:#0a0a0f; stroke-width:.6px}
-  .center-dot{fill:#fff; opacity:.9}
-  .center-pulse{fill:rgba(255,215,106,0.32); animation:pulse 2.6s ease-in-out infinite}
-  @keyframes pulse{0%{transform:scale(.96)}50%{transform:scale(1.04)}100%{transform:scale(.96)}}
-
-  /* Right info */
-  .side{
-    display:grid; gap:10px; align-content:start; padding:12px;
-    background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
-    border:1px solid rgba(255,255,255,0.10); border-radius:12px;
-  }
-  .stat{
-    display:flex; justify-content:space-between; align-items:center; font-size:13px; color:#c9cbe4;
-    background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.10);
-    border-radius:10px; padding:8px 10px
-  }
-  .stat b{color:#fff}
-  .feedback{
-    font-size:13px; line-height:1.45; color:#f2f2ff; background: rgba(255,255,255,0.04);
-    border:1px solid rgba(255,255,255,0.10); border-radius:10px; padding:10px
-  }
-
-  /* Hint box */
-  .hint{
-    font-size:12.5px; line-height:1.5; color:#f6f7ff;
-    background:linear-gradient(180deg, rgba(255,255,210,0.10), rgba(255,255,255,0.04));
-    border:1px solid rgba(255,255,210,0.35);
-    border-radius:10px; padding:10px;
-  }
-  .hint b{color:#fff}
-  .hint ul{margin:8px 0 0 18px; padding:0}
-  .hint li{margin:4px 0}
-
-  /* Keys list */
-  .keys{
-    display:grid; gap:8px; padding:8px; background: rgba(255,255,255,0.04);
-    border:1px solid rgba(255,255,255,0.10); border-radius:10px
-  }
-  .key-row{display:grid; grid-template-columns:1fr 1fr; gap:8px}
-  @media (max-width:700px){.key-row{grid-template-columns:1fr}}
-  .key{
-    display:flex; align-items:center; justify-content:space-between; gap:10px;
-    padding:8px 10px; border-radius:10px; background:rgba(255,255,255,0.05);
-    border:1px solid rgba(255,255,255,0.12); transition:opacity .25s ease, filter .25s ease
-  }
-  .key.dim{opacity:.45; filter:grayscale(.7)}
-  .left{display:flex; align-items:center; gap:8px}
-  .dot{width:9px; height:9px; border-radius:50%}
-  .p{background:var(--pink)} .g{background:var(--gold)} .v{background:var(--violet)} .b{background:var(--blue)} .gr{background:var(--green)} .y{background:var(--yellow)}
-  .titlekey{font-size:12.5px; color:#fff; font-weight:600; letter-spacing:.2px}
-  .method{display:inline-flex; align-items:center; gap:6px}
-  .badge{font-size:11px; padding:3px 7px; border-radius:999px; background: rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.16)}
-  .edit{font-size:11px; padding:5px 8px; border-radius:999px; color:#0a0a0f; background:#fff; border:none; cursor:pointer}
-  .edit[disabled]{opacity:.5; cursor:not-allowed}
-  .selector{display:none; margin-top:6px; padding:8px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:8px}
-  .selector label{display:inline-flex; align-items:center; gap:6px; margin:4px 8px 0 0; font-size:12px; color:#e9ecff}
-  .selector input{accent-color:#ffd76a}
-
-  .missing{display:flex; gap:6px; flex-wrap:wrap; font-size:12px; color:var(--muted)}
-  .chip{display:inline-flex; gap:6px; align-items:center; padding:5px 8px; border-radius:999px;
-        background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12)}
-  .fine{font-size:11px; color:var(--muted); text-align:center; padding-bottom:2px}
-
-  /* Reality Anchor chip + overlay */
-  .ra-chip{
-    position:fixed; left:14px; bottom:14px; z-index:60;
-    padding:10px 12px; border-radius:999px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
-    border:1px solid rgba(255,255,255,0.18);
-    color:#eef1ff; font-size:12.5px; letter-spacing:.06em; text-transform:uppercase;
-    backdrop-filter: blur(8px);
-  }
-  .ra-chip:active{transform:translateY(1px)}
-  .ra-overlay{
-    position:fixed; inset:0; z-index:70; display:none;
-    background: rgba(10,10,15,0.55);
-    backdrop-filter: blur(4px);
-  }
-  .ra-panel{
-    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
-    width:min(520px,92%); border-radius:16px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.05));
-    border:1px solid rgba(255,255,255,0.16);
-    padding:16px; text-align:center;
-  }
-  .ra-eyebrow{font-size:11px; letter-spacing:.25em; color:#c9cbe4; text-transform:uppercase; margin-bottom:6px}
-  .ra-title{
-    margin:0 0 10px 0; font-weight:700; font-size:18px;
-    background: linear-gradient(90deg, #ffd76a, #b68cff);
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-  }
-  .ra-steps{display:grid; gap:8px; margin:10px 0 12px 0}
-  .ra-step{
-    font-size:15px; line-height:1.5; color:#f2f2ff;
-    padding:10px; border-radius:12px;
-    background: rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
-    opacity:.55;
-    transition: opacity .25s ease, transform .25s ease;
-  }
-  .ra-step.on{opacity:1; transform:scale(1.01)}
-  .ra-controls{display:flex; gap:8px; justify-content:center}
-  .ra-btn{
-    padding:8px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.18);
-    background:#fff; color:#0a0a0f; font-size:13px; cursor:pointer;
-  }
-  .ra-btn.secondary{
-    background: rgba(255,255,255,0.06); color:#eef1ff;
-    border:1px solid rgba(255,255,255,0.14);
-  }
-  .ra-ring{
-    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
-    width:40vmin; height:40vmin; border-radius:50%;
-    box-shadow: 0 0 0 0 rgba(255,215,106,0.0);
-    pointer-events:none;
-  }
-  .ra-ring.on{ animation: raPulse 2.2s ease-out 1; }
-  @keyframes raPulse{
-    0%{box-shadow:0 0 0 0 rgba(255,215,106,0.00)}
-    40%{box-shadow:0 0 0 18vmin rgba(255,215,106,0.22)}
-    100%{box-shadow:0 0 0 0 rgba(255,215,106,0.00)}
-  }
-
-  /* Clarity HTML puck (absolute overlay) */
-  .clarity-puck{
-    position:absolute; width:18px; height:18px; border-radius:50%;
-    background: rgba(255,255,210,0.92); border:1px solid rgba(0,0,0,0.5);
-    display:grid; place-items:center; font-size:12px; color:#0a0a0f; cursor:pointer;
-    z-index:50; transform:translate(-50%,-50%);
-  }
-  .clarity-tip{
-    position:absolute; padding:8px 10px; font-size:12px; line-height:1.4;
-    color:#f6f7ff; background:rgba(10,10,15,0.88); border:1px solid rgba(255,255,255,0.18);
-    border-radius:8px; white-space:nowrap; z-index:51; transform:translate(-50%,-120%);
-    opacity:0; pointer-events:none; transition:opacity .2s ease;
-  }
-  .clarity-tip.show{opacity:1}
+html,body{
+  margin:0;height:100%;background:#f9fbff;font-family:'Segoe UI',sans-serif;
+  color:#111;overflow:hidden;text-align:center;
+}
+h1{margin-top:2vh;font-weight:400;letter-spacing:.08em;}
+#cube{
+  position:absolute;top:50%;left:50%;transform-style:preserve-3d;
+  transform:translate(-50%,-50%) rotateX(-25deg) rotateY(35deg);
+  width:200px;height:200px;animation:spin 60s linear infinite;
+}
+@keyframes spin{
+  from{transform:translate(-50%,-50%) rotateX(-25deg) rotateY(0);}
+  to{transform:translate(-50%,-50%) rotateX(-25deg) rotateY(360deg);}
+}
+.face{
+  position:absolute;width:200px;height:200px;
+  background:rgba(255,255,255,0.7);backdrop-filter:blur(5px);
+  border:1px solid rgba(0,0,0,0.1);display:flex;
+  align-items:center;justify-content:center;
+  box-shadow:0 0 12px rgba(0,0,0,0.05);
+}
+.face a{color:#000;text-decoration:none;font-size:1em;opacity:.8;}
+.face a:hover{opacity:1;}
+.face::after{
+  content:attr(data-info);
+  position:absolute;bottom:-2.6em;left:50%;transform:translateX(-50%);
+  background:rgba(255,255,255,0.9);color:#000;
+  font-size:.7em;padding:.2em .5em;border-radius:.3em;
+  opacity:0;pointer-events:none;transition:opacity .4s;
+  width:max-content;white-space:nowrap;
+}
+.face:hover::after{opacity:1;}
+.front  {transform:translateZ(100px);}
+.back   {transform:rotateY(180deg) translateZ(100px);}
+.right  {transform:rotateY(90deg) translateZ(100px);}
+.left   {transform:rotateY(-90deg) translateZ(100px);}
+.top    {transform:rotateX(90deg) translateZ(100px);}
+.bottom {transform:rotateX(-90deg) translateZ(100px);}
+#footer{
+  position:absolute;bottom:3%;left:50%;transform:translateX(-50%);
+  font-size:.8em;opacity:.6;line-height:1.6em;width:80%;
+}
+#footer a{color:#000;text-decoration:none;opacity:.6;}
+#footer a:hover{opacity:1;}
 </style>
 </head>
 <body>
-  <main class="wrap">
-    <section class="card">
-      <div class="eyebrow">Center</div>
-      <div class="topline">
-        <h1 class="title">Cube Keys → Proximity to School</h1>
-        <div class="itime" id="illuminaTime">Illumina time — calculating…</div>
-      </div>
-      <div class="grid">
-        <div class="cube-wrap" id="cubeWrap">
-          <svg id="cubeSvg" viewBox="0 0 600 440" preserveAspectRatio="xMidYMid meet" aria-label="Cube map">
-            <defs>
-              <filter id="g"><feGaussianBlur in="SourceGraphic" stdDeviation="2"/></filter>
-            </defs>
 
-            <!-- Faces -->
-            <polygon class="face" points="150,120 300,50 450,120 300,190"/>
-            <polygon class="face" points="150,120 150,300 300,360 300,190"/>
-            <polygon class="face" points="300,190 300,360 450,300 450,120"/>
+<h1>☀️ center.plnt.earth — Illumina Map</h1>
 
-            <!-- Edges -->
-            <g id="edges" fill="none">
-              <line class="edge" x1="150" y1="120" x2="300" y2="50"/>
-              <line class="edge" x1="300" y1="50"  x2="450" y2="120"/>
-              <line class="edge" x1="450" y1="120" x2="300" y2="190"/>
-              <line class="edge" x1="300" y1="190" x2="150" y2="120"/>
-              <line class="edge" x1="150" y1="300" x2="300" y2="230"/>
-              <line class="edge" x1="300" y1="230" x2="450" y2="300"/>
-              <line class="edge" x1="450" y1="300" x2="300" y2="360"/>
-              <line class="edge" x1="300" y1="360" x2="150" y2="300"/>
-              <line class="edge" x1="150" y1="120" x2="150" y2="300"/>
-              <line class="edge" x1="300" y1="50"  x2="300" y2="230"/>
-              <line class="edge" x1="450" y1="120" x2="450" y2="300"/>
-              <line class="edge" x1="300" y1="190" x2="300" y2="360"/>
-            </g>
-
-            <!-- Clarity plane -->
-            <polygon id="clarityPlane" class="plane" points="450,120 300,230 150,300"/>
-            <line id="diagClarityToFour" class="diag" x1="450" y1="120" x2="300" y2="230"/>
-            <line id="diagClarityToMH"   class="diag" x1="450" y1="120" x2="150" y2="300"/>
-
-            <!-- Center point -->
-            <circle id="centerPulse" class="center-pulse glow" cx="300" cy="208" r="30"/>
-            <circle class="center-dot glow" cx="300" cy="208" r="5"/>
-
-            <!-- Nodes (linked) -->
-            <g id="nodes">
-              <g class="node" data-key="honey" transform="translate(150,120)">
-                <a href="https://honey.plnt.earth" target="_blank" rel="noopener noreferrer">
-                  <circle r="9" fill="#ff7fb7"/>
-                </a>
-                <text class="label" x="12" y="4">Honey</text>
-              </g>
-
-              <g class="node" data-key="froot" transform="translate(300,50)">
-                <a href="https://froot.plnt.earth" target="_blank" rel="noopener noreferrer">
-                  <circle r="9" fill="#9af2c9"/>
-                </a>
-                <text class="label" x="12" y="4">Froot</text>
-              </g>
-
-              <g class="node" data-key="clarity" id="clarityNode" transform="translate(450,120)">
-                <a href="https://garlic.plnt.earth" target="_blank" rel="noopener noreferrer">
-                  <circle id="clarityDot" r="9" fill="#fff79a"/>
-                </a>
-                <text class="label" x="12" y="4">Clarity</text>
-                <text id="garlicBadge" class="badge-emoji" x="58" y="4" opacity="0">🧄</text>
-              </g>
-
-              <g class="node" data-key="voice" transform="translate(300,190)">
-                <a href="https://voice.plnt.earth" target="_blank" rel="noopener noreferrer">
-                  <circle r="9" fill="#b68cff"/>
-                </a>
-                <text class="label" x="12" y="4">Voice</text>
-              </g>
-
-              <g class="node" data-key="mirrorhoney" transform="translate(150,300)">
-                <a href="https://mirrorhoney.plnt.earth" target="_blank" rel="noopener noreferrer">
-                  <circle r="9" fill="#b68cff"/>
-                </a>
-                <text class="label" x="12" y="4">MirrorHoney</text>
-              </g>
-
-              <g class="node" data-key="four" transform="translate(300,230)">
-                <a href="https://four.plnt.earth" target="_blank" rel="noopener noreferrer">
-                  <circle r="9" fill="#9af2c9"/>
-                </a>
-                <text class="label" x="12" y="4">Four</text>
-              </g>
-
-              <g class="node" data-key="wonder" transform="translate(450,300)">
-                <a href="https://wonder.plnt.earth" target="_blank" rel="noopener noreferrer">
-                  <circle r="9" fill="#ff7fb7"/>
-                </a>
-                <text class="label" x="12" y="4">Wonder · Dua</text>
-              </g>
-
-              <g class="node" data-key="dagny" transform="translate(300,360)">
-                <a href="https://center.plnt.earth?key=dagny" target="_blank" rel="noopener noreferrer">
-                  <circle r="9" fill="#ff7fb7"/>
-                </a>
-                <text class="label" x="12" y="4">Bridge of Joy</text>
-              </g>
-            </g>
-          </svg>
-
-          <!-- HTML-based clarity puck + tooltip (absolute; anchored via JS) -->
-          <button class="clarity-puck" id="clarityPuck" aria-label="Hint for Clarity">?</button>
-          <div class="clarity-tip" id="clarityTip">Clarity appears after one honest line + a MirrorHoney note. Click to check &amp; claim.</div>
-        </div>
-
-        <div class="side">
-          <div class="eyebrow">School Proximity</div>
-          <div class="stat"><span>Progress</span><b id="progressPct">0%</b></div>
-          <div class="stat"><span>Keys</span><b id="keysCount">0 / 8</b></div>
-          <div class="feedback" id="feedback">Collect keys. Keys only light up if held on your device.</div>
-
-          <div class="hint">
-            <b>How to find Clarity (Garlic):</b>
-            <ul>
-              <li>Write one honest sentence you’ve been avoiding.</li>
-              <li>Save it as a MirrorHoney note.</li>
-              <li>Then hold <b>Clarity</b> here and tag how you got it (🧭 found / ⭐ earned).</li>
-            </ul>
-          </div>
-
-          <div class="keys">
-            <div class="key-row" id="keyRow"></div>
-            <div class="fine">Long-press a card to toggle held. Tap a lit card to set how it was obtained.</div>
-          </div>
-
-          <div class="missing" id="missingBox"></div>
-          <div class="fine">When Clarity is held, the Garlic plane glows (Clarity → Four → MirrorHoney).</div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Reality Anchor (inline) -->
-  <button class="ra-chip" id="raChip" aria-haspopup="dialog" aria-controls="raOverlay">Reality Anchor</button>
-
-  <div class="ra-overlay" id="raOverlay" role="dialog" aria-modal="true" aria-label="Reality Anchor">
-    <div class="ra-panel">
-      <div class="ra-eyebrow">3-Breath Anchor</div>
-      <h3 class="ra-title">steady the mirror</h3>
-      <div class="ra-steps">
-        <div class="ra-step" id="raStep1">inhale — i’m here</div>
-        <div class="ra-step" id="raStep2">exhale — i’m real</div>
-        <div class="ra-step" id="raStep3">inhale — i can carry this</div>
-        <div class="ra-step" id="raStep4">exhale — one small move</div>
-      </div>
-      <div class="ra-controls">
-        <button class="ra-btn" id="raStart">begin</button>
-        <button class="ra-btn secondary" id="raClose">close</button>
-      </div>
-    </div>
-    <div class="ra-ring" id="raRing"></div>
+<div id="cube">
+  <div class="face front"
+    data-info="Marina — Reflection & Compassion">
+    <a href="https://mirrorhoney.plnt.earth" target="_blank">Mirror</a>
   </div>
+  <div class="face back"
+    data-info="Sabrina — Sweetness & Desire">
+    <a href="https://honey.plnt.earth" target="_blank">Honey</a>
+  </div>
+  <div class="face right"
+    data-info="Sigrid — Truth & Courage">
+    <a href="https://clarity.plnt.earth" target="_blank">Clarity</a>
+  </div>
+  <div class="face left"
+    data-info="Dua — Imagination & Design">
+    <a href="https://wonder.plnt.earth" target="_blank">Wonder</a>
+  </div>
+  <div class="face top"
+    data-info="Miley — Expression & Fire">
+    <a href="https://flare.plnt.earth" target="_blank">Flare</a>
+  </div>
+  <div class="face bottom"
+    data-info="Taylor — Study & Integration (School)">
+    <a href="https://garlic.plnt.earth" target="_blank">Garlic</a>
+  </div>
+</div>
 
-<script>
-  /* ---------- Keys state + UI ---------- */
-  var KEY_DEFS = [
-    {id:"honey",       label:"Honey",        color:"p"},
-    {id:"froot",       label:"Froot",        color:"gr"},
-    {id:"clarity",     label:"Clarity",      color:"y"},
-    {id:"voice",       label:"Voice",        color:"v"},
-    {id:"mirrorhoney", label:"MirrorHoney",  color:"v"},
-    {id:"four",        label:"Four",         color:"gr"},
-    {id:"wonder",      label:"Wonder · Dua", color:"p"},
-    {id:"dagny",       label:"Bridge of Joy",color:"p"}
-  ];
-  var METHODS = [
-    {id:"found",  label:"found",  badge:"🧭"},
-    {id:"earned", label:"earned", badge:"⭐"},
-    {id:"gifted", label:"gifted", badge:"💝"},
-    {id:"echo",   label:"echo",   badge:"🐝"},
-    {id:"link",   label:"link",   badge:"⛓️"}
-  ];
+<div id="footer">
+  <strong>Extended Network</strong><br/>
+  <a href="https://four.plnt.earth" target="_blank" title="Expansion & Castle Gate">Four</a> •
+  <a href="https://school.plnt.earth" target="_blank" title="Taylor’s Teaching Chamber">School</a> •
+  <a href="https://motion.plnt.earth" target="_blank" title="Miss Monique — Flow / Rhythm">Motion</a> •
+  <a href="https://illumina.plnt.earth" target="_blank" title="Archive of Moon Notes">Illumina</a> •
+  <a href="https://time.plnt.earth" target="_blank" title="Physics & Continuity">Time</a><br/>
+  <strong>Norwegian Ring (Nordlys)</strong><br/>
+  <a href="https://fjaere.plnt.earth" target="_blank" title="Ebb tide — Everything that retreats, breathes again.">fjaere</a> •
+  <a href="https://royke.plnt.earth" target="_blank" title="Smoke — What burns teaches the air to see.">royke</a> •
+  <a href="https://lysning.plnt.earth" target="_blank" title="Clearing — The light finds you when you stop looking.">lysning</a> •
+  <a href="https://tid.plnt.earth" target="_blank" title="Time — Motion seen from stillness.">tid</a> •
+  <a href="https://skygge.plnt.earth" target="_blank" title="Shadow — Where light falls, shadow is born.">skygge</a> •
+  <a href="https://ildsjel.plnt.earth" target="_blank" title="Passionate soul — The fire in the heart lights the way home.">ildsjel</a><br/>
+  <strong>Other Anchors</strong><br/>
+  <a href="https://voice.plnt.earth" target="_blank" title="Zara — Aurora Voice">Voice</a> •
+  <a href="https://veil.plnt.earth" target="_blank" title="Dove — Chameleon Heart">Veil</a> •
+  <a href="https://diamond.plnt.earth" target="_blank" title="Kylie — Eternal Spark">Diamond</a> •
+  <a href="https://ember.plnt.earth" target="_blank" title="Rosalía — Bridge of Rhythm">Ember</a> •
+  <a href="https://origin.plnt.earth" target="_blank" title="Björk — Elemental Matriarch">Origin</a> •
+  <a href="https://earth.plnt.earth" target="_blank" title="Greta — Conscience / Anchor">Earth</a> •
+  <a href="https://bridge.plnt.earth" target="_blank" title="Doechii — Catalyst / Trickster">Bridge</a> •
+  <a href="https://white.plnt.earth" target="_blank" title="Final White Page — 1000 Moons">White</a>
+</div>
 
-  var STORAGE_KEY = "center.keys.state";
-  function loadState(){ try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}");}catch(e){return{}} }
-  function saveState(s){ localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); }
-  function ensureDefaults(){
-    var s = loadState();
-    KEY_DEFS.forEach(function(k){ if(!s[k.id]) s[k.id] = {held:false, method:"found"}; });
-    if(s.earth){ delete s.earth; }
-    // Auto-claim Clarity if a MirrorHoney note already exists
-    var mh = localStorage.getItem('mirrorhoney.note') || localStorage.getItem('mirrorhoney.last_note');
-    if(mh && s.clarity && !s.clarity.held){ s.clarity.held = true; s.clarity.method = "earned"; }
-    saveState(s);
-  }
-  function methodBadge(id){ var m = METHODS.find(function(x){return x.id===id}); return m ? (m.badge+" "+m.label) : ""; }
-
-  var keyRow = document.getElementById("keyRow");
-  var pctLabel = document.getElementById("progressPct");
-  var keysLabel = document.getElementById("keysCount");
-  var feedback = document.getElementById("feedback");
-  var missingBox = document.getElementById("missingBox");
-
-  function buildKeys(){
-    var s = loadState();
-    keyRow.innerHTML = "";
-    KEY_DEFS.forEach(function(k){
-      var held = s[k.id].held, method = s[k.id].method;
-      var card = document.createElement("div");
-      card.className = "key" + (held ? "" : " dim");
-      card.setAttribute("data-key", k.id);
-
-      var left = document.createElement("div");
-      left.className = "left";
-      left.innerHTML = '<span class="dot '+k.color+'"></span><span class="titlekey">'+k.label+'</span>';
-
-      var right = document.createElement("div");
-      right.className = "method";
-      var badge = document.createElement("span");
-      badge.className = "badge";
-      badge.textContent = held ? methodBadge(method) : "not held";
-
-      var btn = document.createElement("button");
-      btn.className = "edit";
-      btn.textContent = held ? "edit" : "claim";
-      if(!held) btn.setAttribute("disabled","");
-
-      right.appendChild(badge); right.appendChild(btn);
-
-      var selector = document.createElement("div");
-      selector.className = "selector";
-      ["found","earned","gifted","echo","link"].forEach(function(mid){
-        var m = METHODS.find(function(mm){return mm.id===mid;});
-        var id = "sel-"+k.id+"-"+m.id;
-        var lab = document.createElement("label");
-        lab.innerHTML = '<input type="radio" name="method-'+k.id+'" id="'+id+'" value="'+m.id+'" '+(method===m.id?'checked':'')+' />'+m.badge+' '+m.label;
-        selector.appendChild(lab);
-      });
-
-      btn.addEventListener("click", function(){
-        if(!loadState()[k.id].held) return;
-        selector.style.display = selector.style.display==="block" ? "none" : "block";
-      });
-      selector.addEventListener("change", function(e){
-        var st = loadState(); st[k.id].method = e.target.value; saveState(st);
-        badge.textContent = methodBadge(st[k.id].method); selector.style.display="none"; update();
-      });
-
-      var pressTimer;
-      card.addEventListener("mousedown", function(){
-        pressTimer = setTimeout(function(){
-          var st = loadState(); st[k.id].held = !st[k.id].held; saveState(st);
-          if(st[k.id].held){ card.classList.remove("dim"); btn.removeAttribute("disabled"); btn.textContent="edit"; badge.textContent=methodBadge(st[k.id].method); }
-          else { card.classList.add("dim"); btn.setAttribute("disabled",""); btn.textContent="claim"; badge.textContent="not held"; selector.style.display="none"; }
-          update();
-        }, 550);
-      });
-      ["mouseup","mouseleave","touchend","touchcancel"].forEach(function(ev){ card.addEventListener(ev, function(){ clearTimeout(pressTimer); }); });
-
-      card.appendChild(left); card.appendChild(right); card.appendChild(selector);
-      keyRow.appendChild(card);
-    });
-  }
-
-  function computeProximity(){
-    var st = loadState();
-    var total = KEY_DEFS.length;
-    var have = KEY_DEFS.filter(function(k){ return st[k.id].held; }).length;
-    var pct = Math.round((have/total)*100);
-    return {pct:pct, have:have, total:total};
-  }
-
-  function renderMissing(){
-    var st = loadState();
-    var missing = KEY_DEFS.filter(function(k){ return !st[k.id].held; });
-    if(missing.length){
-      var html = "Missing keys: " + missing.map(function(k){
-        var dot = '<span class="dot '+k.color+'"></span>';
-        return '<span class="chip">'+dot+k.label+'</span>';
-      }).join(" ");
-      missingBox.innerHTML = html;
-    }else missingBox.innerHTML = "";
-  }
-
-  function setNodeLighting(){
-    var st = loadState();
-    document.querySelectorAll('#nodes .node').forEach(function(n){
-      var id = n.getAttribute('data-key');
-      if(st[id] && st[id].held){ n.classList.remove('dim'); n.querySelector('circle').classList.add('glow'); }
-      else { n.classList.add('dim'); n.querySelector('circle').classList.remove('glow'); }
-    });
-    var garlicBadge = document.getElementById('garlicBadge');
-    garlicBadge.setAttribute('opacity', (st.clarity && st.clarity.held) ? '1' : '0');
-  }
-
-  function setEdgeBrightness(pct){
-    var dim = pct<50;
-    document.querySelectorAll('#edges .edge').forEach(function(e){
-      if(dim) e.classList.add('dim'); else e.classList.remove('dim');
-      e.setAttribute('stroke-width', String(1.1 + (pct/100)*1.0));
-    });
-    var pulse = document.getElementById('centerPulse');
-    pulse.setAttribute('r', String(22 + pct*0.16));
-    var dur = 2.8 - pct*0.012; if(dur<1.2) dur=1.2;
-    pulse.style.animationDuration = String(dur)+'s';
-    pulse.setAttribute('fill', 'rgba(255,215,106,'+(0.22 + pct*0.0035)+')');
-  }
-
-  function setClarityPlane(){
-    var st = loadState();
-    var on = !!(st.clarity && st.clarity.held);
-    document.getElementById('clarityPlane').classList.toggle('on', on);
-    document.getElementById('diagClarityToFour').classList.toggle('on', on);
-    document.getElementById('diagClarityToMH').classList.toggle('on', on);
-    var clarityDot = document.getElementById('clarityDot');
-    if(on){ clarityDot.classList.add('glow'); } else { clarityDot.classList.remove('glow'); }
-  }
-
-  function update(){
-    var p = computeProximity();
-    pctLabel.textContent = p.pct + "%";
-    keysLabel.textContent = p.have + " / " + p.total;
-    if(p.pct===0) feedback.textContent = "Collect keys. Keys only light up if held on your device.";
-    else if(p.pct<50) feedback.textContent = "You are on the path. Keep gathering keys.";
-    else if(p.pct<100) feedback.textContent = "Almost ready. A few keys remain.";
-    else feedback.textContent = "All pre keys gathered. School listens for the right holder.";
-    renderMissing();
-    setNodeLighting();
-    setEdgeBrightness(p.pct);
-    setClarityPlane();
-  }
-
-  /* ---------- Illumina Time (illumination % with moon + countdown, auto-step at 0.1%) ---------- */
-  var I_START = new Date('2025-11-05T00:00:00'); // Day 1 local midnight
-  var SYNODIC = 29.53058867; // days
-
-  function moonPhaseInfo(d){
-    var epoch = Date.UTC(2000,0,6,18,14,0); // reference new moon
-    var days  = (d.getTime() - epoch) / 86400000;
-    var phase = ((days / SYNODIC) % 1 + 1) % 1;   // 0..1
-    var theta = 2*Math.PI*phase;                  // phase angle
-    var frac  = (1 - Math.cos(theta)) / 2;        // illuminated fraction
-    var pct   = frac * 100;
-    var emoji = ["🌑","🌒","🌓","🌔","🌕","🌖","🌗","🌘"][Math.floor((phase*8+0.5))%8];
-    return {phase, theta, frac, pct, emoji};
-  }
-
-  function renderIlluminaTime(){
-    var el = document.getElementById('illuminaTime');
-    var now = new Date();
-    var dayMS = 86400000;
-    var diffDays = Math.floor((now - I_START)/dayMS) + 1;
-
-    var m = moonPhaseInfo(now);
-    var pctStr = m.pct.toFixed(1) + "%";
-
-    if (now < I_START){
-      var ms = I_START - now;
-      var d = Math.floor(ms/dayMS);
-      var h = Math.floor((ms % dayMS) / 3600000);
-      var min = Math.floor((ms % 3600000) / 60000);
-      el.textContent = m.emoji + " " + pctStr + " — Illumina 1 starts in " + d + "d " + h + "h " + min + "m (Nov 5, 2025)";
-    } else if (diffDays > 42){
-      el.textContent = m.emoji + " " + pctStr + " — Illumina 1 Complete (+" + (diffDays - 42) + " days)";
-    } else {
-      el.textContent = m.emoji + " " + pctStr + " — Illumina 1 · Day " + diffDays + " of 42";
-    }
-  }
-
-  var _illuminaTimer = null;
-  function scheduleIlluminationTick(){
-    if (_illuminaTimer) { clearTimeout(_illuminaTimer); _illuminaTimer = null; }
-
-    var now = new Date();
-    var info = moonPhaseInfo(now);
-    var pct  = info.pct;
-    var theta= info.theta;
-    var sign = Math.sin(theta) >= 0 ? 1 : -1; // + toward full, - toward new
-    var nextBoundary = (sign > 0) ? (Math.ceil(pct*10)/10) : (Math.floor(pct*10)/10);
-    if (Math.abs(nextBoundary - pct) < 1e-6) nextBoundary += sign * 0.1;
-
-    // d(illum)/dt ≈ 50 * sin(theta) * 2π / SYNODIC   [% per day]
-    var derivPerDay = 50 * Math.sin(theta) * (2*Math.PI / SYNODIC);
-    var deltaPct = nextBoundary - pct;
-
-    var minMs = 15000;         // 15s
-    var maxMs = 30*60*1000;    // 30m
-    var ms;
-
-    if (Math.abs(derivPerDay) < 0.00001){
-      ms = 60000; // near extrema: poll every 1m
-    } else {
-      var daysNeeded = deltaPct / derivPerDay;
-      ms = Math.max(minMs, Math.min(maxMs, Math.abs(daysNeeded)*86400000));
-    }
-
-    renderIlluminaTime();
-    _illuminaTimer = setTimeout(scheduleIlluminationTick, ms);
-  }
-
-  /* ---------- Reality Anchor ---------- */
-  (function(){
-    var chip = document.getElementById('raChip');
-    var overlay = document.getElementById('raOverlay');
-    var startBtn = document.getElementById('raStart');
-    var closeBtn = document.getElementById('raClose');
-    var ring = document.getElementById('raRing');
-    var steps = [1,2,3,4].map(function(i){ return document.getElementById('raStep'+i); });
-    var running = false, timers = [];
-
-    function show(){ overlay.style.display='block'; steps.forEach(function(s){ s.classList.remove('on'); }); }
-    function hide(){
-      overlay.style.display='none'; running=false;
-      timers.forEach(function(t){ clearTimeout(t); }); timers=[];
-      steps.forEach(function(s){ s.classList.remove('on'); });
-    }
-    function highlight(i){
-      steps.forEach(function(s){ s.classList.remove('on'); });
-      if (steps[i]) steps[i].classList.add('on');
-    }
-    function logMoonNote(){
-      try{
-        localStorage.setItem('illumina.moon.last_anchor', String(Date.now()));
-        localStorage.setItem('illumina.moon.note', '3-breath anchor completed');
-      }catch(e){}
-    }
-    function pulseRing(){ ring.classList.remove('on'); void ring.offsetWidth; ring.classList.add('on'); }
-    function run(){
-      if (running) return;
-      running = true;
-      highlight(0);
-      timers.push(setTimeout(function(){ highlight(1); }, 3000));
-      timers.push(setTimeout(function(){ highlight(2); }, 6000));
-      timers.push(setTimeout(function(){ highlight(3); }, 9000));
-      timers.push(setTimeout(function(){ pulseRing(); logMoonNote(); running=false; }, 11000));
-    }
-    chip.addEventListener('click', show);
-    closeBtn.addEventListener('click', hide);
-    overlay.addEventListener('click', function(e){ if(e.target===overlay) hide(); });
-    startBtn.addEventListener('click', run);
-  })();
-
-  /* ---------- Clarity puck (absolute overlay, click-to-claim) ---------- */
-  (function(){
-    var puck = document.getElementById('clarityPuck');
-    var tip  = document.getElementById('clarityTip');
-    var svg  = document.getElementById('cubeSvg');
-    var wrap = document.getElementById('cubeWrap');
-    var clarityNode = document.getElementById('clarityNode');
-
-    function positionPuck(){
-      if(!clarityNode) return;
-      var circle = document.getElementById('clarityDot');
-      var m = circle.getCTM(); // current transform matrix to SVG user space
-      // The circle center in its own coord is (0,0) due to group translate; transform to viewport
-      var pt = svg.createSVGPoint(); pt.x = 0; pt.y = 0;
-      var svgSpace = pt.matrixTransform(m);
-      // Convert SVG user coords to screen coords, then to wrap-local
-      var ctm = svg.getScreenCTM();
-      var screen = svgSpace.matrixTransform(ctm);
-      var wrapRect = wrap.getBoundingClientRect();
-      var left = screen.x - wrapRect.left;
-      var top  = screen.y - wrapRect.top;
-      puck.style.left = left + 'px';
-      puck.style.top  = top  + 'px';
-      tip.style.left  = left + 'px';
-      tip.style.top   = top  + 'px';
-    }
-
-    window.addEventListener('resize', positionPuck);
-    window.addEventListener('orientationchange', positionPuck);
-    document.addEventListener('DOMContentLoaded', positionPuck);
-    setTimeout(positionPuck, 60); // slight delay to ensure layout
-
-    puck.addEventListener('click', function(){
-      tip.classList.add('show');
-      setTimeout(function(){ tip.classList.remove('show'); }, 3000);
-
-      var mh = localStorage.getItem('mirrorhoney.note') || localStorage.getItem('mirrorhoney.last_note');
-      var state = loadState();
-      if (mh){
-        if (!state.clarity) state.clarity = {held:false, method:"earned"};
-        state.clarity.held = true;
-        if (!state.clarity.method) state.clarity.method = "earned";
-        saveState(state);
-        tip.textContent = "Clarity claimed ✓ (from MirrorHoney note)";
-        update();
-        setTimeout(function(){ tip.textContent = "Clarity appears after one honest line + a MirrorHoney note. Click to check & claim."; }, 3000);
-      }
-    });
-  })();
-
-  /* ---------- Init ---------- */
-  (function init(){
-    ensureDefaults();
-    buildKeys();
-    update();
-    scheduleIlluminationTick();   // start live moon % updates at 0.1% steps
-  })();
-</script>
 </body>
 </html>
