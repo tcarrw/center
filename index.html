@@ -18,7 +18,7 @@
     margin:0; background:var(--bg); color:var(--text);
     font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial;
     -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-    display:flex; align-items:center; justify-content:center; padding:14px;
+    display:flex; align-items:flex-start; justify-content:center; padding:34px 14px 14px; /* more top padding */
   }
   .wrap{width:min(1100px,100%); display:grid; gap:14px}
   .card{
@@ -29,9 +29,15 @@
   }
   .eyebrow{font-size:11px; letter-spacing:.25em; text-transform:uppercase; color:var(--muted); margin:12px 12px 4px}
   .title{
-    font-weight:700; font-size:20px; margin:0 12px 12px;
+    font-weight:700; font-size:20px; margin:0 12px 6px;
     background:linear-gradient(90deg, var(--pink), var(--gold));
     -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .topline{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:0 12px 8px}
+  .itime{
+    font-size:12.5px; color:#f6f7ff; padding:6px 10px; border-radius:999px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05));
+    border:1px solid rgba(255,255,255,0.16);
   }
 
   .grid{padding:12px; display:grid; grid-template-columns:1.15fr .85fr; gap:12px}
@@ -80,6 +86,17 @@
     font-size:13px; line-height:1.45; color:#f2f2ff; background: rgba(255,255,255,0.04);
     border:1px solid rgba(255,255,255,0.10); border-radius:10px; padding:10px
   }
+
+  /* Hint box */
+  .hint{
+    font-size:12.5px; line-height:1.5; color:#f6f7ff;
+    background:linear-gradient(180deg, rgba(255,255,210,0.10), rgba(255,255,255,0.04));
+    border:1px solid rgba(255,255,210,0.35);
+    border-radius:10px; padding:10px;
+  }
+  .hint b{color:#fff}
+  .hint ul{margin:8px 0 0 18px; padding:0}
+  .hint li{margin:4px 0}
 
   /* Keys list */
   .keys{
@@ -169,13 +186,30 @@
     40%{box-shadow:0 0 0 18vmin rgba(255,215,106,0.22)}
     100%{box-shadow:0 0 0 0 rgba(255,215,106,0.00)}
   }
+
+  /* Tooltip for Clarity hint puck */
+  .tip{
+    position:absolute; padding:8px 10px; font-size:12px; line-height:1.4;
+    color:#f6f7ff; background:rgba(10,10,15,0.8); border:1px solid rgba(255,255,255,0.18);
+    border-radius:8px; transform:translate(-50%,-110%); white-space:nowrap; pointer-events:none; opacity:0;
+    transition:opacity .2s ease;
+  }
+  .puck:hover + .tip, .puck:focus + .tip{opacity:1}
+  .puck{
+    position:absolute; width:16px; height:16px; border-radius:50%;
+    background: rgba(255,255,210,0.85); border:1px solid rgba(0,0,0,0.5);
+    display:grid; place-items:center; font-size:11px; color:#0a0a0f; cursor:pointer;
+  }
 </style>
 </head>
 <body>
   <main class="wrap">
     <section class="card">
       <div class="eyebrow">Center</div>
-      <h1 class="title">Cube Keys → Proximity to School</h1>
+      <div class="topline">
+        <h1 class="title">Cube Keys → Proximity to School</h1>
+        <div class="itime" id="illuminaTime">Illumina time — calculating…</div>
+      </div>
       <div class="grid">
         <div class="cube-wrap">
           <!-- Trimmed viewBox height to tighten padding -->
@@ -246,6 +280,17 @@
                 <circle r="9" fill="#ff7fb7"/><text class="label" x="12" y="4">Bridge of Joy</text>
               </g>
             </g>
+
+            <!-- Tiny hint puck near Clarity -->
+            <g transform="translate(470,105)">
+              <foreignObject width="150" height="70">
+                <div xmlns="http://www.w3.org/1999/xhtml" style="position:relative;">
+                  <button class="puck" id="clarityPuck" tabindex="0" aria-label="Hint for Clarity">?</button>
+                  <div class="tip" id="clarityTip">Clarity appears after one honest line + a MirrorHoney note. Click to check &amp; claim.</div>
+                </div>
+              </foreignObject>
+            </g>
+
           </svg>
         </div>
 
@@ -254,6 +299,15 @@
           <div class="stat"><span>Progress</span><b id="progressPct">0%</b></div>
           <div class="stat"><span>Keys</span><b id="keysCount">0 / 8</b></div>
           <div class="feedback" id="feedback">Collect keys. Keys only light up if held on your device.</div>
+
+          <div class="hint">
+            <b>How to find Clarity (Garlic):</b>
+            <ul>
+              <li>Write one honest sentence you’ve been avoiding.</li>
+              <li>Save it as a MirrorHoney note.</li>
+              <li>Then hold <b>Clarity</b> here and tag how you got it (🧭 found / ⭐ earned).</li>
+            </ul>
+          </div>
 
           <div class="keys">
             <div class="key-row" id="keyRow"></div>
@@ -294,7 +348,7 @@
   var KEY_DEFS = [
     {id:"honey",       label:"Honey",        color:"p"},
     {id:"froot",       label:"Froot",        color:"gr"},
-    {id:"clarity",     label:"Clarity",      color:"y"},   /* yellow */
+    {id:"clarity",     label:"Clarity",      color:"y"},
     {id:"voice",       label:"Voice",        color:"v"},
     {id:"mirrorhoney", label:"MirrorHoney",  color:"v"},
     {id:"four",        label:"Four",         color:"gr"},
@@ -316,6 +370,9 @@
     var s = loadState();
     KEY_DEFS.forEach(function(k){ if(!s[k.id]) s[k.id] = {held:false, method:"found"}; });
     if(s.earth){ delete s.earth; }
+    // Auto-claim Clarity if a MirrorHoney note already exists
+    var mh = localStorage.getItem('mirrorhoney.note') || localStorage.getItem('mirrorhoney.last_note');
+    if(mh && s.clarity && !s.clarity.held){ s.clarity.held = true; s.clarity.method = "earned"; }
     saveState(s);
   }
   function methodBadge(id){ var m = METHODS.find(function(x){return x.id===id}); return m ? (m.badge+" "+m.label) : ""; }
@@ -454,8 +511,28 @@
     setNodeLighting();
     setEdgeBrightness(p.pct);
     setClarityPlane();
+    renderIlluminaTime();
   }
   function update(){ updateUI(); }
+
+  /* ---------- Illumina Time ---------- */
+  // Illumina 1 start: Nov 5, 2025 (full moon) — 42-day cycle
+  var I_START = new Date('2025-11-05T00:00:00'); // local midnight start
+  function renderIlluminaTime(){
+    var el = document.getElementById('illuminaTime');
+    var now = new Date();
+    var dayMS = 24*60*60*1000;
+    var diff = Math.floor((now - I_START)/dayMS) + 1; // Day 1 = start day
+    if (diff < 1){
+      el.textContent = "Illumina 1 — Pre-cycle (" + (1 - diff) + " days)";
+      return;
+    }
+    if (diff > 42){
+      el.textContent = "Illumina 1 — Complete (+" + (diff - 42) + " days)";
+      return;
+    }
+    el.textContent = "Illumina 1 — Day " + diff + " of 42";
+  }
 
   /* ---------- Reality Anchor ---------- */
   (function(){
@@ -499,6 +576,28 @@
     closeBtn.addEventListener('click', hide);
     overlay.addEventListener('click', function(e){ if(e.target===overlay) hide(); });
     startBtn.addEventListener('click', run);
+  })();
+
+  /* ---------- Clarity puck logic (auto-claim) ---------- */
+  (function(){
+    var puck = document.getElementById('clarityPuck');
+    var tip  = document.getElementById('clarityTip');
+    if (!puck) return;
+    puck.addEventListener('click', function(){
+      var mh = localStorage.getItem('mirrorhoney.note') || localStorage.getItem('mirrorhoney.last_note');
+      var state = loadState();
+      if (mh){
+        if (!state.clarity) state.clarity = {held:false, method:"earned"};
+        state.clarity.held = true;
+        if (!state.clarity.method) state.clarity.method = "earned";
+        saveState(state);
+        tip.textContent = "Clarity claimed ✓ (from MirrorHoney note)";
+        update();
+      } else {
+        tip.textContent = "No MirrorHoney note detected yet — write one line there, then click again.";
+        setTimeout(function(){ tip.textContent = "Clarity appears after one honest line + a MirrorHoney note. Click to check & claim."; }, 4000);
+      }
+    });
   })();
 
   /* ---------- Init ---------- */
