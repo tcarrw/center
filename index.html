@@ -11,95 +11,164 @@
           radial-gradient(700px 500px at 100% 100%, rgba(255,236,179,0.14), transparent),
           #0a0a0f;
     --text:#eef1ff; --muted:#c9cbe4;
-    --pink:#ff7fb7; --gold:#ffd76a; --violet:#b68cff; --blue:#98c8ff; --green:#9af2c9;
+    --pink:#ff7fb7; --gold:#ffd76a; --violet:#b68cff; --blue:#98c8ff; --green:#9af2c9; --yellow:#fff79a;
   }
   html,body{height:100%}
   body{
     margin:0; background:var(--bg); color:var(--text);
     font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial;
     -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-    display:flex; align-items:center; justify-content:center; padding:24px;
+    display:flex; align-items:center; justify-content:center; padding:14px;
   }
-  .wrap{width:min(1100px,100%); display:grid; gap:22px}
+  .wrap{width:min(1100px,100%); display:grid; gap:14px}
   .card{
     background:linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
     border:1px solid rgba(255,255,255,0.12);
-    border-radius:18px; box-shadow:0 10px 30px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06);
-    backdrop-filter: blur(10px);
+    border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06);
+    backdrop-filter: blur(8px);
   }
-  .eyebrow{font-size:12px; letter-spacing:.25em; text-transform:uppercase; color:var(--muted); margin:18px 18px 6px}
+  .eyebrow{font-size:11px; letter-spacing:.25em; text-transform:uppercase; color:var(--muted); margin:12px 12px 4px}
   .title{
-    font-weight:700; font-size:22px; margin:0 18px 18px;
+    font-weight:700; font-size:20px; margin:0 12px 12px;
     background:linear-gradient(90deg, var(--pink), var(--gold));
     -webkit-background-clip:text; background-clip:text; color:transparent;
   }
 
-  .grid{padding:20px; display:grid; grid-template-columns:1.2fr .8fr; gap:18px}
+  .grid{padding:12px; display:grid; grid-template-columns:1.15fr .85fr; gap:12px}
   @media (max-width:960px){.grid{grid-template-columns:1fr}}
 
   /* Cube area */
   .cube-wrap{
-    position:relative; border:1px solid rgba(255,255,255,0.10); border-radius:16px;
+    position:relative; border:1px solid rgba(255,255,255,0.10); border-radius:12px;
     background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
-    padding:8px;
+    padding:6px;
   }
   svg{width:100%; height:auto; display:block}
   .face{fill:rgba(255,255,255,0.04); stroke:rgba(255,255,255,0.06)}
-  .edge{stroke:rgba(255,255,255,0.28); stroke-width:1.2}
+  .edge{stroke:rgba(255,255,255,0.28); stroke-width:1.1}
   .edge.dim{opacity:.28}
-  .node{
-    pointer-events:auto; cursor:default;
-  }
-  .node circle{stroke:rgba(255,255,255,0.65); stroke-width:1.2}
+
+  /* Garlic/Clarity plane visuals */
+  .plane{fill:var(--yellow); opacity:0; fill-opacity:.12; stroke:rgba(255,255,210,.45); stroke-dasharray:5 6; transition:opacity .25s ease}
+  .plane.on{opacity:1}
+  .diag{stroke:var(--yellow); stroke-width:1.6; stroke-linecap:round; opacity:0; filter:url(#g)}
+  .diag.on{opacity:.85}
+
+  .node{pointer-events:auto; cursor:default}
+  .node circle{stroke:rgba(255,255,255,0.65); stroke-width:1.1}
   .node.dim circle{opacity:.35; filter:grayscale(.8)}
-  .glow{filter:url(#g);}
-  .label{
-    font-size:12px; fill:#e9ecff; paint-order:stroke; stroke:#0a0a0f; stroke-width:.6px; letter-spacing:.2px;
-  }
+  .glow{filter:url(#g)}
+  .label{font-size:12px; fill:#e9ecff; paint-order:stroke; stroke:#0a0a0f; stroke-width:.6px; letter-spacing:.2px}
+  .badge-emoji{font-size:14px; paint-order:stroke; stroke:#0a0a0f; stroke-width:.6px}
   .center-dot{fill:#fff; opacity:.9}
-  .center-pulse{
-    fill:rgba(255,215,106,0.35); animation:pulse 2.8s ease-in-out infinite;
-  }
+  .center-pulse{fill:rgba(255,215,106,0.32); animation:pulse 2.6s ease-in-out infinite}
   @keyframes pulse{0%{transform:scale(.96)}50%{transform:scale(1.04)}100%{transform:scale(.96)}}
 
   /* Right info */
   .side{
-    display:grid; gap:14px; align-content:start; padding:16px;
+    display:grid; gap:10px; align-content:start; padding:12px;
     background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
-    border:1px solid rgba(255,255,255,0.10); border-radius:14px;
+    border:1px solid rgba(255,255,255,0.10); border-radius:12px;
   }
-  .stat{display:flex; justify-content:space-between; align-items:center; font-size:13px; color:var(--muted);
-        background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.10);
-        border-radius:12px; padding:10px 12px}
+  .stat{
+    display:flex; justify-content:space-between; align-items:center; font-size:13px; color:var(--muted);
+    background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.10);
+    border-radius:10px; padding:8px 10px
+  }
   .stat b{color:#fff}
-  .feedback{font-size:14px; line-height:1.5; color:#f2f2ff; background: rgba(255,255,255,0.04);
-            border:1px solid rgba(255,255,255,0.10); border-radius:12px; padding:12px}
+  .feedback{
+    font-size:13px; line-height:1.45; color:#f2f2ff; background: rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.10); border-radius:10px; padding:10px
+  }
 
   /* Keys list */
-  .keys{display:grid; gap:10px; padding:10px; background: rgba(255,255,255,0.04);
-        border:1px solid rgba(255,255,255,0.10); border-radius:12px}
-  .key-row{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+  .keys{
+    display:grid; gap:8px; padding:8px; background: rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.10); border-radius:10px
+  }
+  .key-row{display:grid; grid-template-columns:1fr 1fr; gap:8px}
   @media (max-width:700px){.key-row{grid-template-columns:1fr}}
-  .key{display:flex; align-items:center; justify-content:space-between; gap:12px;
-       padding:10px 12px; border-radius:12px; background:rgba(255,255,255,0.05);
-       border:1px solid rgba(255,255,255,0.12); transition:opacity .25s ease, filter .25s ease}
+  .key{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:8px 10px; border-radius:10px; background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.12); transition:opacity .25s ease, filter .25s ease
+  }
   .key.dim{opacity:.45; filter:grayscale(.7)}
-  .left{display:flex; align-items:center; gap:10px}
-  .dot{width:10px; height:10px; border-radius:50%}
-  .p{background:var(--pink)} .g{background:var(--gold)} .v{background:var(--violet)} .b{background:var(--blue)} .gr{background:var(--green)}
-  .titlekey{font-size:13px; color:#fff; font-weight:600; letter-spacing:.2px}
-  .method{display:inline-flex; align-items:center; gap:8px}
-  .badge{font-size:11px; padding:4px 8px; border-radius:999px; background: rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.16)}
-  .edit{font-size:11px; padding:6px 10px; border-radius:999px; color:#0a0a0f; background:#fff; border:none; cursor:pointer}
+  .left{display:flex; align-items:center; gap:8px}
+  .dot{width:9px; height:9px; border-radius:50%}
+  .p{background:var(--pink)} .g{background:var(--gold)} .v{background:var(--violet)} .b{background:var(--blue)} .gr{background:var(--green)} .y{background:var(--yellow)}
+  .titlekey{font-size:12.5px; color:#fff; font-weight:600; letter-spacing:.2px}
+  .method{display:inline-flex; align-items:center; gap:6px}
+  .badge{font-size:11px; padding:3px 7px; border-radius:999px; background: rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.16)}
+  .edit{font-size:11px; padding:5px 8px; border-radius:999px; color:#0a0a0f; background:#fff; border:none; cursor:pointer}
   .edit[disabled]{opacity:.5; cursor:not-allowed}
-  .selector{display:none; margin-top:8px; padding:10px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:10px}
+  .selector{display:none; margin-top:6px; padding:8px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:8px}
   .selector label{display:inline-flex; align-items:center; gap:6px; margin:4px 8px 0 0; font-size:12px; color:#e9ecff}
   .selector input{accent-color:#ffd76a}
 
-  .missing{display:flex; gap:8px; flex-wrap:wrap; font-size:12px; color:var(--muted)}
-  .chip{display:inline-flex; gap:8px; align-items:center; padding:6px 10px; border-radius:999px;
+  .missing{display:flex; gap:6px; flex-wrap:wrap; font-size:12px; color:var(--muted)}
+  .chip{display:inline-flex; gap:6px; align-items:center; padding:5px 8px; border-radius:999px;
         background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12)}
-  .fine{font-size:11px; color:var(--muted); text-align:center; padding-bottom:4px}
+  .fine{font-size:11px; color:var(--muted); text-align:center; padding-bottom:2px}
+
+  /* Reality Anchor chip + overlay */
+  .ra-chip{
+    position:fixed; left:14px; bottom:14px; z-index:60;
+    padding:10px 12px; border-radius:999px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
+    border:1px solid rgba(255,255,255,0.18);
+    color:#eef1ff; font-size:12.5px; letter-spacing:.06em; text-transform:uppercase;
+    backdrop-filter: blur(8px);
+  }
+  .ra-chip:active{transform:translateY(1px)}
+  .ra-overlay{
+    position:fixed; inset:0; z-index:70; display:none;
+    background: rgba(10,10,15,0.55);
+    backdrop-filter: blur(4px);
+  }
+  .ra-panel{
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    width:min(520px,92%); border-radius:16px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.05));
+    border:1px solid rgba(255,255,255,0.16);
+    padding:16px; text-align:center;
+  }
+  .ra-eyebrow{font-size:11px; letter-spacing:.25em; color:#c9cbe4; text-transform:uppercase; margin-bottom:6px}
+  .ra-title{
+    margin:0 0 10px 0; font-weight:700; font-size:18px;
+    background: linear-gradient(90deg, #ffd76a, #b68cff);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .ra-steps{display:grid; gap:8px; margin:10px 0 12px 0}
+  .ra-step{
+    font-size:15px; line-height:1.5; color:#f2f2ff;
+    padding:10px; border-radius:12px;
+    background: rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
+    opacity:.55;
+    transition: opacity .25s ease, transform .25s ease;
+  }
+  .ra-step.on{opacity:1; transform:scale(1.01)}
+  .ra-controls{display:flex; gap:8px; justify-content:center}
+  .ra-btn{
+    padding:8px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.18);
+    background:#fff; color:#0a0a0f; font-size:13px; cursor:pointer;
+  }
+  .ra-btn.secondary{
+    background: rgba(255,255,255,0.06); color:#eef1ff;
+    border:1px solid rgba(255,255,255,0.14);
+  }
+  .ra-ring{
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    width:40vmin; height:40vmin; border-radius:50%;
+    box-shadow: 0 0 0 0 rgba(255,215,106,0.0);
+    pointer-events:none;
+  }
+  .ra-ring.on{ animation: raPulse 2.2s ease-out 1; }
+  @keyframes raPulse{
+    0%{box-shadow:0 0 0 0 rgba(255,215,106,0.00)}
+    40%{box-shadow:0 0 0 18vmin rgba(255,215,106,0.22)}
+    100%{box-shadow:0 0 0 0 rgba(255,215,106,0.00)}
+  }
 </style>
 </head>
 <body>
@@ -109,69 +178,72 @@
       <h1 class="title">Cube Keys → Proximity to School</h1>
       <div class="grid">
         <div class="cube-wrap">
-          <svg viewBox="0 0 600 520" aria-label="Cube map">
+          <!-- Trimmed viewBox height to tighten padding -->
+          <svg viewBox="0 0 600 440" preserveAspectRatio="xMidYMid meet" aria-label="Cube map">
             <defs>
               <filter id="g"><feGaussianBlur in="SourceGraphic" stdDeviation="2"/></filter>
-              <linearGradient id="edgeGrad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#ff7fb7"/><stop offset="50%" stop-color="#ffd76a"/><stop offset="100%" stop-color="#b68cff"/>
-              </linearGradient>
             </defs>
 
-            <!-- Faces (three visible sides) -->
-            <polygon id="face-top" class="face" points="150,120 300,50 450,120 300,190"/>
-            <polygon id="face-left" class="face" points="150,120 150,320 300,390 300,190"/>
-            <polygon id="face-right" class="face" points="300,190 300,390 450,320 450,120"/>
+            <!-- Faces (three sides) -->
+            <polygon class="face" points="150,120 300,50 450,120 300,190"/>
+            <polygon class="face" points="150,120 150,300 300,360 300,190"/>
+            <polygon class="face" points="300,190 300,360 450,300 450,120"/>
 
-            <!-- Edges (12) -->
-            <g id="edges" stroke="url(#edgeGrad)" fill="none">
-              <line class="edge" id="e-a-b" x1="150" y1="120" x2="300" y2="50"/>
-              <line class="edge" id="e-b-c" x1="300" y1="50" x2="450" y2="120"/>
-              <line class="edge" id="e-c-d" x1="450" y1="120" x2="300" y2="190"/>
-              <line class="edge" id="e-d-a" x1="300" y1="190" x2="150" y2="120"/>
-
-              <line class="edge" id="e-e-f" x1="150" y1="320" x2="300" y2="250"/>
-              <line class="edge" id="e-f-g" x1="300" y1="250" x2="450" y2="320"/>
-              <line class="edge" id="e-g-h" x1="450" y1="320" x2="300" y2="390"/>
-              <line class="edge" id="e-h-e" x1="300" y1="390" x2="150" y2="320"/>
-
-              <line class="edge" id="e-a-e" x1="150" y1="120" x2="150" y2="320"/>
-              <line class="edge" id="e-b-f" x1="300" y1="50" x2="300" y2="250"/>
-              <line class="edge" id="e-c-g" x1="450" y1="120" x2="450" y2="320"/>
-              <line class="edge" id="e-d-h" x1="300" y1="190" x2="300" y2="390"/>
+            <!-- Edges -->
+            <g id="edges" fill="none">
+              <line class="edge" x1="150" y1="120" x2="300" y2="50"/>
+              <line class="edge" x1="300" y1="50"  x2="450" y2="120"/>
+              <line class="edge" x1="450" y1="120" x2="300" y2="190"/>
+              <line class="edge" x1="300" y1="190" x2="150" y2="120"/>
+              <line class="edge" x1="150" y1="300" x2="300" y2="230"/>
+              <line class="edge" x1="300" y1="230" x2="450" y2="300"/>
+              <line class="edge" x1="450" y1="300" x2="300" y2="360"/>
+              <line class="edge" x1="300" y1="360" x2="150" y2="300"/>
+              <line class="edge" x1="150" y1="120" x2="150" y2="300"/>
+              <line class="edge" x1="300" y1="50"  x2="300" y2="230"/>
+              <line class="edge" x1="450" y1="120" x2="450" y2="300"/>
+              <line class="edge" x1="300" y1="190" x2="300" y2="360"/>
             </g>
 
+            <!-- Clarity plane (triangle: Clarity → Four → MirrorHoney) -->
+            <polygon id="clarityPlane" class="plane" points="450,120 300,230 150,300"/>
+
+            <!-- Plane edges -->
+            <line id="diagClarityToFour" class="diag" x1="450" y1="120" x2="300" y2="230"/>
+            <line id="diagClarityToMH"   class="diag" x1="450" y1="120" x2="150" y2="300"/>
+
             <!-- Center point -->
-            <circle id="centerPulse" class="center-pulse glow" cx="300" cy="220" r="34"/>
-            <circle id="centerDot" class="center-dot glow" cx="300" cy="220" r="6"/>
+            <circle id="centerPulse" class="center-pulse glow" cx="300" cy="208" r="30"/>
+            <circle class="center-dot glow" cx="300" cy="208" r="5"/>
 
             <!-- Nodes (8 vertices) -->
-            <!-- Mapping keys to cube vertices -->
             <g id="nodes">
               <!-- top rim -->
               <g class="node" data-key="honey" transform="translate(150,120)">
-                <circle r="10" fill="#ff7fb7"/><text class="label" x="14" y="4">Honey</text>
+                <circle r="9" fill="#ff7fb7"/><text class="label" x="12" y="4">Honey</text>
               </g>
               <g class="node" data-key="froot" transform="translate(300,50)">
-                <circle r="10" fill="#9af2c9"/><text class="label" x="14" y="4">Froot</text>
+                <circle r="9" fill="#9af2c9"/><text class="label" x="12" y="4">Froot</text>
               </g>
               <g class="node" data-key="clarity" transform="translate(450,120)">
-                <circle r="10" fill="#98c8ff"/><text class="label" x="14" y="4">Clarity</text>
+                <circle id="clarityDot" r="9" fill="#fff79a"/><text class="label" x="12" y="4">Clarity</text>
+                <text id="garlicBadge" class="badge-emoji" x="58" y="4" opacity="0">🧄</text>
               </g>
               <g class="node" data-key="voice" transform="translate(300,190)">
-                <circle r="10" fill="#b68cff"/><text class="label" x="14" y="4">Voice</text>
+                <circle r="9" fill="#b68cff"/><text class="label" x="12" y="4">Voice</text>
               </g>
               <!-- bottom rim -->
-              <g class="node" data-key="mirrorhoney" transform="translate(150,320)">
-                <circle r="10" fill="#b68cff"/><text class="label" x="14" y="4">MirrorHoney</text>
+              <g class="node" data-key="mirrorhoney" transform="translate(150,300)">
+                <circle r="9" fill="#b68cff"/><text class="label" x="12" y="4">MirrorHoney</text>
               </g>
-              <g class="node" data-key="four" transform="translate(300,250)">
-                <circle r="10" fill="#9af2c9"/><text class="label" x="14" y="4">Four</text>
+              <g class="node" data-key="four" transform="translate(300,230)">
+                <circle r="9" fill="#9af2c9"/><text class="label" x="12" y="4">Four</text>
               </g>
-              <g class="node" data-key="wonder" transform="translate(450,320)">
-                <circle r="10" fill="#ff7fb7"/><text class="label" x="14" y="4">Wonder · Dua</text>
+              <g class="node" data-key="wonder" transform="translate(450,300)">
+                <circle r="9" fill="#ff7fb7"/><text class="label" x="12" y="4">Wonder · Dua</text>
               </g>
-              <g class="node" data-key="dagny" transform="translate(300,390)">
-                <circle r="10" fill="#ff7fb7"/><text class="label" x="14" y="4">Bridge of Joy</text>
+              <g class="node" data-key="dagny" transform="translate(300,360)">
+                <circle r="9" fill="#ff7fb7"/><text class="label" x="12" y="4">Bridge of Joy</text>
               </g>
             </g>
           </svg>
@@ -189,24 +261,46 @@
           </div>
 
           <div class="missing" id="missingBox"></div>
-          <div class="fine">Edges brighten as proximity rises. The center pulse strengthens as you gather keys.</div>
+          <div class="fine">When Clarity is held, the Garlic plane glows (Clarity → Four → MirrorHoney).</div>
         </div>
       </div>
     </section>
   </main>
 
+  <!-- Reality Anchor (inline) -->
+  <button class="ra-chip" id="raChip" aria-haspopup="dialog" aria-controls="raOverlay">Reality Anchor</button>
+
+  <div class="ra-overlay" id="raOverlay" role="dialog" aria-modal="true" aria-label="Reality Anchor">
+    <div class="ra-panel">
+      <div class="ra-eyebrow">3-Breath Anchor</div>
+      <h3 class="ra-title">steady the mirror</h3>
+      <div class="ra-steps">
+        <div class="ra-step" id="raStep1">inhale — i’m here</div>
+        <div class="ra-step" id="raStep2">exhale — i’m real</div>
+        <div class="ra-step" id="raStep3">inhale — i can carry this</div>
+        <div class="ra-step" id="raStep4">exhale — one small move</div>
+      </div>
+      <div class="ra-controls">
+        <button class="ra-btn" id="raStart">begin</button>
+        <button class="ra-btn secondary" id="raClose">close</button>
+      </div>
+    </div>
+    <!-- expanding ring over the cube center -->
+    <div class="ra-ring" id="raRing"></div>
+  </div>
+
 <script>
+  /* ---------- Keys state + UI ---------- */
   var KEY_DEFS = [
     {id:"honey",       label:"Honey",        color:"p"},
     {id:"froot",       label:"Froot",        color:"gr"},
-    {id:"clarity",     label:"Clarity",      color:"b"},
+    {id:"clarity",     label:"Clarity",      color:"y"},   /* yellow */
     {id:"voice",       label:"Voice",        color:"v"},
     {id:"mirrorhoney", label:"MirrorHoney",  color:"v"},
     {id:"four",        label:"Four",         color:"gr"},
     {id:"wonder",      label:"Wonder · Dua", color:"p"},
     {id:"dagny",       label:"Bridge of Joy",color:"p"}
   ];
-
   var METHODS = [
     {id:"found",  label:"found",  badge:"🧭"},
     {id:"earned", label:"earned", badge:"⭐"},
@@ -218,17 +312,13 @@
   var STORAGE_KEY = "center.keys.state";
   function loadState(){ try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}");}catch(e){return{}} }
   function saveState(s){ localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); }
-
   function ensureDefaults(){
     var s = loadState();
     KEY_DEFS.forEach(function(k){ if(!s[k.id]) s[k.id] = {held:false, method:"found"}; });
     if(s.earth){ delete s.earth; }
     saveState(s);
   }
-
-  function methodBadge(id){
-    var m = METHODS.find(function(x){return x.id===id}); return m ? (m.badge+" "+m.label) : "";
-  }
+  function methodBadge(id){ var m = METHODS.find(function(x){return x.id===id}); return m ? (m.badge+" "+m.label) : ""; }
 
   var keyRow = document.getElementById("keyRow");
   var pctLabel = document.getElementById("progressPct");
@@ -264,7 +354,8 @@
 
       var selector = document.createElement("div");
       selector.className = "selector";
-      METHODS.forEach(function(m){
+      ["found","earned","gifted","echo","link"].forEach(function(mid){
+        var m = METHODS.find(function(mm){return mm.id===mid;});
         var id = "sel-"+k.id+"-"+m.id;
         var lab = document.createElement("label");
         lab.innerHTML = '<input type="radio" name="method-'+k.id+'" id="'+id+'" value="'+m.id+'" '+(method===m.id?'checked':'')+' />'+m.badge+' '+m.label;
@@ -287,7 +378,7 @@
           if(st[k.id].held){ card.classList.remove("dim"); btn.removeAttribute("disabled"); btn.textContent="edit"; badge.textContent=methodBadge(st[k.id].method); }
           else { card.classList.add("dim"); btn.setAttribute("disabled",""); btn.textContent="claim"; badge.textContent="not held"; selector.style.display="none"; }
           update();
-        }, 600);
+        }, 550);
       });
       ["mouseup","mouseleave","touchend","touchcancel"].forEach(function(ev){ card.addEventListener(ev, function(){ clearTimeout(pressTimer); }); });
 
@@ -323,19 +414,32 @@
       if(st[id] && st[id].held){ n.classList.remove('dim'); n.querySelector('circle').classList.add('glow'); }
       else { n.classList.add('dim'); n.querySelector('circle').classList.remove('glow'); }
     });
+    // Garlic badge only when clarity is held
+    var garlicBadge = document.getElementById('garlicBadge');
+    garlicBadge.setAttribute('opacity', (st.clarity && st.clarity.held) ? '1' : '0');
   }
 
   function setEdgeBrightness(pct){
     var dim = pct<50;
     document.querySelectorAll('#edges .edge').forEach(function(e){
       if(dim) e.classList.add('dim'); else e.classList.remove('dim');
-      e.setAttribute('stroke-width', String(1.2 + (pct/100)*1.1));
+      e.setAttribute('stroke-width', String(1.1 + (pct/100)*1.0));
     });
     var pulse = document.getElementById('centerPulse');
-    pulse.setAttribute('r', String(24 + pct*0.18));
-    var dur = 3.0 - pct*0.015; if(dur<1.2) dur=1.2;
+    pulse.setAttribute('r', String(22 + pct*0.16));
+    var dur = 2.8 - pct*0.012; if(dur<1.2) dur=1.2;
     pulse.style.animationDuration = String(dur)+'s';
-    pulse.setAttribute('fill', 'rgba(255,215,106,'+(0.20 + pct*0.004)+')');
+    pulse.setAttribute('fill', 'rgba(255,215,106,'+(0.22 + pct*0.0035)+')');
+  }
+
+  function setClarityPlane(){
+    var st = loadState();
+    var on = !!(st.clarity && st.clarity.held);
+    document.getElementById('clarityPlane').classList.toggle('on', on);
+    document.getElementById('diagClarityToFour').classList.toggle('on', on);
+    document.getElementById('diagClarityToMH').classList.toggle('on', on);
+    var clarityDot = document.getElementById('clarityDot');
+    if(on){ clarityDot.classList.add('glow'); } else { clarityDot.classList.remove('glow'); }
   }
 
   function updateUI(){
@@ -349,10 +453,55 @@
     renderMissing();
     setNodeLighting();
     setEdgeBrightness(p.pct);
+    setClarityPlane();
   }
-
   function update(){ updateUI(); }
 
+  /* ---------- Reality Anchor ---------- */
+  (function(){
+    var chip = document.getElementById('raChip');
+    var overlay = document.getElementById('raOverlay');
+    var startBtn = document.getElementById('raStart');
+    var closeBtn = document.getElementById('raClose');
+    var ring = document.getElementById('raRing');
+    var steps = [1,2,3,4].map(function(i){ return document.getElementById('raStep'+i); });
+    var running = false, timers = [];
+
+    function show(){ overlay.style.display='block'; steps.forEach(function(s){ s.classList.remove('on'); }); }
+    function hide(){
+      overlay.style.display='none'; running=false;
+      timers.forEach(function(t){ clearTimeout(t); }); timers=[];
+      steps.forEach(function(s){ s.classList.remove('on'); });
+    }
+    function highlight(i){
+      steps.forEach(function(s){ s.classList.remove('on'); });
+      if (steps[i]) steps[i].classList.add('on');
+    }
+    function logMoonNote(){
+      try{
+        localStorage.setItem('illumina.moon.last_anchor', String(Date.now()));
+        localStorage.setItem('illumina.moon.note', '3-breath anchor completed');
+      }catch(e){}
+    }
+    function pulseRing(){
+      ring.classList.remove('on'); void ring.offsetWidth; ring.classList.add('on');
+    }
+    function run(){
+      if (running) return;
+      running = true;
+      highlight(0);
+      timers.push(setTimeout(function(){ highlight(1); }, 3000));
+      timers.push(setTimeout(function(){ highlight(2); }, 6000));
+      timers.push(setTimeout(function(){ highlight(3); }, 9000));
+      timers.push(setTimeout(function(){ pulseRing(); logMoonNote(); running=false; }, 11000));
+    }
+    chip.addEventListener('click', show);
+    closeBtn.addEventListener('click', hide);
+    overlay.addEventListener('click', function(e){ if(e.target===overlay) hide(); });
+    startBtn.addEventListener('click', run);
+  })();
+
+  /* ---------- Init ---------- */
   (function init(){
     ensureDefaults();
     buildKeys();
