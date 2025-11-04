@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Center · Bridge of Joy → School Proximity</title>
+<title>Center · Keys Proximity to School</title>
 <style>
   :root{
     --bg: radial-gradient(1200px 800px at 70% -20%, rgba(255,182,193,0.22), transparent),
@@ -12,161 +12,110 @@
           #0a0a0f;
     --glass: rgba(255,255,255,0.08);
     --glass-strong: rgba(255,255,255,0.12);
-    --stroke: rgba(255,255,255,0.22);
     --text: #eef1ff;
     --muted: #c9cbe4;
     --pink: #ff7fb7;
     --gold: #ffd76a;
     --violet: #b68cff;
-    --green: #9af2c9;
     --blue: #98c8ff;
-    --shadow: 0 10px 30px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06);
+    --green: #9af2c9;
   }
   html,body{height:100%}
   body{
-    margin:0;
-    background: var(--bg);
-    color: var(--text);
-    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
-    letter-spacing: 0.2px;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    display:flex; align-items:center; justify-content:center;
-    padding:24px;
+    margin:0; background:var(--bg); color:var(--text);
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial;
+    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+    display:flex; align-items:center; justify-content:center; padding:24px;
   }
-  .wrap{width:min(980px,100%); display:grid; gap:22px;}
+  .wrap{width:min(980px,100%); display:grid; gap:22px}
+
   .card{
     background: linear-gradient(180deg, var(--glass-strong), rgba(255,255,255,0.04));
     border: 1px solid rgba(255,255,255,0.12);
     border-radius: 18px;
-    box-shadow: var(--shadow);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06);
     backdrop-filter: blur(10px);
   }
-  .stanza{
-    padding:28px;
-  }
-  .eyebrow{
-    font-size:12px;
-    letter-spacing: .25em;
-    text-transform:uppercase;
-    color: var(--muted);
-    margin-bottom:10px;
-  }
+  .stanza{padding:28px}
+  .eyebrow{font-size:12px; letter-spacing:.25em; text-transform:uppercase; color:var(--muted); margin-bottom:10px}
   .title{
     font-weight:700; font-size:22px; margin:0 0 14px 0;
     background: linear-gradient(90deg, var(--pink), var(--gold));
-    -webkit-background-clip:text; background-clip:text; color: transparent;
+    -webkit-background-clip:text; background-clip:text; color:transparent;
   }
-  blockquote{
-    margin:0; padding:0 0 0 14px; border-left:2px solid rgba(255,255,255,0.18);
-    line-height:1.6; color:#f7f4ff;
-  }
-  .meter{
-    padding:22px;
-    display:grid;
-    grid-template-columns: 1.1fr .9fr;
-    gap:18px;
-  }
-  @media (max-width:900px){
-    .meter{grid-template-columns:1fr}
-  }
+  blockquote{margin:0; padding:0 0 0 14px; border-left:2px solid rgba(255,255,255,0.18); line-height:1.6; color:#f7f4ff}
 
-  .dial{
-    position:relative; aspect-ratio:1/1; width:100%;
-    border-radius:20px; padding:16px;
-    display:grid; place-items:center;
-    background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
-    border:1px solid rgba(255,255,255,0.10);
-  }
-  .dial-inner{
-    position:relative; width:100%; height:100%;
-    display:grid; place-items:center;
-  }
-  .ring{
-    position:absolute; inset:0; display:grid; place-items:center;
-  }
+  .meter{padding:22px; display:grid; grid-template-columns: 1.1fr .9fr; gap:18px}
+  @media (max-width:900px){.meter{grid-template-columns:1fr}}
+
+  /* Dial */
+  .dial{position:relative; aspect-ratio:1/1; width:100%; border-radius:20px; padding:16px;
+        display:grid; place-items:center; background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+        border:1px solid rgba(255,255,255,0.10)}
+  .dial-inner{position:relative; width:100%; height:100%; display:grid; place-items:center}
+  .ring{position:absolute; inset:0; display:grid; place-items:center}
   .ring svg{width:100%; height:100%}
-  .ring .track{stroke: rgba(255,255,255,0.12)}
-  .ring .progress{stroke: url(#grad)}
-  .pulse{
-    position:absolute; width:64%; height:64%; border-radius:50%;
-    background: radial-gradient(circle at 50% 40%, rgba(255,215,106,0.45), rgba(255,127,183,0.35) 48%, transparent 70%);
-    filter: blur(8px);
-    animation: hum 2.8s infinite ease-in-out;
-    opacity:.5;
-  }
-  @keyframes hum{
-    0%{transform: scale(0.96)}
-    50%{transform: scale(1.04)}
-    100%{transform: scale(0.96)}
-  }
-  .labels{
-    position:absolute; inset:10%; display:grid; place-items:center;
-  }
-  .orbit{
-    position:absolute; inset:7%; border-radius:50%;
-    border:1px dashed rgba(255,255,255,0.14);
-  }
-  .node{
-    position:absolute; transform: translate(-50%,-50%); font-size:12px; color:#e9ecff;
-    padding:6px 8px; border-radius:999px; background: rgba(10,10,15,0.45); border:1px solid rgba(255,255,255,0.14);
-    backdrop-filter: blur(6px);
-    white-space:nowrap;
-  }
+  .track{stroke: rgba(255,255,255,0.12)}
+  .progress{stroke: url(#grad)}
+  .pulse{position:absolute; width:64%; height:64%; border-radius:50%;
+         background: radial-gradient(circle at 50% 40%, rgba(255,215,106,0.45), rgba(255,127,183,0.35) 48%, transparent 70%);
+         filter: blur(8px); animation: hum 2.8s infinite ease-in-out; opacity:.5}
+  @keyframes hum{0%{transform:scale(.96)}50%{transform:scale(1.04)}100%{transform:scale(.96)}}
+  .labels{position:absolute; inset:10%; display:grid; place-items:center}
+  .orbit{position:absolute; inset:7%; border-radius:50%; border:1px dashed rgba(255,255,255,0.14)}
+  .node{position:absolute; transform:translate(-50%,-50%); font-size:12px; color:#e9ecff;
+        padding:6px 8px; border-radius:999px; background: rgba(10,10,15,0.45);
+        border:1px solid rgba(255,255,255,0.14); backdrop-filter: blur(6px); white-space:nowrap}
   .node b{font-weight:700}
   .school{background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03)); border:1px solid rgba(255,255,255,0.22)}
-  .center-dot{
-    position:absolute; width:10px; height:10px; border-radius:50%; background:#fff; opacity:.8; box-shadow:0 0 20px rgba(255,255,255,0.6);
-  }
-  .readout{
-    display:grid; gap:14px; align-content:start; padding:16px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
-    border:1px solid rgba(255,255,255,0.10);
-    border-radius:14px;
-  }
-  .stat{
-    display:flex; justify-content:space-between; align-items:center; font-size:13px; color:var(--muted);
-    background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.10);
-    border-radius:12px; padding:10px 12px;
-  }
+  .center-dot{position:absolute; width:10px; height:10px; border-radius:50%; background:#fff; opacity:.8; box-shadow:0 0 20px rgba(255,255,255,0.6)}
+
+  /* Right column */
+  .readout{display:grid; gap:14px; align-content:start; padding:16px;
+           background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+           border:1px solid rgba(255,255,255,0.10); border-radius:14px}
+  .stat{display:flex; justify-content:space-between; align-items:center; font-size:13px; color:var(--muted);
+        background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.10);
+        border-radius:12px; padding:10px 12px}
   .stat b{color:#fff}
-  .feedback{
-    font-size:14px; line-height:1.5; color:#f2f2ff; background: rgba(255,255,255,0.04);
-    border:1px solid rgba(255,255,255,0.10); border-radius:12px; padding:12px;
-  }
-  .controls{
-    display:grid; gap:10px; padding:10px; background: rgba(255,255,255,0.04);
-    border:1px solid rgba(255,255,255,0.10); border-radius:12px;
-  }
-  .ctrl{display:grid; gap:8px}
-  .ctrl label{font-size:12px; color:var(--muted); letter-spacing: .06em; text-transform:uppercase}
-  input[type="range"]{width:100%}
-  .legend{
-    display:flex; gap:10px; flex-wrap:wrap; font-size:12px; color:var(--muted);
-  }
-  .chip{display:inline-flex; gap:8px; align-items:center; padding:6px 10px; border-radius:999px; background: rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12)}
+  .feedback{font-size:14px; line-height:1.5; color:#f2f2ff; background: rgba(255,255,255,0.04);
+            border:1px solid rgba(255,255,255,0.10); border-radius:12px; padding:12px}
+
+  .keys{display:grid; gap:10px; padding:10px; background: rgba(255,255,255,0.04);
+        border:1px solid rgba(255,255,255,0.10); border-radius:12px}
+  .key-row{display:flex; gap:10px; flex-wrap:wrap}
+  .key{display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px;
+       background: rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12)}
+  .key input{accent-color:#ffd76a}
+  .key .tag{font-size:12px; color:#e9ecff}
+  .missing{display:flex; gap:8px; flex-wrap:wrap; font-size:12px; color:var(--muted)}
+  .chip{display:inline-flex; gap:8px; align-items:center; padding:6px 10px; border-radius:999px;
+        background: rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12)}
   .dot{width:8px; height:8px; border-radius:50%}
-  .p{background: var(--pink)} .g{background: var(--gold)} .v{background: var(--violet)} .b{background: var(--blue)} .gr{background: var(--green)}
+  .p{background:var(--pink)} .g{background:var(--gold)} .v{background:var(--violet)} .b{background:var(--blue)} .gr{background:var(--green)}
   .fine{font-size:11px; color:var(--muted); text-align:center; padding-bottom:4px}
 </style>
 </head>
 <body>
   <main class="wrap">
+    <!-- Dagny stanza -->
     <section class="card stanza">
-      <div class="eyebrow">Bridge of Joy — Dagny’s Echo</div>
+      <div class="eyebrow">Bridge of Joy · Dagny</div>
       <h1 class="title">Before the lesson, she laughs.</h1>
       <blockquote>
         <p>before the bell, she dances.<br><br>
-        joy isn’t taught here — it arrives,<br>
+        joy is not taught here. it arrives,<br>
         buzzing through open windows,<br>
-        pink-light in her wake.<br><br>
-        when you hear her song,<br>
-        remember: the heart learns first.<br><br>
-        🐝 hum once. 🌸 enter when you feel it bloom.</p>
+        pink light in her wake.<br><br>
+        when you hear her song, remember:<br>
+        the heart learns first.<br><br>
+        🐝 hum once. 🌸 enter when it blooms.</p>
       </blockquote>
     </section>
 
+    <!-- Proximity based on keys -->
     <section class="card meter">
+      <!-- Left: dial -->
       <div class="dial">
         <div class="dial-inner">
           <div class="ring">
@@ -178,8 +127,9 @@
                   <stop offset="100%" stop-color="#b68cff"/>
                 </linearGradient>
               </defs>
-              <circle class="track" cx="50" cy="50" r="42" fill="none" stroke-width="4" />
-              <circle class="progress" cx="50" cy="50" r="42" fill="none" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 999" transform="rotate(-90 50 50)"/>
+              <circle class="track" cx="50" cy="50" r="42" fill="none" stroke-width="4"/>
+              <circle class="progress" cx="50" cy="50" r="42" fill="none" stroke-width="5"
+                      stroke-linecap="round" stroke-dasharray="0 999" transform="rotate(-90 50 50)"/>
             </svg>
           </div>
           <div class="pulse" id="pulse"></div>
@@ -187,76 +137,101 @@
           <div class="center-dot"></div>
 
           <div class="labels">
+            <!-- six primary orbit points plus Earth and Wonder -->
             <div class="node" style="top:6%; left:50%; transform:translate(-50%,-50%);">Honey</div>
             <div class="node" style="top:20%; left:85%;">Froot</div>
             <div class="node" style="top:50%; left:94%;">Clarity</div>
             <div class="node" style="top:80%; left:80%;">Voice</div>
             <div class="node school" style="top:94%; left:50%; transform:translate(-50%,-50%);"><b>School</b></div>
             <div class="node" style="top:80%; left:20%;">MirrorHoney</div>
+            <div class="node" style="top:50%; left:6%;">Earth</div>
+            <div class="node" style="top:20%; left:15%;">Wonder · Dua</div>
           </div>
         </div>
       </div>
 
+      <!-- Right: keys + readout -->
       <div class="readout">
         <div class="eyebrow">School Proximity</div>
-        <div class="stat"><span>Distance</span><b id="distanceLabel">Far</b></div>
-        <div class="stat"><span>Signal</span><b id="signalLabel">Calm</b></div>
+        <div class="stat"><span>Progress</span><b id="progressPct">0%</b></div>
+        <div class="stat"><span>Keys</span><b id="keysCount">0 / 8</b></div>
+        <div class="feedback" id="feedback">Collect keys to approach School.</div>
 
-        <div class="controls">
-          <div class="ctrl">
-            <label for="joy">Joy (Dagny · Bee Hum)</label>
-            <input id="joy" type="range" min="0" max="100" step="1"/>
-          </div>
-          <div class="ctrl">
-            <label for="reflection">Reflection (Marina · Mirror)</label>
-            <input id="reflection" type="range" min="0" max="100" step="1"/>
-          </div>
-          <div class="ctrl">
-            <label for="clarity">Clarity (Sigrid · Blue Glass)</label>
-            <input id="clarity" type="range" min="0" max="100" step="1"/>
+        <div class="keys">
+          <div class="key-row" id="keyRow">
+            <!-- checkboxes are generated by JS so we can persist and keep order -->
           </div>
         </div>
 
-        <div class="feedback" id="feedback">Stillness first, then song.</div>
-        <div class="legend">
-          <span class="chip"><span class="dot p"></span>Joy → School hears laughter</span>
-          <span class="chip"><span class="dot v"></span>Reflection → Mirror aligns</span>
-          <span class="chip"><span class="dot b"></span>Clarity → Path sharpens</span>
-        </div>
-        <div class="fine">Proximity rises with Joy, supported by Reflection and Clarity. Keys remain sealed at School.</div>
+        <div class="missing" id="missingBox"></div>
+
+        <div class="fine">Proximity is based only on keys collected. School stays sealed until threshold is met by the right holder.</div>
       </div>
     </section>
   </main>
 
 <script>
-  var joy = document.getElementById("joy");
-  var reflection = document.getElementById("reflection");
-  var clarity = document.getElementById("clarity");
-  var progress = document.querySelector(".progress");
-  var feedback = document.getElementById("feedback");
-  var distanceLabel = document.getElementById("distanceLabel");
-  var signalLabel = document.getElementById("signalLabel");
-  var pulse = document.getElementById("pulse");
+  // Define the keys that count toward School proximity
+  var KEY_DEFS = [
+    {id:"honey",       label:"Honey",            color:"p"},
+    {id:"mirrorhoney", label:"MirrorHoney",      color:"v"},
+    {id:"froot",       label:"Froot",            color:"g"},
+    {id:"clarity",     label:"Clarity",          color:"b"},
+    {id:"voice",       label:"Voice",            color:"v"},
+    {id:"earth",       label:"Earth",            color:"gr"},
+    {id:"wonder",      label:"Wonder · Dua",     color:"p"},
+    {id:"dagny",       label:"Bridge of Joy",    color:"p"} // Dagny echo as a collectible signal
+  ];
 
-  function load(){
-    var j = Number(localStorage.getItem("center.joy") ?? 28);
-    var r = Number(localStorage.getItem("center.reflection") ?? 22);
-    var c = Number(localStorage.getItem("center.clarity") ?? 20);
-    joy.value = j; reflection.value = r; clarity.value = c;
+  var STORAGE_KEY = "center.keys";
+  var progress = document.querySelector(".progress");
+  var pulse = document.getElementById("pulse");
+  var pctLabel = document.getElementById("progressPct");
+  var keysLabel = document.getElementById("keysCount");
+  var feedback = document.getElementById("feedback");
+  var keyRow = document.getElementById("keyRow");
+  var missingBox = document.getElementById("missingBox");
+
+  function loadState(){
+    try{
+      var saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+      return saved;
+    }catch(e){ return {}; }
+  }
+  function saveState(state){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  function buildKeys(){
+    var state = loadState();
+    keyRow.innerHTML = "";
+    KEY_DEFS.forEach(function(k){
+      var checked = !!state[k.id];
+      var el = document.createElement("label");
+      el.className = "key";
+      el.innerHTML = '<input type="checkbox" '+(checked?'checked':'')+' data-key="'+k.id+'"/>' +
+                     '<span class="dot '+k.color+'"></span>' +
+                     '<span class="tag">'+k.label+'</span>';
+      keyRow.appendChild(el);
+    });
+    keyRow.querySelectorAll('input[type="checkbox"]').forEach(function(cb){
+      cb.addEventListener("change", onToggle);
+    });
+  }
+
+  function onToggle(e){
+    var state = loadState();
+    state[e.target.getAttribute("data-key")] = e.target.checked;
+    saveState(state);
     update();
   }
 
-  function save(j,r,c){
-    localStorage.setItem("center.joy", j);
-    localStorage.setItem("center.reflection", r);
-    localStorage.setItem("center.clarity", c);
-  }
-
-  function proximityScore(j, r, c){
-    var s = 0.62*j + 0.28*r + 0.10*c;
-    if (s>100) s = 100;
-    if (s<0) s = 0;
-    return s;
+  function computeProximity(){
+    var state = loadState();
+    var total = KEY_DEFS.length;
+    var have = KEY_DEFS.filter(function(k){ return !!state[k.id]; }).length;
+    var pct = Math.round((have/total)*100);
+    return {pct:pct, have:have, total:total};
   }
 
   function updateRing(score){
@@ -266,36 +241,49 @@
     progress.setAttribute("stroke-dasharray", dash + " " + (circum - dash));
   }
 
-  function updateUI(score){
-    pulse.style.opacity = String(0.35 + score*0.0065);
-    pulse.style.animationDuration = String(3.2 - (score*0.015)) + "s";
-    if(score < 34){
-      distanceLabel.textContent = "Far";
-      signalLabel.textContent = "Calm";
-      feedback.textContent = "Stillness first, then song.";
-    } else if(score < 67){
-      distanceLabel.textContent = "Approaching";
-      signalLabel.textContent = "Rising";
-      feedback.textContent = "Your hum is traveling — keep dancing.";
+  function updateUI(){
+    var p = computeProximity();
+    pctLabel.textContent = p.pct + "%";
+    keysLabel.textContent = p.have + " / " + p.total;
+    updateRing(p.pct);
+
+    // gentle pulse maps to proximity
+    pulse.style.opacity = String(0.35 + p.pct*0.0065);
+    pulse.style.animationDuration = String(3.2 - (p.pct*0.015)) + "s";
+
+    var missing = KEY_DEFS.filter(function(k){
+      var st = loadState(); return !st[k.id];
+    });
+
+    if(p.pct === 0){
+      feedback.textContent = "Collect keys to approach School.";
+    } else if(p.pct < 50){
+      feedback.textContent = "You are on the path. Keep gathering signals.";
+    } else if(p.pct < 100){
+      feedback.textContent = "Almost ready. A few keys remain.";
     } else {
-      distanceLabel.textContent = "Near";
-      signalLabel.textContent = "Bright";
-      feedback.textContent = "You’re laughing already — the classroom hears you.";
+      feedback.textContent = "All pre keys gathered. The gate listens for the holder.";
+    }
+
+    // render missing list
+    if(missing.length){
+      var html = "Missing keys: ";
+      html += missing.map(function(k){
+        return '<span class="chip"><span class="dot '+k.color+'"></span>'+k.label+'</span>';
+      }).join(" ");
+      missingBox.innerHTML = html;
+    } else {
+      missingBox.innerHTML = "";
     }
   }
 
-  function update(){
-    var j = Number(joy.value), r = Number(reflection.value), c = Number(clarity.value);
-    var score = proximityScore(j,r,c);
-    updateRing(score);
-    updateUI(score);
-    save(j,r,c);
-  }
+  function update(){ updateUI(); }
 
-  joy.addEventListener("input", update);
-  reflection.addEventListener("input", update);
-  clarity.addEventListener("input", update);
-  load();
+  // init
+  (function init(){
+    buildKeys();
+    update();
+  })();
 </script>
 </body>
 </html>
