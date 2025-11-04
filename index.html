@@ -18,7 +18,7 @@
     margin:0; background:var(--bg); color:var(--text);
     font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial;
     -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-    display:flex; align-items:flex-start; justify-content:center; padding:34px 14px 14px; /* more top padding */
+    display:flex; align-items:flex-start; justify-content:center; padding:34px 14px 14px; /* top padding */
   }
   .wrap{width:min(1100px,100%); display:grid; gap:14px}
   .card{
@@ -48,6 +48,7 @@
     position:relative; border:1px solid rgba(255,255,255,0.10); border-radius:12px;
     background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
     padding:6px;
+    overflow:visible;
   }
   svg{width:100%; height:auto; display:block}
   .face{fill:rgba(255,255,255,0.04); stroke:rgba(255,255,255,0.06)}
@@ -60,11 +61,13 @@
   .diag{stroke:var(--yellow); stroke-width:1.6; stroke-linecap:round; opacity:0; filter:url(#g)}
   .diag.on{opacity:.85}
 
-  .node{pointer-events:auto; cursor:default}
+  /* Vertex links */
+  .node a{cursor:pointer}
+  .node a:hover ~ text.label{filter:brightness(1.1)}
+  .node text.label{font-size:12px; fill:#e9ecff; paint-order:stroke; stroke:#0a0a0f; stroke-width:.6px; letter-spacing:.2px}
   .node circle{stroke:rgba(255,255,255,0.65); stroke-width:1.1}
   .node.dim circle{opacity:.35; filter:grayscale(.8)}
   .glow{filter:url(#g)}
-  .label{font-size:12px; fill:#e9ecff; paint-order:stroke; stroke:#0a0a0f; stroke-width:.6px; letter-spacing:.2px}
   .badge-emoji{font-size:14px; paint-order:stroke; stroke:#0a0a0f; stroke-width:.6px}
   .center-dot{fill:#fff; opacity:.9}
   .center-pulse{fill:rgba(255,215,106,0.32); animation:pulse 2.6s ease-in-out infinite}
@@ -77,7 +80,7 @@
     border:1px solid rgba(255,255,255,0.10); border-radius:12px;
   }
   .stat{
-    display:flex; justify-content:space-between; align-items:center; font-size:13px; color:var(--muted);
+    display:flex; justify-content:space-between; align-items:center; font-size:13px; color:#c9cbe4;
     background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.10);
     border-radius:10px; padding:8px 10px
   }
@@ -187,19 +190,20 @@
     100%{box-shadow:0 0 0 0 rgba(255,215,106,0.00)}
   }
 
-  /* Tooltip for Clarity hint puck */
-  .tip{
+  /* Clarity HTML puck (absolute overlay) */
+  .clarity-puck{
+    position:absolute; width:18px; height:18px; border-radius:50%;
+    background: rgba(255,255,210,0.92); border:1px solid rgba(0,0,0,0.5);
+    display:grid; place-items:center; font-size:12px; color:#0a0a0f; cursor:pointer;
+    z-index:50; transform:translate(-50%,-50%);
+  }
+  .clarity-tip{
     position:absolute; padding:8px 10px; font-size:12px; line-height:1.4;
-    color:#f6f7ff; background:rgba(10,10,15,0.8); border:1px solid rgba(255,255,255,0.18);
-    border-radius:8px; transform:translate(-50%,-110%); white-space:nowrap; pointer-events:none; opacity:0;
-    transition:opacity .2s ease;
+    color:#f6f7ff; background:rgba(10,10,15,0.88); border:1px solid rgba(255,255,255,0.18);
+    border-radius:8px; white-space:nowrap; z-index:51; transform:translate(-50%,-120%);
+    opacity:0; pointer-events:none; transition:opacity .2s ease;
   }
-  .puck:hover + .tip, .puck:focus + .tip{opacity:1}
-  .puck{
-    position:absolute; width:16px; height:16px; border-radius:50%;
-    background: rgba(255,255,210,0.85); border:1px solid rgba(0,0,0,0.5);
-    display:grid; place-items:center; font-size:11px; color:#0a0a0f; cursor:pointer;
-  }
+  .clarity-tip.show{opacity:1}
 </style>
 </head>
 <body>
@@ -211,14 +215,13 @@
         <div class="itime" id="illuminaTime">Illumina time — calculating…</div>
       </div>
       <div class="grid">
-        <div class="cube-wrap">
-          <!-- Trimmed viewBox height to tighten padding -->
-          <svg viewBox="0 0 600 440" preserveAspectRatio="xMidYMid meet" aria-label="Cube map">
+        <div class="cube-wrap" id="cubeWrap">
+          <svg id="cubeSvg" viewBox="0 0 600 440" preserveAspectRatio="xMidYMid meet" aria-label="Cube map">
             <defs>
               <filter id="g"><feGaussianBlur in="SourceGraphic" stdDeviation="2"/></filter>
             </defs>
 
-            <!-- Faces (three sides) -->
+            <!-- Faces -->
             <polygon class="face" points="150,120 300,50 450,120 300,190"/>
             <polygon class="face" points="150,120 150,300 300,360 300,190"/>
             <polygon class="face" points="300,190 300,360 450,300 450,120"/>
@@ -239,10 +242,8 @@
               <line class="edge" x1="300" y1="190" x2="300" y2="360"/>
             </g>
 
-            <!-- Clarity plane (triangle: Clarity → Four → MirrorHoney) -->
+            <!-- Clarity plane -->
             <polygon id="clarityPlane" class="plane" points="450,120 300,230 150,300"/>
-
-            <!-- Plane edges -->
             <line id="diagClarityToFour" class="diag" x1="450" y1="120" x2="300" y2="230"/>
             <line id="diagClarityToMH"   class="diag" x1="450" y1="120" x2="150" y2="300"/>
 
@@ -250,48 +251,70 @@
             <circle id="centerPulse" class="center-pulse glow" cx="300" cy="208" r="30"/>
             <circle class="center-dot glow" cx="300" cy="208" r="5"/>
 
-            <!-- Nodes (8 vertices) -->
+            <!-- Nodes (linked) -->
             <g id="nodes">
-              <!-- top rim -->
               <g class="node" data-key="honey" transform="translate(150,120)">
-                <circle r="9" fill="#ff7fb7"/><text class="label" x="12" y="4">Honey</text>
+                <a href="https://honey.plnt.earth" target="_blank" rel="noopener noreferrer">
+                  <circle r="9" fill="#ff7fb7"/>
+                </a>
+                <text class="label" x="12" y="4">Honey</text>
               </g>
+
               <g class="node" data-key="froot" transform="translate(300,50)">
-                <circle r="9" fill="#9af2c9"/><text class="label" x="12" y="4">Froot</text>
+                <a href="https://froot.plnt.earth" target="_blank" rel="noopener noreferrer">
+                  <circle r="9" fill="#9af2c9"/>
+                </a>
+                <text class="label" x="12" y="4">Froot</text>
               </g>
-              <g class="node" data-key="clarity" transform="translate(450,120)">
-                <circle id="clarityDot" r="9" fill="#fff79a"/><text class="label" x="12" y="4">Clarity</text>
+
+              <g class="node" data-key="clarity" id="clarityNode" transform="translate(450,120)">
+                <a href="https://garlic.plnt.earth" target="_blank" rel="noopener noreferrer">
+                  <circle id="clarityDot" r="9" fill="#fff79a"/>
+                </a>
+                <text class="label" x="12" y="4">Clarity</text>
                 <text id="garlicBadge" class="badge-emoji" x="58" y="4" opacity="0">🧄</text>
               </g>
+
               <g class="node" data-key="voice" transform="translate(300,190)">
-                <circle r="9" fill="#b68cff"/><text class="label" x="12" y="4">Voice</text>
+                <a href="https://voice.plnt.earth" target="_blank" rel="noopener noreferrer">
+                  <circle r="9" fill="#b68cff"/>
+                </a>
+                <text class="label" x="12" y="4">Voice</text>
               </g>
-              <!-- bottom rim -->
+
               <g class="node" data-key="mirrorhoney" transform="translate(150,300)">
-                <circle r="9" fill="#b68cff"/><text class="label" x="12" y="4">MirrorHoney</text>
+                <a href="https://mirrorhoney.plnt.earth" target="_blank" rel="noopener noreferrer">
+                  <circle r="9" fill="#b68cff"/>
+                </a>
+                <text class="label" x="12" y="4">MirrorHoney</text>
               </g>
+
               <g class="node" data-key="four" transform="translate(300,230)">
-                <circle r="9" fill="#9af2c9"/><text class="label" x="12" y="4">Four</text>
+                <a href="https://four.plnt.earth" target="_blank" rel="noopener noreferrer">
+                  <circle r="9" fill="#9af2c9"/>
+                </a>
+                <text class="label" x="12" y="4">Four</text>
               </g>
+
               <g class="node" data-key="wonder" transform="translate(450,300)">
-                <circle r="9" fill="#ff7fb7"/><text class="label" x="12" y="4">Wonder · Dua</text>
+                <a href="https://wonder.plnt.earth" target="_blank" rel="noopener noreferrer">
+                  <circle r="9" fill="#ff7fb7"/>
+                </a>
+                <text class="label" x="12" y="4">Wonder · Dua</text>
               </g>
+
               <g class="node" data-key="dagny" transform="translate(300,360)">
-                <circle r="9" fill="#ff7fb7"/><text class="label" x="12" y="4">Bridge of Joy</text>
+                <a href="https://center.plnt.earth?key=dagny" target="_blank" rel="noopener noreferrer">
+                  <circle r="9" fill="#ff7fb7"/>
+                </a>
+                <text class="label" x="12" y="4">Bridge of Joy</text>
               </g>
             </g>
-
-            <!-- Tiny hint puck near Clarity -->
-            <g transform="translate(470,105)">
-              <foreignObject width="150" height="70">
-                <div xmlns="http://www.w3.org/1999/xhtml" style="position:relative;">
-                  <button class="puck" id="clarityPuck" tabindex="0" aria-label="Hint for Clarity">?</button>
-                  <div class="tip" id="clarityTip">Clarity appears after one honest line + a MirrorHoney note. Click to check &amp; claim.</div>
-                </div>
-              </foreignObject>
-            </g>
-
           </svg>
+
+          <!-- HTML-based clarity puck + tooltip (absolute; anchored via JS) -->
+          <button class="clarity-puck" id="clarityPuck" aria-label="Hint for Clarity">?</button>
+          <div class="clarity-tip" id="clarityTip">Clarity appears after one honest line + a MirrorHoney note. Click to check &amp; claim.</div>
         </div>
 
         <div class="side">
@@ -339,7 +362,6 @@
         <button class="ra-btn secondary" id="raClose">close</button>
       </div>
     </div>
-    <!-- expanding ring over the cube center -->
     <div class="ra-ring" id="raRing"></div>
   </div>
 
@@ -471,7 +493,6 @@
       if(st[id] && st[id].held){ n.classList.remove('dim'); n.querySelector('circle').classList.add('glow'); }
       else { n.classList.add('dim'); n.querySelector('circle').classList.remove('glow'); }
     });
-    // Garlic badge only when clarity is held
     var garlicBadge = document.getElementById('garlicBadge');
     garlicBadge.setAttribute('opacity', (st.clarity && st.clarity.held) ? '1' : '0');
   }
@@ -499,7 +520,7 @@
     if(on){ clarityDot.classList.add('glow'); } else { clarityDot.classList.remove('glow'); }
   }
 
-  function updateUI(){
+  function update(){
     var p = computeProximity();
     pctLabel.textContent = p.pct + "%";
     keysLabel.textContent = p.have + " / " + p.total;
@@ -511,27 +532,74 @@
     setNodeLighting();
     setEdgeBrightness(p.pct);
     setClarityPlane();
-    renderIlluminaTime();
   }
-  function update(){ updateUI(); }
 
-  /* ---------- Illumina Time ---------- */
-  // Illumina 1 start: Nov 5, 2025 (full moon) — 42-day cycle
-  var I_START = new Date('2025-11-05T00:00:00'); // local midnight start
+  /* ---------- Illumina Time (illumination % with moon + countdown, auto-step at 0.1%) ---------- */
+  var I_START = new Date('2025-11-05T00:00:00'); // Day 1 local midnight
+  var SYNODIC = 29.53058867; // days
+
+  function moonPhaseInfo(d){
+    var epoch = Date.UTC(2000,0,6,18,14,0); // reference new moon
+    var days  = (d.getTime() - epoch) / 86400000;
+    var phase = ((days / SYNODIC) % 1 + 1) % 1;   // 0..1
+    var theta = 2*Math.PI*phase;                  // phase angle
+    var frac  = (1 - Math.cos(theta)) / 2;        // illuminated fraction
+    var pct   = frac * 100;
+    var emoji = ["🌑","🌒","🌓","🌔","🌕","🌖","🌗","🌘"][Math.floor((phase*8+0.5))%8];
+    return {phase, theta, frac, pct, emoji};
+  }
+
   function renderIlluminaTime(){
     var el = document.getElementById('illuminaTime');
     var now = new Date();
-    var dayMS = 24*60*60*1000;
-    var diff = Math.floor((now - I_START)/dayMS) + 1; // Day 1 = start day
-    if (diff < 1){
-      el.textContent = "Illumina 1 — Pre-cycle (" + (1 - diff) + " days)";
-      return;
+    var dayMS = 86400000;
+    var diffDays = Math.floor((now - I_START)/dayMS) + 1;
+
+    var m = moonPhaseInfo(now);
+    var pctStr = m.pct.toFixed(1) + "%";
+
+    if (now < I_START){
+      var ms = I_START - now;
+      var d = Math.floor(ms/dayMS);
+      var h = Math.floor((ms % dayMS) / 3600000);
+      var min = Math.floor((ms % 3600000) / 60000);
+      el.textContent = m.emoji + " " + pctStr + " — Illumina 1 starts in " + d + "d " + h + "h " + min + "m (Nov 5, 2025)";
+    } else if (diffDays > 42){
+      el.textContent = m.emoji + " " + pctStr + " — Illumina 1 Complete (+" + (diffDays - 42) + " days)";
+    } else {
+      el.textContent = m.emoji + " " + pctStr + " — Illumina 1 · Day " + diffDays + " of 42";
     }
-    if (diff > 42){
-      el.textContent = "Illumina 1 — Complete (+" + (diff - 42) + " days)";
-      return;
+  }
+
+  var _illuminaTimer = null;
+  function scheduleIlluminationTick(){
+    if (_illuminaTimer) { clearTimeout(_illuminaTimer); _illuminaTimer = null; }
+
+    var now = new Date();
+    var info = moonPhaseInfo(now);
+    var pct  = info.pct;
+    var theta= info.theta;
+    var sign = Math.sin(theta) >= 0 ? 1 : -1; // + toward full, - toward new
+    var nextBoundary = (sign > 0) ? (Math.ceil(pct*10)/10) : (Math.floor(pct*10)/10);
+    if (Math.abs(nextBoundary - pct) < 1e-6) nextBoundary += sign * 0.1;
+
+    // d(illum)/dt ≈ 50 * sin(theta) * 2π / SYNODIC   [% per day]
+    var derivPerDay = 50 * Math.sin(theta) * (2*Math.PI / SYNODIC);
+    var deltaPct = nextBoundary - pct;
+
+    var minMs = 15000;         // 15s
+    var maxMs = 30*60*1000;    // 30m
+    var ms;
+
+    if (Math.abs(derivPerDay) < 0.00001){
+      ms = 60000; // near extrema: poll every 1m
+    } else {
+      var daysNeeded = deltaPct / derivPerDay;
+      ms = Math.max(minMs, Math.min(maxMs, Math.abs(daysNeeded)*86400000));
     }
-    el.textContent = "Illumina 1 — Day " + diff + " of 42";
+
+    renderIlluminaTime();
+    _illuminaTimer = setTimeout(scheduleIlluminationTick, ms);
   }
 
   /* ---------- Reality Anchor ---------- */
@@ -560,9 +628,7 @@
         localStorage.setItem('illumina.moon.note', '3-breath anchor completed');
       }catch(e){}
     }
-    function pulseRing(){
-      ring.classList.remove('on'); void ring.offsetWidth; ring.classList.add('on');
-    }
+    function pulseRing(){ ring.classList.remove('on'); void ring.offsetWidth; ring.classList.add('on'); }
     function run(){
       if (running) return;
       running = true;
@@ -578,12 +644,42 @@
     startBtn.addEventListener('click', run);
   })();
 
-  /* ---------- Clarity puck logic (auto-claim) ---------- */
+  /* ---------- Clarity puck (absolute overlay, click-to-claim) ---------- */
   (function(){
     var puck = document.getElementById('clarityPuck');
     var tip  = document.getElementById('clarityTip');
-    if (!puck) return;
+    var svg  = document.getElementById('cubeSvg');
+    var wrap = document.getElementById('cubeWrap');
+    var clarityNode = document.getElementById('clarityNode');
+
+    function positionPuck(){
+      if(!clarityNode) return;
+      var circle = document.getElementById('clarityDot');
+      var m = circle.getCTM(); // current transform matrix to SVG user space
+      // The circle center in its own coord is (0,0) due to group translate; transform to viewport
+      var pt = svg.createSVGPoint(); pt.x = 0; pt.y = 0;
+      var svgSpace = pt.matrixTransform(m);
+      // Convert SVG user coords to screen coords, then to wrap-local
+      var ctm = svg.getScreenCTM();
+      var screen = svgSpace.matrixTransform(ctm);
+      var wrapRect = wrap.getBoundingClientRect();
+      var left = screen.x - wrapRect.left;
+      var top  = screen.y - wrapRect.top;
+      puck.style.left = left + 'px';
+      puck.style.top  = top  + 'px';
+      tip.style.left  = left + 'px';
+      tip.style.top   = top  + 'px';
+    }
+
+    window.addEventListener('resize', positionPuck);
+    window.addEventListener('orientationchange', positionPuck);
+    document.addEventListener('DOMContentLoaded', positionPuck);
+    setTimeout(positionPuck, 60); // slight delay to ensure layout
+
     puck.addEventListener('click', function(){
+      tip.classList.add('show');
+      setTimeout(function(){ tip.classList.remove('show'); }, 3000);
+
       var mh = localStorage.getItem('mirrorhoney.note') || localStorage.getItem('mirrorhoney.last_note');
       var state = loadState();
       if (mh){
@@ -593,9 +689,7 @@
         saveState(state);
         tip.textContent = "Clarity claimed ✓ (from MirrorHoney note)";
         update();
-      } else {
-        tip.textContent = "No MirrorHoney note detected yet — write one line there, then click again.";
-        setTimeout(function(){ tip.textContent = "Clarity appears after one honest line + a MirrorHoney note. Click to check & claim."; }, 4000);
+        setTimeout(function(){ tip.textContent = "Clarity appears after one honest line + a MirrorHoney note. Click to check & claim."; }, 3000);
       }
     });
   })();
@@ -605,6 +699,7 @@
     ensureDefaults();
     buildKeys();
     update();
+    scheduleIlluminationTick();   // start live moon % updates at 0.1% steps
   })();
 </script>
 </body>
