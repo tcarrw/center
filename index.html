@@ -12,125 +12,90 @@
   --violet: #3a2e56;
   --aqua: #68ffc5;
   --pink: #ff99d6;
+  --dim: #44425a;
 }
 
 html, body {
-  margin: 0; padding: 0;
-  width: 100%; height: 100%;
+  margin:0; padding:0;
+  width:100%; height:100%;
   background: radial-gradient(circle at 50% 60%, var(--violet), var(--night));
-  color: var(--lavender);
-  font-family: "Inter", sans-serif;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  text-align: center;
-  overflow: hidden;
+  color:var(--lavender);
+  font-family:"Inter", sans-serif;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  text-align:center; overflow:hidden;
 }
 
-h1 { letter-spacing: 1px; margin-bottom: 0.25em; }
+h1 { letter-spacing:1px; margin-bottom:0.25em; }
 
-p {
-  font-size: 1em; line-height: 1.4em;
-  max-width: 320px; opacity: 0.85;
-}
+p { font-size:1em; line-height:1.4em; max-width:320px; opacity:0.85; }
+
+.status { font-size:0.9em; margin-top:0.3em; opacity:0.7; }
 
 #glyph {
-  width: 120px; height: 120px;
-  border-radius: 50%;
-  border: 1px solid var(--lavender);
-  margin: 40px auto;
-  position: relative;
-  box-shadow: 0 0 15px rgba(203,184,255,0.2);
+  width:120px; height:120px; border-radius:50%;
+  border:1px solid var(--dim);
+  margin:40px auto; position:relative;
+  box-shadow:0 0 8px rgba(68,66,90,0.3);
   transition: box-shadow 1s ease, border-color 1s ease;
 }
-
 #glyph::after {
-  content: "";
-  position: absolute;
-  top: 50%; left: 50%;
-  width: 3px; height: 60px;
-  background: var(--lavender);
-  transform: translate(-50%, -50%) rotate(45deg);
-  opacity: 0.6;
+  content:""; position:absolute; top:50%; left:50%;
+  width:3px; height:60px; background:var(--dim);
+  transform:translate(-50%,-50%) rotate(45deg);
+  opacity:0.4;
 }
 
 #fourLink {
-  display: inline-block;
-  text-decoration: none;
-  color: var(--gold);
-  font-weight: 500;
-  font-size: 1.1em;
-  opacity: 0;
-  transition: opacity 2s ease;
-  pointer-events: none;
+  display:inline-block; text-decoration:none;
+  color:var(--gold); font-weight:500; font-size:1.1em;
+  opacity:0; transition:opacity 2s ease; pointer-events:none;
 }
-
-#fourLink.active {
-  opacity: 1;
-  pointer-events: auto;
-  animation: pulseOnce 1.5s ease-out 1;
-}
+#fourLink.active { opacity:1; pointer-events:auto; animation:pulseOnce 1.5s ease-out 1; }
 
 @keyframes pulseOnce {
-  0% { text-shadow: 0 0 0 var(--gold); }
-  40% { text-shadow: 0 0 25px var(--gold); }
-  100% { text-shadow: 0 0 3px var(--gold); }
+  0%{text-shadow:0 0 0 var(--gold);}
+  40%{text-shadow:0 0 25px var(--gold);}
+  100%{text-shadow:0 0 3px var(--gold);}
 }
 
-#cue {
-  display: inline-block;
-  margin-left: 0.3em;
-  opacity: 0;
-  transition: opacity 1s ease;
-}
+#cue { margin-left:0.3em; opacity:0; transition:opacity 1s ease; }
+#cue.show { opacity:1; }
 
-#cue.show { opacity: 1; }
+.lavenderGlow { box-shadow:0 0 40px rgba(203,184,255,0.6); border-color:var(--lavender); }
+.aquaGlow { box-shadow:0 0 40px rgba(104,255,197,0.6); border-color:var(--aqua); }
 
-.lavenderGlow { box-shadow: 0 0 40px rgba(203,184,255,0.6); }
-.aquaGlow { box-shadow: 0 0 40px rgba(104,255,197,0.6); border-color: var(--aqua); }
-
-/* --- Dagny shimmer arc --- */
+/* shimmer + signature */
 .shimmer {
-  position: absolute;
-  width: 2px;
-  height: 200px;
-  background: linear-gradient(45deg, var(--lavender), var(--gold));
-  top: calc(50% - 100px);
-  left: 50%;
-  transform-origin: top center;
-  opacity: 0;
-  pointer-events: none;
+  position:absolute; width:2px; height:200px;
+  background:linear-gradient(45deg,var(--lavender),var(--gold));
+  top:calc(50% - 100px); left:50%;
+  transform-origin:top center; opacity:0; pointer-events:none;
 }
 @keyframes bendAndSnap {
-  0%   { transform: rotate(-60deg) scaleY(0); opacity: 0; }
-  40%  { transform: rotate(-30deg) scaleY(1); opacity: 1; }
-  70%  { transform: rotate(-10deg) scaleY(1.1); opacity: 1; }
-  100% { transform: rotate(0deg) scaleY(0); opacity: 0; }
+  0%{transform:rotate(-60deg) scaleY(0);opacity:0;}
+  40%{transform:rotate(-30deg) scaleY(1);opacity:1;}
+  70%{transform:rotate(-10deg) scaleY(1.1);opacity:1;}
+  100%{transform:rotate(0deg) scaleY(0);opacity:0;}
 }
-.shimmer.active { animation: bendAndSnap 1.8s ease-in-out forwards; }
+.shimmer.active { animation:bendAndSnap 1.8s ease-in-out forwards; }
 
-/* --- Dagny signature text --- */
 #dagnySignature {
-  position: absolute;
-  bottom: 60px;
-  font-size: 0.9em;
-  opacity: 0;
-  transition: opacity 2s ease;
-  background: linear-gradient(90deg, var(--lavender), var(--gold));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  position:absolute; bottom:60px; font-size:0.9em;
+  opacity:0; transition:opacity 2s ease;
+  background:linear-gradient(90deg,var(--lavender),var(--gold));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
 }
-#dagnySignature.show { opacity: 1; animation: fadeOut 6s ease 2s forwards; }
+#dagnySignature.show { opacity:1; animation:fadeOut 6s ease 2s forwards; }
 
-@keyframes fadeOut {
-  0% { opacity: 1; }
-  100% { opacity: 0; }
-}
+@keyframes fadeOut {0%{opacity:1;}100%{opacity:0;}}
 </style>
 </head>
 <body>
 
 <h1>center.plnt.earth</h1>
 <p>🗝 active portal · illumina time: <span id="moonPhase">loading…</span></p>
+<p id="status" class="status">checking keys…</p>
 
 <div id="glyph"></div>
 <div id="shimmer" class="shimmer"></div>
@@ -145,72 +110,62 @@ p {
 <a id="fourLink" href="https://four.plnt.earth">four<span id="cue"></span></a>
 
 <script>
-// ---- Moon Illumination (approximation)
-const moonPhase = document.getElementById('moonPhase');
-const date = new Date();
-const synodic = 29.53058867;
-const newMoon = new Date(2025, 10, 5);
-const diff = (date - newMoon) / (1000*60*60*24);
-const phase = ((diff % synodic) / synodic) * 100;
-moonPhase.textContent = phase.toFixed(1) + "%";
+// moon illumination
+const moonPhase=document.getElementById('moonPhase');
+const date=new Date(), synodic=29.53058867;
+const newMoon=new Date(2025,10,5);
+const diff=(date-newMoon)/(1000*60*60*24);
+const phase=((diff%synodic)/synodic)*100;
+moonPhase.textContent=phase.toFixed(1)+"%";
 
-// ---- Elements
-const glyph = document.getElementById('glyph');
-const fourLink = document.getElementById('fourLink');
-const note = document.getElementById('note');
-const cue = document.getElementById('cue');
-const shimmer = document.getElementById('shimmer');
-const dagnySignature = document.getElementById('dagnySignature');
+const glyph=document.getElementById('glyph');
+const fourLink=document.getElementById('fourLink');
+const note=document.getElementById('note');
+const cue=document.getElementById('cue');
+const shimmer=document.getElementById('shimmer');
+const dagnySignature=document.getElementById('dagnySignature');
+const status=document.getElementById('status');
 
-// ---- Gate Logic
-const gate = localStorage.getItem('kendylGate');
+const gate=localStorage.getItem('kendylGate');
 
-function dagnyShimmer(colors) {
-  shimmer.style.background = `linear-gradient(45deg, ${colors[0]}, ${colors[1]})`;
-  dagnySignature.style.background = `linear-gradient(90deg, ${colors[0]}, ${colors[1]})`;
+function dagnyShimmer(colors){
+  shimmer.style.background=`linear-gradient(45deg,${colors[0]},${colors[1]})`;
+  dagnySignature.style.background=`linear-gradient(90deg,${colors[0]},${colors[1]})`;
   shimmer.classList.add('active');
-  setTimeout(() => dagnySignature.classList.add('show'), 1800);
+  setTimeout(()=>dagnySignature.classList.add('show'),1800);
 }
 
-if (gate === 'school') {
-  glyph.classList.add('lavenderGlow');
-  fourLink.classList.add('active');
-  cue.textContent = '🎓';
-  cue.classList.add('show');
-  note.innerHTML = `
-    the center glows when the gate opens<br>
-    <strong>kendyl’s key</strong> aligns the path.<br>
-    when the shimmer steadies, follow it toward alice.
-  `;
-  dagnyShimmer(['var(--lavender)','var(--gold)']);
-}
-
-if (gate === 'motion') {
-  glyph.classList.add('aquaGlow');
-  fourLink.classList.add('active');
-  cue.textContent = '🔄';
-  cue.classList.add('show');
-  note.innerHTML = `
-    the center glows when the gate opens<br>
-    <strong>monique’s key</strong> aligns the path.<br>
-    when the rhythm steadies, follow it toward alice.
-  `;
-  dagnyShimmer(['var(--aqua)','var(--pink)']);
-  // ---- 128 Hz tone (soft)
-  const AudioContext = window.AudioContext || window.webkitAudioContext;
-  const ctx = new AudioContext();
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  osc.frequency.value = 128;
-  osc.type = 'sine';
-  osc.connect(gain).connect(ctx.destination);
-  gain.gain.setValueAtTime(0, ctx.currentTime);
-  gain.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 0.5);
-  gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 1.5);
-  osc.start();
-  osc.stop(ctx.currentTime + 1.5);
+if(!gate){
+  status.textContent="no key detected · awaiting connection";
+} else {
+  status.textContent="key held · connection active";
+  if(gate==="school"){
+    glyph.classList.add('lavenderGlow');
+    fourLink.classList.add('active');
+    cue.textContent='🎓'; cue.classList.add('show');
+    note.innerHTML=`the center glows when the gate opens<br>
+      <strong>kendyl’s key</strong> aligns the path.<br>
+      when the shimmer steadies, follow it toward alice.`;
+    dagnyShimmer(['var(--lavender)','var(--gold)']);
+  }
+  if(gate==="motion"){
+    glyph.classList.add('aquaGlow');
+    fourLink.classList.add('active');
+    cue.textContent='🔄'; cue.classList.add('show');
+    note.innerHTML=`the center glows when the gate opens<br>
+      <strong>monique’s key</strong> aligns the path.<br>
+      when the rhythm steadies, follow it toward alice.`;
+    dagnyShimmer(['var(--aqua)','var(--pink)']);
+    const AudioContext=window.AudioContext||window.webkitAudioContext;
+    const ctx=new AudioContext(), osc=ctx.createOscillator(), gain=ctx.createGain();
+    osc.frequency.value=128; osc.type='sine';
+    osc.connect(gain).connect(ctx.destination);
+    gain.gain.setValueAtTime(0,ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.05,ctx.currentTime+0.5);
+    gain.gain.linearRampToValueAtTime(0,ctx.currentTime+1.5);
+    osc.start(); osc.stop(ctx.currentTime+1.5);
+  }
 }
 </script>
-
 </body>
 </html>
