@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My Illumina Notebook</title>
+<style>
+body{font-family:system-ui,sans-serif;background:#0a0a0f;color:#fff;
+     display:flex;flex-direction:column;align-items:center;
+     padding:2rem;min-height:100vh;}
+textarea{width:100%;max-width:40rem;height:50vh;
+          background:#111;color:#fff;border:1px solid #fff3;
+          border-radius:8px;padding:1rem;resize:vertical;}
+button{margin-top:1rem;padding:0.6rem 1.2rem;border:none;
+        background:#222;color:#fff;border-radius:8px;cursor:pointer;}
+</style>
+</head>
+<body>
+<h1>🌕 My Illumina Notebook</h1>
+<p id="time"></p>
+<textarea id="note" placeholder="Write anything. Your words stay on this page."></textarea>
+<button id="save">💾 Save Locally</button>
+<script>
+function moonEmoji(p){const pool=["🌑","🌒","🌓","🌔","🌕","🌖","🌗","🌘"];
+  return pool[Math.floor((p*8)%8)];}
+function update(){
+  const start=new Date("2025-11-05T00:00:00Z");
+  const now=new Date();
+  const d=(now-start)/86400000;
+  const day=Math.floor(d%42)+1;
+  const phase=(d%42)/42;
+  document.getElementById('time').textContent=
+    `${moonEmoji(phase)} Illumina 1 · Day ${day}/42 · Phase ${phase.toFixed(2)}`;
+}
+update();setInterval(update,60000);
+const note=document.getElementById('note');
+if(localStorage.note)note.value=localStorage.note;
+document.getElementById('save').onclick=()=>{
+  localStorage.note=note.value;
+  alert('Saved locally. It never leaves this device.');
+};
+</script>
+</body>
+</html>
