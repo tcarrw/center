@@ -2,121 +2,61 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Center · Illumina 1</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Center · Illumina Notebooks</title>
 <style>
-:root {
-  --amber:#ffb347;
-  --night:#0b0d16;
-  --day:#faf6ef;
-  --text-night:#f5f5f5;
-  --text-day:#1a1a1a;
-  --disabled:rgba(255,255,255,0.2);
-}
-html,body{
-  margin:0;padding:0;
-  font-family:'Inter',sans-serif;
-  transition:background 1s,color 1s;
-}
-body.day{background:var(--day);color:var(--text-day);}
-body.night{background:var(--night);color:var(--text-night);}
-header{text-align:center;padding:3rem 1rem 2rem;}
-.clock{position:relative;width:180px;height:180px;margin:0 auto 1rem;}
-.clock-ring{
-  stroke:var(--amber);stroke-width:6;fill:none;
-  stroke-dasharray:565;
-  stroke-dashoffset:calc(565*(1-0.0476));
-  transform:rotate(-90deg);transform-origin:center;
-  opacity:.6;animation:pulse 4.2s infinite ease-in-out;
-}
-.clock-text{
-  position:absolute;width:100%;top:50%;left:0;
-  transform:translateY(-50%);
-  text-align:center;font-weight:500;line-height:1.5;
-}
-@keyframes pulse{0%,100%{opacity:.6;}50%{opacity:1;}}
-h1{margin:0;font-size:1.4rem;letter-spacing:.05em;}
-nav{
-  display:flex;flex-wrap:wrap;
-  justify-content:center;gap:1rem;
-  padding:2rem;
-}
-a.nav-item{
-  text-decoration:none;
-  color:inherit;
-  border:1px solid var(--amber);
-  border-radius:12px;
-  padding:1rem 1.5rem;
-  min-width:160px;
-  text-align:center;
-  transition:background .3s,color .3s,opacity .3s;
-}
-a.nav-item:hover{background:var(--amber);color:#000;}
-a.nav-item.disabled{
-  border-color:var(--disabled);
-  color:var(--disabled);
-  pointer-events:none;
-}
-.triangle{
-  width:160px;height:140px;
-  margin:0 auto;
-  filter:drop-shadow(0 0 12px var(--amber));
-  animation:pulse 4.2s infinite ease-in-out;
-}
-footer{
-  text-align:center;
-  font-size:.85rem;
-  opacity:.6;
-  margin:2rem 0;
-}
-@media (prefers-color-scheme: dark){
-  body{background:var(--night);color:var(--text-night);}
-}
+body{margin:0;background:#0a0a0f;color:#fff;font-family:system-ui,sans-serif;
+     display:flex;flex-direction:column;align-items:center;justify-content:center;
+     min-height:100vh;text-align:center;padding:2rem;}
+h1{font-size:2.5rem;margin-bottom:0.5rem;}
+#ring{width:60vmin;height:60vmin;border:1px solid #fff2;border-radius:50%;
+      margin:2rem 0;position:relative;}
+#start{background:#222;color:#fff;border:1px solid #fff3;padding:0.7rem 1.4rem;
+       border-radius:8px;cursor:pointer;font-size:1rem;}
+#start:hover{background:#444;}
+a{color:#fff;}
+footer{opacity:.5;font-size:.75rem;margin-top:2rem;max-width:26rem;line-height:1.4;}
 </style>
 </head>
 <body>
-<header>
-  <div class="clock">
-    <svg viewBox="0 0 200 200">
-      <circle cx="100" cy="100" r="90" class="clock-ring"/>
-    </svg>
-    <div class="clock-text">
-      <div>Illumina 1 · Day 2</div>
-      <div>99 % Illumination</div>
-    </div>
-  </div>
-  <div class="triangle">
-    <svg viewBox="0 0 100 87" width="100%" height="100%">
-      <polygon points="50,0 100,87 0,87" fill="none" stroke="var(--amber)" stroke-width="2"/>
-    </svg>
-  </div>
-  <h1>Center online · welcome back to the bridge</h1>
-</header>
+<h1>Center · Illumina</h1>
+<p>42 days of remembering and release.</p>
+<div id="ring"></div>
 
-<nav>
-  <a href="ignition.html" class="nav-item">Ignition Sequence · Day 1</a>
-  <a href="return.html" class="nav-item">Return to the Ship · Day 2</a>
-  <a href="#" class="nav-item disabled">Illumina Time Map</a>
-  <a href="#" class="nav-item disabled">MirrorHoney</a>
-  <a href="#" class="nav-item disabled">Garlic</a>
-  <a href="#" class="nav-item disabled">Earth</a>
-  <a href="#" class="nav-item disabled">Motion</a>
-</nav>
+<h2>🪶 Start your own Notebook</h2>
+<p>It lives only on your device. You can keep it private, or share your exported page when you’re ready to join the constellation.</p>
+<button id="start">Download Notebook Template</button>
 
-<footer>© Illumina Cycle 1 · Center Bridge</footer>
+<h3>Example Moon Logs</h3>
+<p>🌕 <a href="moon/ignition.html">Ignition</a> ·
+🌗 <a href="moon/no-babies.html">No Babies</a> ·
+🌖 <a href="moon/return-of-seeds.html">Return of Seeds</a> ·
+🌑 <a href="moon/return.html">Return</a></p>
+
+<footer>Time drifts here by Illumina rhythm — forty-two days of remembering and release.</footer>
 
 <script>
-function setTheme(){
-  const hr=new Date().getHours();
-  if(hr>=7&&hr<19){
-    document.body.classList.add('day');
-    document.body.classList.remove('night');
-  }else{
-    document.body.classList.add('night');
-    document.body.classList.remove('day');
-  }
+/* make 42 dots */
+const ring=document.getElementById('ring');
+for(let i=0;i<42;i++){
+  const d=document.createElement('div');
+  d.style.position='absolute';
+  d.style.width='8px';d.style.height='8px';
+  d.style.borderRadius='50%';d.style.background='#fff2';
+  const a=(i/42)*2*Math.PI;const r=28;
+  d.style.transform=`translate(${Math.sin(a)*r}vmin,${-Math.cos(a)*r}vmin)`;
+  ring.appendChild(d);
 }
-setTheme();
+document.getElementById('start').onclick=()=>{
+  fetch('notebooks/template.html')
+  .then(r=>r.text())
+  .then(t=>{
+    const blob=new Blob([t],{type:'text/html'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;a.download='illumina-notebook.html';a.click();
+  });
+};
 </script>
 </body>
 </html>
