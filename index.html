@@ -5,38 +5,78 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Center · Illumina Notebooks</title>
 <style>
-body{margin:0;background:#0a0a0f;color:#fff;font-family:system-ui,sans-serif;
-     display:flex;flex-direction:column;align-items:center;justify-content:center;
-     min-height:100vh;text-align:center;padding:2rem;}
-h1{font-size:2.5rem;margin-bottom:0.5rem;}
+body{
+  margin:0;background:#0a0a0f;color:#fff;font-family:system-ui,sans-serif;
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;min-height:100vh;text-align:center;padding:2rem;
+}
+h1{font-size:2.5rem;margin-bottom:.25rem;}
 #ring{width:60vmin;height:60vmin;border:1px solid #fff2;border-radius:50%;
       margin:2rem 0;position:relative;}
-#start{background:#222;color:#fff;border:1px solid #fff3;padding:0.7rem 1.4rem;
-       border-radius:8px;cursor:pointer;font-size:1rem;}
-#start:hover{background:#444;}
-a{color:#fff;}
-footer{opacity:.5;font-size:.75rem;margin-top:2rem;max-width:26rem;line-height:1.4;}
+#start,#shareBtn{
+  background:#222;color:#fff;border:1px solid #fff3;
+  padding:0.7rem 1.4rem;border-radius:8px;cursor:pointer;
+  font-size:1rem;margin:.4rem;
+}
+#start:hover,#shareBtn:hover{background:#444;}
+a{color:#fff;text-decoration:none;}
+a:hover{text-decoration:underline;}
+section{margin-top:2rem;}
+footer{
+  opacity:.5;font-size:.75rem;margin-top:2rem;max-width:26rem;line-height:1.4;
+}
+.grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:1rem;max-width:800px;width:100%;margin-top:1rem;
+}
+.card{
+  background:#111;padding:1rem;border-radius:10px;border:1px solid #fff2;
+  font-size:.9rem;line-height:1.4;
+}
 </style>
 </head>
 <body>
 <h1>Center · Illumina</h1>
 <p>42 days of remembering and release.</p>
+
+<!-- the Illumina ring -->
 <div id="ring"></div>
 
-<h2>🪶 Start your own Notebook</h2>
-<p>It lives only on your device. You can keep it private, or share your exported page when you’re ready to join the constellation.</p>
-<button id="start">Download Notebook Template</button>
+<!-- buttons -->
+<div>
+  <button id="start">🪶 Start Your Notebook</button>
+  <button id="shareBtn">📣 Share to X</button>
+</div>
 
-<h3>Example Moon Logs</h3>
-<p>🌕 <a href="moon/ignition.html">Ignition</a> ·
-🌗 <a href="moon/no-babies.html">No Babies</a> ·
-🌖 <a href="moon/return-of-seeds.html">Return of Seeds</a> ·
-🌑 <a href="moon/return.html">Return</a></p>
+<!-- moon logs ordered by day -->
+<section>
+  <h3>🌙 Moon Logs · Illumina 1</h3>
+  <p>
+  🌕 <a href="moon/01-ignition.html">Day 1 · Ignition</a> ·
+  🌗 <a href="moon/14-no-babies.html">Day 14 · No Babies</a> ·
+  🌖 <a href="moon/28-return-of-seeds.html">Day 28 · Return of Seeds</a> ·
+  🌑 <a href="moon/42-return.html">Day 42 · Return</a>
+  </p>
+</section>
 
-<footer>Time drifts here by Illumina rhythm — forty-two days of remembering and release.</footer>
+<!-- community constellation -->
+<section id="community">
+  <h3>✨ Community Constellation</h3>
+  <p>These are public notebooks orbiting this cycle.</p>
+  <div class="grid" id="grid">
+    <div class="card">🌕 <b>@suna</b><br><em>“Ignition felt like glitter physics.”</em><br><a href="#">View notebook →</a></div>
+    <div class="card">🌗 <b>@beeofwords</b><br><em>“Unionized my emotions.”</em><br><a href="#">View notebook →</a></div>
+    <div class="card">🌖 <b>@compostdreams</b><br><em>“Return of Seeds was an outfit.”</em><br><a href="#">View notebook →</a></div>
+  </div>
+</section>
+
+<footer>
+Time drifts here by Illumina rhythm — forty-two days of remembering and release.  
+No accounts, no data; only light, motion, and what you write.
+</footer>
 
 <script>
-/* make 42 dots */
+/* ---------- Illumina ring ---------- */
 const ring=document.getElementById('ring');
 for(let i=0;i<42;i++){
   const d=document.createElement('div');
@@ -47,16 +87,45 @@ for(let i=0;i<42;i++){
   d.style.transform=`translate(${Math.sin(a)*r}vmin,${-Math.cos(a)*r}vmin)`;
   ring.appendChild(d);
 }
+
+/* ---------- helpers ---------- */
+function moonEmoji(p){const pool=["🌑","🌒","🌓","🌔","🌕","🌖","🌗","🌘"];
+  return pool[Math.floor((p*8)%8)];}
+function illuminaState(){
+  const start=new Date("2025-11-05T00:00:00Z");
+  const now=new Date();const d=(now-start)/86400000;
+  const day=Math.floor(d%42)+1;const phase=(d%42)/42;
+  return {day,phase};
+}
+
+/* ---------- notebook download ---------- */
 document.getElementById('start').onclick=()=>{
   fetch('notebooks/template.html')
-  .then(r=>r.text())
-  .then(t=>{
-    const blob=new Blob([t],{type:'text/html'});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    a.href=url;a.download='illumina-notebook.html';a.click();
-  });
+    .then(r=>r.text())
+    .then(t=>{
+      const blob=new Blob([t],{type:'text/html'});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');
+      a.href=url;a.download='illumina-notebook.html';a.click();
+    });
 };
+
+/* ---------- share to X ---------- */
+document.getElementById('shareBtn').onclick=()=>{
+  const {day,phase}=illuminaState();
+  const text=`${moonEmoji(phase)} Illumina 1 · Day ${day}/42 — writing under the same moon at https://center.plnt.earth`;
+  const url=`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+  window.open(url,'_blank');
+};
+
+/* ---------- highlight current day ---------- */
+const dots=[...ring.children];
+setInterval(()=>{
+  const {day}=illuminaState();
+  dots.forEach((d,i)=>{
+    d.style.background=i+1===day?'#fff':'#fff2';
+  });
+},60000);
 </script>
 </body>
 </html>
