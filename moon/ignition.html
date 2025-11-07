@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ignition · Illumina 1</title>
+<style>
+body{background:#0a0a0f;color:#fff;font-family:system-ui,sans-serif;
+     display:flex;flex-direction:column;align-items:center;
+     justify-content:center;text-align:center;min-height:100vh;padding:2rem;}
+h1{font-size:2rem;margin-bottom:.5rem;}
+.time{opacity:.7;margin-bottom:1rem;}
+p{max-width:34rem;line-height:1.6;font-size:1.1rem;}
+footer{opacity:.5;font-size:.75rem;margin-top:2rem;max-width:30rem;}
+</style>
+</head>
+<body>
+<h1>🌕 Ignition</h1>
+<div class="time" id="time"></div>
+<p>The lab coat caught first. We called it an omen and a look. Launch achieved, mascara intact.</p>
+<footer>Illumina 1 · Launch spark · Cycle begins with laughter and smoke.</footer>
+<script>
+function moonEmoji(p){const pool=["🌑","🌒","🌓","🌔","🌕","🌖","🌗","🌘"];return pool[Math.floor((p*8)%8)]}
+function update(){
+ const start=new Date("2025-11-05T00:00:00Z");
+ const now=new Date();const d=(now-start)/86400000;
+ const day=Math.floor(d%42)+1;const phase=(d%42)/42;
+ document.getElementById('time').textContent=`${moonEmoji(phase)} Illumina 1 · Day ${day}/42 · Phase ${phase.toFixed(2)}`;
+}
+update();setInterval(update,60000);
+</script>
+</body>
+</html>
