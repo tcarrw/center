@@ -1,1 +1,92 @@
-a
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>center.plnt.earth – Scottie Pippen’s Underwater Pets</title>
+<style>
+html,body{
+  margin:0;padding:0;height:100%;width:100%;
+  font-family:"Courier New", monospace;
+  color:#eaf7ff;
+  background:linear-gradient(#022436,#044b67);
+  overflow:hidden;
+}
+.ocean{
+  position:absolute;
+  top:0;left:0;
+  width:100%;height:100%;
+  background:radial-gradient(circle at 50% 80%,rgba(255,255,255,0.05) 0%,transparent 70%);
+  animation:wave 12s ease-in-out infinite alternate;
+}
+@keyframes wave{
+  0%{transform:translateY(0);}
+  100%{transform:translateY(-20px);}
+}
+.bubble{
+  position:absolute;
+  bottom:-5%;
+  width:8px;height:8px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.3);
+  animation:rise 12s linear infinite;
+}
+@keyframes rise{
+  0%{transform:translateY(0) scale(1);}
+  100%{transform:translateY(-110vh) scale(0.3);}
+}
+.text{
+  position:relative;
+  top:50%;
+  transform:translateY(-50%);
+  width:80%;
+  margin:auto;
+  text-align:center;
+  line-height:1.6;
+  font-size:1.1rem;
+  max-width:600px;
+}
+h1{font-weight:400;margin-bottom:1.5rem;font-size:1.6rem;color:#aef;}
+footer{
+  position:absolute;
+  bottom:2%;
+  width:100%;
+  text-align:center;
+  font-size:0.8rem;
+  opacity:0.5;
+}
+</style>
+</head>
+<body>
+<div class="ocean" id="ocean"></div>
+
+<div class="text">
+  <h1>Scottie Pippen’s Underwater Pets</h1>
+  <p>
+    In the deep blue gym, a seahorse dribbles bubbles.<br>
+    A manta glides the length of memory — assist after assist.<br>
+    Jellyfish lanterns float through old Chicago light.<br><br>
+    Scottie feeds them silence and leftover highlight reels.<br>
+    They circle like teammates who never retired.<br>
+    Even here, gravity listens to defense.<br><br>
+    The coral keep score in whispers.<br>
+    The scoreboard blinks “breathe.”<br>
+    Every rebound is a wave returning home.
+  </p>
+</div>
+
+<footer>center.plnt.earth © 2025</footer>
+
+<script>
+const ocean=document.getElementById('ocean');
+for(let i=0;i<40;i++){
+  const b=document.createElement('div');
+  b.className='bubble';
+  b.style.left=Math.random()*100+'%';
+  b.style.animationDelay=(Math.random()*12)+'s';
+  b.style.width=b.style.height=(3+Math.random()*8)+'px';
+  ocean.appendChild(b);
+}
+</script>
+</body>
+</html>
