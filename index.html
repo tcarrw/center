@@ -1,158 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>center.plnt.earth</title>
-
-<meta name="color-scheme" content="dark">
-<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>time · opalite</title>
 
 <style>
-html,body{
-  margin:0;
-  height:100%;
-  width:100%;
-  background:#000;
-  overflow:hidden;
-  touch-action:manipulation;
-  color:#fff;
-  font-family:"Helvetica Neue",sans-serif;
-}
-canvas{
-  position:fixed;
-  top:0;left:0;
-  width:100%;height:100%;
-  display:block;
-}
-#label{
-  position:fixed;
-  bottom:2%;
-  left:50%;
-  transform:translateX(-50%);
-  font-size:0.9rem;
-  letter-spacing:1px;
-  opacity:0;
-  transition:opacity 0.6s ease;
-  pointer-events:none;
-  text-align:center;
-}
-#label.show{opacity:0.6;}
+  html,body{
+    margin:0;
+    height:100%;
+    background:#060612;
+    overflow:hidden;
+    font-family:system-ui,sans-serif;
+    color:#f3f0ff;
+  }
+
+  /* opalite field */
+  @keyframes opalShift {
+    0%{filter:hue-rotate(0deg) brightness(1);}
+    25%{filter:hue-rotate(40deg) brightness(1.1);}
+    50%{filter:hue-rotate(-25deg) brightness(0.93);}
+    75%{filter:hue-rotate(20deg) brightness(1.08);}
+    100%{filter:hue-rotate(0deg) brightness(1);}
+  }
+  body{ animation:opalShift 22s infinite linear; }
+
+  /* slow sphere */
+  .sphere{
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:70vmin;
+    height:70vmin;
+    transform:translate(-50%,-50%);
+    border-radius:50%;
+    box-shadow:
+      0 0 80px #c4b5fd22 inset,
+      0 0 140px #b388ff33;
+    animation:sphereMove 28s infinite ease-in-out;
+    opacity:0.35;
+  }
+  @keyframes sphereMove{
+    0%{transform:translate(-50%,-50%) scale(1);}
+    50%{transform:translate(-51%,-48%) scale(1.08);}
+    100%{transform:translate(-50%,-50%) scale(1);}
+  }
+
+  /* title */
+  .title{
+    position:absolute;
+    top:42%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    font-size:36px;
+    letter-spacing:6px;
+    opacity:0.88;
+    text-shadow:0 0 15px #c4b5fd66;
+    animation:titleFloat 16s infinite ease-in-out;
+  }
+  @keyframes titleFloat{
+    0%{transform:translate(-50%,-50%) scale(1);}
+    50%{transform:translate(-50%,-53%) scale(1.05);}
+    100%{transform:translate(-50%,-50%) scale(1);}
+  }
+
+  /* equation — soft, drifting */
+  .eq{
+    position:absolute;
+    top:58%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    font-size:18px;
+    opacity:0.65;
+    letter-spacing:1px;
+    animation:eqDrift 26s infinite ease-in-out;
+  }
+  @keyframes eqDrift{
+    0%{transform:translate(-50%,-50%);}
+    50%{transform:translate(-50%,-48%);}
+    100%{transform:translate(-50%,-50%);}
+  }
+
+  /* shards */
+  .shard{
+    position:absolute;
+    color:#c4b5fd33;
+    font-size:12px;
+    pointer-events:none;
+    user-select:none;
+    animation:rise 32s linear infinite;
+  }
+  @keyframes rise{
+    from{transform:translateY(0) rotate(0deg);}
+    to{transform:translateY(-240vh) rotate(360deg);}
+  }
 </style>
 </head>
+
 <body>
-<canvas id="field"></canvas>
-<div id="label">plnt.earth / center</div>
+
+<div class="sphere"></div>
+<div class="title">time · opalite</div>
+<div class="eq">τ = E / c³</div>
 
 <script>
-// center.plnt.earth visual field
-const c=document.getElementById('field');
-const ctx=c.getContext('2d');
-let W,H,midX,midY;function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;midX=W/2;midY=H/2;}
-resize();window.addEventListener('resize',resize);
-
-// main nodes
-const nodes=[
- {name:"Aran",color:"#888",r:80,size:5,period:120},
- {name:"Mirrorhoney",color:"#b18cff",r:130,size:6,period:140},
- {name:"Honey",color:"#ffd44d",r:160,size:6,period:100,
-  satellites:[{name:"Strawberry Dream",color:"#ff88b7",r:20,size:3,period:18}]},
- {name:"Quietmoon",color:"#aee1ff",r:190,size:6,period:115},
- {name:"Garlic",color:"#dddddd",r:210,size:5,period:130},
- {name:"Dagny",color:"#a8f1d3",r:240,size:6,period:125},
- {name:"Motion",color:"#70e7ff",r:270,size:6,period:110,
-  satellites:[{name:"Voice",color:"#d9baff",r:18,size:3,period:14}]},
-];
-
-let t0=performance.now();
-
-function draw(){
-  const t=(performance.now()-t0)/1000;
-  ctx.clearRect(0,0,W,H);
-
-  // faint center pulse
-  const pulse=0.4+0.1*Math.sin(t*2*Math.PI/8);
-  ctx.beginPath();
-  ctx.arc(midX,midY,4,0,2*Math.PI);
-  ctx.fillStyle=`rgba(200,200,200,${pulse})`;
-  ctx.fill();
-
-  // draw nodes
-  nodes.forEach(n=>{
-    const ang=t*2*Math.PI/n.period;
-    const x=midX+Math.cos(ang)*n.r;
-    const y=midY+Math.sin(ang)*n.r;
-    const grad=ctx.createRadialGradient(x,y,0,x,y,60);
-    grad.addColorStop(0,n.color);
-    grad.addColorStop(1,"rgba(0,0,0,0)");
-    ctx.beginPath();
-    ctx.arc(x,y,n.size,0,2*Math.PI);
-    ctx.fillStyle=grad;
-    ctx.fill();
-
-    // satellites
-    if(n.satellites){
-      n.satellites.forEach(s=>{
-        const a2=t*2*Math.PI/s.period;
-        const sx=x+Math.cos(a2)*s.r;
-        const sy=y+Math.sin(a2)*s.r;
-        const g2=ctx.createRadialGradient(sx,sy,0,sx,sy,40);
-        g2.addColorStop(0,s.color);
-        g2.addColorStop(1,"rgba(0,0,0,0)");
-        ctx.beginPath();
-        ctx.arc(sx,sy,s.size,0,2*Math.PI);
-        ctx.fillStyle=g2;
-        ctx.fill();
-      });
-    }
-  });
-
-  requestAnimationFrame(draw);
-}
-draw();
-
-// simple hover labels
-const label=document.getElementById('label');
-let lastHover=null;
-c.addEventListener('mousemove',e=>{
-  const mx=e.offsetX,my=e.offsetY;
-  let found=null;
-  nodes.forEach(n=>{
-    const ang=(performance.now()-t0)/1000*2*Math.PI/n.period;
-    const x=midX+Math.cos(ang)*n.r;
-    const y=midY+Math.sin(ang)*n.r;
-    if(Math.hypot(mx-x,my-y)<12)found=n;
-    if(n.satellites){
-      n.satellites.forEach(s=>{
-        const a2=(performance.now()-t0)/1000*2*Math.PI/s.period;
-        const sx=x+Math.cos(a2)*s.r;
-        const sy=y+Math.sin(a2)*s.r;
-        if(Math.hypot(mx-sx,my-sy)<10)found=s;
-      });
-    }
-  });
-  if(found&&found!==lastHover){
-    label.textContent=found.name;
-    label.classList.add('show');
-    lastHover=found;
-  }else if(!found&&lastHover){
-    label.classList.remove('show');
-    label.textContent='plnt.earth / center';
-    lastHover=null;
+  const fragments=["time","opal","τ","E/c³","phase","soft","mirror","drift","pulse"];
+  for(let i=0;i<64;i++){
+    const s=document.createElement('div');
+    s.className='shard';
+    s.textContent=fragments[Math.floor(Math.random()*fragments.length)];
+    s.style.left=Math.random()*100+'vw';
+    s.style.top=(80 + Math.random()*40)+'vh';
+    s.style.animationDuration = (16 + Math.random()*22) + 's';
+    s.style.animationDelay = (-Math.random()*20) + 's';
+    document.body.appendChild(s);
   }
-});
-
-// tap labels for mobile
-c.addEventListener('click',()=>{
-  label.classList.add('show');
-  setTimeout(()=>label.classList.remove('show'),2000);
-});
-
-// --- silent audio placeholders ---
-// function tone(freq){ const a=new AudioContext();const o=a.createOscillator();const g=a.createGain();
-// o.type="sine";o.frequency.value=freq; o.connect(g); g.connect(a.destination);
-// g.gain.setValueAtTime(0.1,a.currentTime);o.start();o.stop(a.currentTime+0.5);}
 </script>
+
 </body>
 </html>
