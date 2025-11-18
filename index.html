@@ -1,158 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>center.plnt.earth</title>
-
-<meta name="color-scheme" content="dark">
-<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Bejeweled · Illumina!</title>
 <style>
-html,body{
-  margin:0;
-  height:100%;
-  width:100%;
-  background:#000;
-  overflow:hidden;
-  touch-action:manipulation;
-  color:#fff;
-  font-family:"Helvetica Neue",sans-serif;
-}
-canvas{
-  position:fixed;
-  top:0;left:0;
-  width:100%;height:100%;
-  display:block;
-}
-#label{
-  position:fixed;
-  bottom:2%;
-  left:50%;
-  transform:translateX(-50%);
-  font-size:0.9rem;
-  letter-spacing:1px;
-  opacity:0;
-  transition:opacity 0.6s ease;
-  pointer-events:none;
-  text-align:center;
-}
-#label.show{opacity:0.6;}
+  :root{
+    --bg:#0b0f19;
+    --ink:#e6e8ee;
+    --muted:#a3acc2;
+    --card:#131a27;
+    --accent:#c4b5fd;
+  }
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:system-ui,sans-serif;}
+  header{
+    padding:16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:#0f1524;
+    position:sticky;top:0;z-index:20;
+  }
+  nav a{
+    color:var(--muted);
+    margin:0 8px;
+    text-decoration:none;
+    font-size:14px;
+  }
+  nav a.active{
+    color:var(--accent);
+    font-weight:600;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:32px 16px;}
+  .card{
+    background:var(--card);
+    padding:20px;
+    margin:24px 0;
+    border-radius:16px;
+    box-shadow:0 0 20px rgba(0,0,0,0.3);
+  }
+  .card h2{margin-top:0;color:var(--accent);}
+  iframe{width:100%;height:315px;border:0;border-radius:12px;margin-top:12px;}
 </style>
 </head>
 <body>
-<canvas id="field"></canvas>
-<div id="label">plnt.earth / center</div>
+<header>
+  <div>✨ Bejeweled</div>
+  <nav>
+    <a href="https://bejeweled.plnt.earth">Bejeweled</a>
+    <a href="https://time.plnt.earth">Time</a>
+    <a href="https://time.plnt.earth/elevator/index.html">Elevator</a>
+    <a href="https://honey.plnt.earth">Honey</a>
+    <a href="https://mirror.plnt.earth">Mirror</a>
+    <a href="https://earth.plnt.earth">Earth</a>
+    <a href="https://time.plnt.earth/anchors/index.html">Anchors</a>
+    <a href="https://time.plnt.earth/map/index.html">Map</a>
+  </nav>
+</header>
+<div class="wrap">
+  <div class="card">
+    <h2>Bejeweled — Shine</h2>
+    <p>Self‑illumination. Reclaiming clarity. Polishing back the original signal.</p>
+    <iframe src="https://www.youtube-nocookie.com/embed/b7QlX3yR2xs" allowfullscreen></iframe>
+  </div>
+  <div class="card">
+    <h2>Anti‑Hero — Shadow</h2>
+    <p>The distortion field beneath the shine. The mirror that bends the self‑image.</p>
+    <iframe src="https://www.youtube-nocookie.com/embed/b1kbLwvqugk" allowfullscreen></iframe>
+  </div>
+  <div class="card">
+    <h2>I Can See You — Recognition</h2>
+    <p>Reciprocal visibility. The two‑body gaze. The mutual seeing loop.</p>
+    <iframe src="https://www.youtube-nocookie.com/embed/lVkKLf4DCn8" allowfullscreen></iframe>
+  </div>
+  <div class="card">
+    <h2>Mastermind — Pattern</h2>
+    <p>The architecture beneath the arc. Intention → structure → outcome.</p>
+    <iframe src="https://www.youtube-nocookie.com/embed/Tmz1lz0zcLQ" allowfullscreen></iframe>
+  </div>
+  <div class="card">
+    <h2>#Opalite — Field</h2>
+    <p>Prismatic identity. Refraction. The metamaterial lens of clarity.</p>
+    <iframe src="https://www.youtube-nocookie.com/embed/4FUIEcnvT04" allowfullscreen></iframe>
+  </div>
+</div>
 
 <script>
-// center.plnt.earth visual field
-const c=document.getElementById('field');
-const ctx=c.getContext('2d');
-let W,H,midX,midY;function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;midX=W/2;midY=H/2;}
-resize();window.addEventListener('resize',resize);
-
-// main nodes
-const nodes=[
- {name:"Aran",color:"#888",r:80,size:5,period:120},
- {name:"Mirrorhoney",color:"#b18cff",r:130,size:6,period:140},
- {name:"Honey",color:"#ffd44d",r:160,size:6,period:100,
-  satellites:[{name:"Strawberry Dream",color:"#ff88b7",r:20,size:3,period:18}]},
- {name:"Quietmoon",color:"#aee1ff",r:190,size:6,period:115},
- {name:"Garlic",color:"#dddddd",r:210,size:5,period:130},
- {name:"Dagny",color:"#a8f1d3",r:240,size:6,period:125},
- {name:"Motion",color:"#70e7ff",r:270,size:6,period:110,
-  satellites:[{name:"Voice",color:"#d9baff",r:18,size:3,period:14}]},
-];
-
-let t0=performance.now();
-
-function draw(){
-  const t=(performance.now()-t0)/1000;
-  ctx.clearRect(0,0,W,H);
-
-  // faint center pulse
-  const pulse=0.4+0.1*Math.sin(t*2*Math.PI/8);
-  ctx.beginPath();
-  ctx.arc(midX,midY,4,0,2*Math.PI);
-  ctx.fillStyle=`rgba(200,200,200,${pulse})`;
-  ctx.fill();
-
-  // draw nodes
-  nodes.forEach(n=>{
-    const ang=t*2*Math.PI/n.period;
-    const x=midX+Math.cos(ang)*n.r;
-    const y=midY+Math.sin(ang)*n.r;
-    const grad=ctx.createRadialGradient(x,y,0,x,y,60);
-    grad.addColorStop(0,n.color);
-    grad.addColorStop(1,"rgba(0,0,0,0)");
-    ctx.beginPath();
-    ctx.arc(x,y,n.size,0,2*Math.PI);
-    ctx.fillStyle=grad;
-    ctx.fill();
-
-    // satellites
-    if(n.satellites){
-      n.satellites.forEach(s=>{
-        const a2=t*2*Math.PI/s.period;
-        const sx=x+Math.cos(a2)*s.r;
-        const sy=y+Math.sin(a2)*s.r;
-        const g2=ctx.createRadialGradient(sx,sy,0,sx,sy,40);
-        g2.addColorStop(0,s.color);
-        g2.addColorStop(1,"rgba(0,0,0,0)");
-        ctx.beginPath();
-        ctx.arc(sx,sy,s.size,0,2*Math.PI);
-        ctx.fillStyle=g2;
-        ctx.fill();
-      });
+  // Highlight active nav link based on hostname
+  const links = document.querySelectorAll('nav a');
+  links.forEach(link => {
+    const linkHost = new URL(link.href).hostname;
+    if (linkHost === window.location.hostname) {
+      link.classList.add('active');
     }
   });
-
-  requestAnimationFrame(draw);
-}
-draw();
-
-// simple hover labels
-const label=document.getElementById('label');
-let lastHover=null;
-c.addEventListener('mousemove',e=>{
-  const mx=e.offsetX,my=e.offsetY;
-  let found=null;
-  nodes.forEach(n=>{
-    const ang=(performance.now()-t0)/1000*2*Math.PI/n.period;
-    const x=midX+Math.cos(ang)*n.r;
-    const y=midY+Math.sin(ang)*n.r;
-    if(Math.hypot(mx-x,my-y)<12)found=n;
-    if(n.satellites){
-      n.satellites.forEach(s=>{
-        const a2=(performance.now()-t0)/1000*2*Math.PI/s.period;
-        const sx=x+Math.cos(a2)*s.r;
-        const sy=y+Math.sin(a2)*s.r;
-        if(Math.hypot(mx-sx,my-sy)<10)found=s;
-      });
-    }
-  });
-  if(found&&found!==lastHover){
-    label.textContent=found.name;
-    label.classList.add('show');
-    lastHover=found;
-  }else if(!found&&lastHover){
-    label.classList.remove('show');
-    label.textContent='plnt.earth / center';
-    lastHover=null;
-  }
-});
-
-// tap labels for mobile
-c.addEventListener('click',()=>{
-  label.classList.add('show');
-  setTimeout(()=>label.classList.remove('show'),2000);
-});
-
-// --- silent audio placeholders ---
-// function tone(freq){ const a=new AudioContext();const o=a.createOscillator();const g=a.createGain();
-// o.type="sine";o.frequency.value=freq; o.connect(g); g.connect(a.destination);
-// g.gain.setValueAtTime(0.1,a.currentTime);o.start();o.stop(a.currentTime+0.5);}
 </script>
 </body>
 </html>
