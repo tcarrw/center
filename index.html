@@ -205,13 +205,14 @@ h1{
   display:flex;
   flex-direction:column;
   gap:12px;
-  max-height:0;
-  overflow:hidden;
+  max-height:2000px;
+  overflow:visible;
   transition:max-height 0.4s ease;
 }
 
-.floors-container.open{
-  max-height:2000px;
+.floors-container.closed{
+  max-height:0;
+  overflow:hidden;
 }
 
 .floor-13{
@@ -239,11 +240,17 @@ h1{
   font-size:13px;
   text-align:center;
   transition:all 0.2s ease;
+  user-select:none;
 }
 
 .floor:hover{
   background:rgba(255,255,255,0.10);
   transform:translateY(-2px);
+}
+
+.floor:active{
+  transform:translateY(0);
+  background:rgba(196,181,253,0.20);
 }
 
 .floor.playing{
@@ -262,12 +269,14 @@ h1{
   border:1px solid rgba(255,255,255,0.22);
   font-weight:700;
   font-size:16px;
+  pointer-events:none;
 }
 
 .floor-text{
   line-height:1.4;
   word-wrap:break-word;
   max-width:100%;
+  pointer-events:none;
 }
 
 /* Responsive: stack on small screens */
@@ -291,18 +300,18 @@ h1{
   }
   
   /* Reorder floors to descend 13->1 on mobile */
-  .floor[data-n="12"]{order:1;}
-  .floor[data-n="11"]{order:2;}
-  .floor[data-n="10"]{order:3;}
-  .floor[data-n="9"]{order:4;}
-  .floor[data-n="8"]{order:5;}
-  .floor[data-n="7"]{order:6;}
-  .floor[data-n="6"]{order:7;}
-  .floor[data-n="5"]{order:8;}
-  .floor[data-n="4"]{order:9;}
-  .floor[data-n="3"]{order:10;}
-  .floor[data-n="2"]{order:11;}
-  .floor[data-n="1"]{order:12;}
+  .floor[data-n="11"]{order:1;}
+  .floor[data-n="12"]{order:2;}
+  .floor[data-n="9"]{order:3;}
+  .floor[data-n="10"]{order:4;}
+  .floor[data-n="7"]{order:5;}
+  .floor[data-n="8"]{order:6;}
+  .floor[data-n="5"]{order:7;}
+  .floor[data-n="6"]{order:8;}
+  .floor[data-n="3"]{order:9;}
+  .floor[data-n="4"]{order:10;}
+  .floor[data-n="1"]{order:11;}
+  .floor[data-n="2"]{order:12;}
 }
 
 /* Color dots */
@@ -449,11 +458,11 @@ h1{
 
   <!-- Toggle Button -->
   <button class="toggle-floors-btn" id="toggleBtn">
-    <span>Show Floor Buttons</span>
-    <span class="toggle-arrow">▼</span>
+    <span>Hide Floor Buttons</span>
+    <span class="toggle-arrow open">▼</span>
   </button>
 
-  <div class="floors-container" id="floorsContainer">
+  <div class="floors-container open" id="floorsContainer">
     <!-- Floor 13 centered -->
     <div class="floor-13">
       <div class="floor" data-n="13">
@@ -462,60 +471,60 @@ h1{
       </div>
     </div>
 
-    <!-- Floors 1-12 in 2 columns (descending order) -->
+    <!-- Floors in 2 columns: 11-12, 9-10, 7-8, 5-6, 3-4, 1-2 -->
     <div class="floors-grid">
-      <div class="floor" data-n="12">
-        <div class="btn c12">12</div>
-        <div class="floor-text">Key</div>
-      </div>
       <div class="floor" data-n="11">
         <div class="btn c11">11</div>
         <div class="floor-text">Echo</div>
       </div>
-
-      <div class="floor" data-n="10">
-        <div class="btn c10">10</div>
-        <div class="floor-text">Pulse</div>
+      <div class="floor" data-n="12">
+        <div class="btn c12">12</div>
+        <div class="floor-text">Key</div>
       </div>
+
       <div class="floor" data-n="9">
         <div class="btn c9">9</div>
         <div class="floor-text">Glass</div>
       </div>
-
-      <div class="floor" data-n="8">
-        <div class="btn c8">8</div>
-        <div class="floor-text">Orbit</div>
+      <div class="floor" data-n="10">
+        <div class="btn c10">10</div>
+        <div class="floor-text">Pulse</div>
       </div>
+
       <div class="floor" data-n="7">
         <div class="btn c7">7</div>
         <div class="floor-text">Gate</div>
       </div>
-
-      <div class="floor" data-n="6">
-        <div class="btn c6">6</div>
-        <div class="floor-text">River</div>
+      <div class="floor" data-n="8">
+        <div class="btn c8">8</div>
+        <div class="floor-text">Orbit</div>
       </div>
+
       <div class="floor" data-n="5">
         <div class="btn c5">5</div>
         <div class="floor-text">Crown</div>
       </div>
-
-      <div class="floor" data-n="4">
-        <div class="btn c4">4</div>
-        <div class="floor-text">Fire</div>
+      <div class="floor" data-n="6">
+        <div class="btn c6">6</div>
+        <div class="floor-text">River</div>
       </div>
+
       <div class="floor" data-n="3">
         <div class="btn c3">3</div>
         <div class="floor-text">Knife</div>
       </div>
-
-      <div class="floor" data-n="2">
-        <div class="btn c2">2</div>
-        <div class="floor-text">Breath</div>
+      <div class="floor" data-n="4">
+        <div class="btn c4">4</div>
+        <div class="floor-text">Fire</div>
       </div>
+
       <div class="floor" data-n="1">
         <div class="btn c1">1</div>
         <div class="floor-text">Seed</div>
+      </div>
+      <div class="floor" data-n="2">
+        <div class="btn c2">2</div>
+        <div class="floor-text">Breath</div>
       </div>
     </div>
   </div>
@@ -601,7 +610,7 @@ const floorDetails={
 
 /* STATE */
 let currentFloor = null;
-let direction = 'up'; // 'up' or 'down'
+let direction = 'up';
 
 /* LOAD SAVED STATE */
 function loadState(){
@@ -645,6 +654,7 @@ const toggleArrow = toggleBtn.querySelector('.toggle-arrow');
 
 toggleBtn.addEventListener('click', ()=>{
   floorsContainer.classList.toggle('open');
+  floorsContainer.classList.toggle('closed');
   toggleArrow.classList.toggle('open');
   
   if(floorsContainer.classList.contains('open')){
@@ -682,7 +692,9 @@ function updateDirectionUI(){
 
 /* PLAY VIDEO */
 function play(n){
-  document.getElementById("yt").src = songs[n].link;
+  console.log('Playing floor:', n);
+  const iframe = document.getElementById("yt");
+  iframe.src = songs[n].link;
   document.getElementById("label").textContent = songs[n].name;
   
   currentFloor = n;
@@ -703,6 +715,7 @@ function showDetails(n){
 
 /* HANDLE FLOOR TAP */
 function handleFloor(n){
+  console.log('Floor clicked:', n);
   play(n);
   showDetails(n);
 }
@@ -710,7 +723,12 @@ function handleFloor(n){
 /* BIND FLOORS */
 document.querySelectorAll(".floor").forEach(f=>{
   const n = parseInt(f.dataset.n);
-  f.addEventListener("click", ()=>handleFloor(n));
+  console.log('Binding floor:', n);
+  f.addEventListener("click", (e)=>{
+    e.preventDefault();
+    e.stopPropagation();
+    handleFloor(n);
+  });
 });
 </script>
 
