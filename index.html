@@ -47,11 +47,24 @@ body{
   border:1px solid rgba(255,255,255,0.35);
   height:auto;
   aspect-ratio:16/9;
+  background:#000;
 }
 
 #label{
   margin-top:12px;
   font-size:15px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+#label .now{
+  opacity:0.9;
+}
+#label .meta{
+  font-size:12px;
+  opacity:0.7;
 }
 
 .detail-panel{
@@ -81,6 +94,7 @@ body{
   top:0;
   height:100vh;
   overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
   box-sizing:border-box;
 }
 
@@ -113,18 +127,31 @@ h1{
 
 .direction-control{
   display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:16px;
-  margin-bottom:20px;
+  flex-direction:column;
+  gap:12px;
+  margin-bottom:16px;
   padding:16px;
   background:rgba(255,255,255,0.08);
   border-radius:16px;
   border:1px solid rgba(255,255,255,0.12);
 }
 
+.direction-row{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.direction-label{
+  font-size:13px;
+  color:var(--ink);
+  opacity:0.7;
+}
+
 .direction-btn{
-  padding:10px 20px;
+  padding:10px 18px;
   border-radius:12px;
   border:1px solid rgba(255,255,255,0.22);
   background:rgba(255,255,255,0.10);
@@ -137,7 +164,7 @@ h1{
 }
 
 .direction-btn:active{
-  transform:scale(0.95);
+  transform:scale(0.96);
 }
 
 .direction-btn.active{
@@ -145,10 +172,37 @@ h1{
   color:#1a0f3e;
 }
 
-.direction-label{
-  font-size:13px;
+.seq-row{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+
+.seq-btn{
+  padding:12px 14px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.22);
+  background:rgba(255,255,255,0.10);
   color:var(--ink);
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  transition:all 0.2s ease;
+  -webkit-tap-highlight-color:transparent;
+  min-width:140px;
+  text-align:center;
+}
+
+.seq-btn:active{
+  transform:scale(0.96);
+}
+
+.seq-hint{
+  text-align:center;
+  font-size:12px;
   opacity:0.7;
+  line-height:1.4;
 }
 
 .toggle-floors-btn{
@@ -210,13 +264,13 @@ h1{
   font-size:13px;
   text-align:center;
   transition:all 0.2s ease;
-  min-height:100px;
+  min-height:108px;
   -webkit-tap-highlight-color:rgba(196,181,253,0.3);
   touch-action:manipulation;
 }
 
 .floor:active{
-  transform:scale(0.95);
+  transform:scale(0.96);
   background:rgba(196,181,253,0.20);
 }
 
@@ -240,24 +294,22 @@ h1{
 }
 
 .floor-text{
-  line-height:1.4;
-  font-weight:500;
+  line-height:1.35;
+  font-weight:650;
+}
+
+.floor-sub{
+  margin-top:4px;
+  font-size:12px;
+  opacity:0.72;
+  line-height:1.25;
 }
 
 @media(max-width:960px){
-  body{
-    flex-direction:column;
-  }
-  
-  .left-panel,
-  .elevator-panel{
-    width:100%;
-  }
-  
-  .elevator-panel{
-    position:relative;
-    height:auto;
-  }
+  body{ flex-direction:column; }
+  .left-panel,.elevator-panel{ width:100%; }
+  .elevator-panel{ position:relative; height:auto; }
+  .player{ top:12px; }
 }
 
 .c1{background:#4ac0b4;}
@@ -313,8 +365,11 @@ h1{
 
 <div class="left-panel">
   <div class="player">
-    <iframe id="yt" src="" allowfullscreen allow="autoplay"></iframe>
-    <div id="label">Choose a floor.</div>
+    <iframe id="yt" src="" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture"></iframe>
+    <div id="label">
+      <span class="now">Choose a floor.</span>
+      <span class="meta" id="meta"></span>
+    </div>
   </div>
   <div id="details" class="detail-panel"></div>
 </div>
@@ -331,12 +386,22 @@ h1{
   </div>
 
   <div class="direction-control">
-    <span class="direction-label">Direction:</span>
-    <button class="direction-btn active" id="dirUp">⬆ Up</button>
-    <button class="direction-btn" id="dirDown">⬇ Down</button>
+    <div class="direction-row">
+      <span class="direction-label">Direction:</span>
+      <button class="direction-btn active" id="dirUp" type="button">⬆ Up</button>
+      <button class="direction-btn" id="dirDown" type="button">⬇ Down</button>
+    </div>
+
+    <div class="seq-row">
+      <button class="seq-btn" id="playNext" type="button">Play Next</button>
+    </div>
+
+    <div class="seq-hint" id="seqHint">
+      Up climbs toward 13 and stays there until direction changes.
+    </div>
   </div>
 
-  <button class="toggle-floors-btn" id="toggleBtn">
+  <button class="toggle-floors-btn" id="toggleBtn" type="button">
     <span>Hide Floor Buttons</span>
     <span class="toggle-arrow open">▼</span>
   </button>
@@ -346,6 +411,7 @@ h1{
       <div class="floor" data-floor="13">
         <div class="btn c13">13</div>
         <div class="floor-text">Vine</div>
+        <div class="floor-sub">Synthesis · linkage</div>
       </div>
     </div>
 
@@ -353,55 +419,67 @@ h1{
       <div class="floor" data-floor="11">
         <div class="btn c11">11</div>
         <div class="floor-text">Echo</div>
+        <div class="floor-sub">Recursion · rewrite</div>
       </div>
       <div class="floor" data-floor="12">
         <div class="btn c12">12</div>
         <div class="floor-text">Key</div>
+        <div class="floor-sub">Unlock · corridor</div>
       </div>
 
       <div class="floor" data-floor="9">
         <div class="btn c9">9</div>
         <div class="floor-text">Glass</div>
+        <div class="floor-sub">Reflection · verify</div>
       </div>
       <div class="floor" data-floor="10">
         <div class="btn c10">10</div>
         <div class="floor-text">Pulse</div>
+        <div class="floor-sub">Sync · alignment</div>
       </div>
 
       <div class="floor" data-floor="7">
         <div class="btn c7">7</div>
         <div class="floor-text">Gate</div>
+        <div class="floor-sub">Threshold · decide</div>
       </div>
       <div class="floor" data-floor="8">
         <div class="btn c8">8</div>
         <div class="floor-text">Orbit</div>
+        <div class="floor-sub">Cycle · return</div>
       </div>
 
       <div class="floor" data-floor="5">
         <div class="btn c5">5</div>
         <div class="floor-text">Crown</div>
+        <div class="floor-sub">Structure · mastery</div>
       </div>
       <div class="floor" data-floor="6">
         <div class="btn c6">6</div>
         <div class="floor-text">River</div>
+        <div class="floor-sub">Flow · continuity</div>
       </div>
 
       <div class="floor" data-floor="3">
         <div class="btn c3">3</div>
         <div class="floor-text">Knife</div>
+        <div class="floor-sub">Cut · clarity</div>
       </div>
       <div class="floor" data-floor="4">
         <div class="btn c4">4</div>
         <div class="floor-text">Fire</div>
+        <div class="floor-sub">Test · transform</div>
       </div>
 
       <div class="floor" data-floor="1">
         <div class="btn c1">1</div>
         <div class="floor-text">Seed</div>
+        <div class="floor-sub">Origin · start</div>
       </div>
       <div class="floor" data-floor="2">
         <div class="btn c2">2</div>
         <div class="floor-text">Breath</div>
+        <div class="floor-sub">Signal · motion</div>
       </div>
     </div>
   </div>
@@ -460,72 +538,165 @@ const floorDetails={
 
 let currentFloor=null;
 let direction='up';
+let entered=false;
 
-function play(n){
-  document.getElementById("yt").src=songs[n].link;
-  document.getElementById("label").textContent=songs[n].name;
-  currentFloor=n;
-  localStorage.setItem('illumina_last_floor',n);
-  
+function clampFloor(n){
+  if(n<1) return 1;
+  if(n>13) return 13;
+  return n;
+}
+
+function setMeta(){
+  const meta=document.getElementById("meta");
+  const d=(direction==='up') ? "Direction: Up" : "Direction: Down";
+  const c=(currentFloor==null) ? "" : (" · Floor: " + currentFloor);
+  meta.textContent=d+c;
+}
+
+function markPlaying(n){
   document.querySelectorAll('.floor').forEach(f=>f.classList.remove('playing'));
-  document.querySelector(`.floor[data-floor="${n}"]`).classList.add('playing');
+  const el=document.querySelector(`.floor[data-floor="${n}"]`);
+  if(el) el.classList.add('playing');
 }
 
 function showDetails(n){
   const d=document.getElementById("details");
-  d.innerHTML=floorDetails[n];
+  d.innerHTML=floorDetails[n] || "";
   d.style.display="block";
 }
 
-document.getElementById("consentButton").onclick=()=>{
-  document.getElementById("consentModal").style.display="none";
-  const saved=localStorage.getItem('illumina_last_floor');
-  if(saved){
-    play(parseInt(saved));
-    showDetails(parseInt(saved));
+function play(n){
+  n=clampFloor(n);
+  currentFloor=n;
+
+  const yt=document.getElementById("yt");
+  yt.src=songs[n].link;
+
+  const now=document.querySelector("#label .now");
+  now.textContent=songs[n].name;
+
+  localStorage.setItem('illumina_last_floor',String(n));
+  localStorage.setItem('illumina_last_song',songs[n].name);
+
+  markPlaying(n);
+  showDetails(n);
+  setMeta();
+}
+
+function nextFloorFrom(n){
+  if(n==null) return (direction==='up') ? 1 : 13;
+
+  if(direction==='up'){
+    if(n>=13) return 13;          // stays at 13 until direction changes
+    return n+1;
+  }else{
+    if(n<=1) return 1;            // stays at 1 until direction changes
+    return n-1;
   }
-};
+}
+
+function playNext(){
+  const nf=nextFloorFrom(currentFloor);
+  play(nf);
+}
+
+function setDirection(dir){
+  direction=(dir==='down') ? 'down' : 'up';
+  localStorage.setItem('illumina_direction',direction);
+
+  const upBtn=document.getElementById("dirUp");
+  const downBtn=document.getElementById("dirDown");
+
+  if(direction==='up'){
+    upBtn.classList.add('active');
+    downBtn.classList.remove('active');
+  }else{
+    downBtn.classList.add('active');
+    upBtn.classList.remove('active');
+  }
+
+  const hint=document.getElementById("seqHint");
+  hint.textContent = (direction==='up')
+    ? "Up climbs toward 13 and stays there until direction changes."
+    : "Down descends toward 1 and stays there until direction changes.";
+
+  setMeta();
+}
+
+function applySavedUIState(){
+  const savedDir=localStorage.getItem('illumina_direction');
+  setDirection(savedDir || 'up');
+
+  const hidden=localStorage.getItem('illumina_floors_hidden');
+  if(hidden==='1'){
+    const container=document.getElementById("floorsContainer");
+    const arrow=document.querySelector(".toggle-arrow");
+    const btn=document.getElementById("toggleBtn");
+    container.style.display="none";
+    arrow.classList.remove("open");
+    btn.querySelector("span").textContent="Show Floor Buttons";
+  }
+}
 
 document.querySelectorAll(".floor").forEach(f=>{
   f.onclick=()=>{
-    const n=parseInt(f.dataset.floor);
+    if(!entered) return;
+    const n=parseInt(f.dataset.floor,10);
     play(n);
-    showDetails(n);
   };
 });
 
 document.getElementById("dirUp").onclick=()=>{
-  direction='up';
-  localStorage.setItem('illumina_direction','up');
-  document.getElementById("dirUp").classList.add('active');
-  document.getElementById("dirDown").classList.remove('active');
+  if(!entered) return;
+  setDirection('up');
 };
 
 document.getElementById("dirDown").onclick=()=>{
-  direction='down';
-  localStorage.setItem('illumina_direction','down');
-  document.getElementById("dirDown").classList.add('active');
-  document.getElementById("dirUp").classList.remove('active');
+  if(!entered) return;
+  setDirection('down');
+};
+
+document.getElementById("playNext").onclick=()=>{
+  if(!entered) return;
+  playNext();
 };
 
 document.getElementById("toggleBtn").onclick=()=>{
   const container=document.getElementById("floorsContainer");
   const arrow=document.querySelector(".toggle-arrow");
   const btn=document.getElementById("toggleBtn");
-  
+
   if(container.style.display==="none"){
     container.style.display="flex";
     arrow.classList.add("open");
     btn.querySelector("span").textContent="Hide Floor Buttons";
+    localStorage.setItem('illumina_floors_hidden','0');
   }else{
     container.style.display="none";
     arrow.classList.remove("open");
     btn.querySelector("span").textContent="Show Floor Buttons";
+    localStorage.setItem('illumina_floors_hidden','1');
+  }
+};
+
+document.getElementById("consentButton").onclick=()=>{
+  entered=true;
+  document.getElementById("consentModal").style.display="none";
+
+  applySavedUIState();
+
+  const saved=localStorage.getItem('illumina_last_floor');
+  if(saved){
+    play(parseInt(saved,10));
+  }else{
+    setMeta();
   }
 };
 
 window.onload=()=>{
+  applySavedUIState();
   document.getElementById("consentModal").style.display="flex";
+  setMeta();
 };
 </script>
 
