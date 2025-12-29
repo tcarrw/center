@@ -218,6 +218,11 @@ button.key small{
   margin:10px 0;
   text-align:left;
   background:var(--panel);
+  cursor:pointer;
+  transition:background 0.2s;
+}
+.entry:hover{
+  background:#1b3333;
 }
 .entry strong{font-size:15px;}
 .entry a{color:var(--accent2);text-decoration:none;font-size:12px;}
@@ -251,7 +256,7 @@ body::after{
 <header id="header">T9 Signal Terminal · PLNT Earth</header>
 
 <div id="videoWrapper">
-  <iframe id="ytplayer" src="https://www.youtube.com/embed/p2ZdeIKJA8c?autoplay=1&mute=1&loop=1&playlist=p2ZdeIKJA8c&enablejsapi=1" 
+  <iframe id="ytplayer" src="https://www.youtube.com/embed/p2ZdeIKJA8c?loop=1&playlist=p2ZdeIKJA8c&enablejsapi=1" 
     allow="autoplay; encrypted-media" allowfullscreen></iframe>
 </div>
 
@@ -275,8 +280,9 @@ body::after{
 
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
-let player,audioCtx=null,loopEnabled=true,isMuted=true,bgTone=null,currentToneFreq=null;
-let currentVideoId='p2ZdeIKJA8c'; // Track current video
+let player,audioCtx=null,loopEnabled=true,bgTone=null,currentToneFreq=null;
+let currentVideoId='p2ZdeIKJA8c';
+let isPlaying=false;
 
 function onYouTubeIframeAPIReady(){
   player=new YT.Player('ytplayer',{
@@ -288,30 +294,33 @@ function onYouTubeIframeAPIReady(){
 }
 
 function onPlayerReady(){
-  player.mute();
+  // Video ready but paused by default
 }
 
 function onPlayerStateChange(e){
+  if(e.data===YT.PlayerState.PLAYING){
+    isPlaying=true;
+  }else if(e.data===YT.PlayerState.PAUSED||e.data===YT.PlayerState.ENDED){
+    isPlaying=false;
+  }
   if(e.data===YT.PlayerState.ENDED&&loopEnabled){
     player.playVideo();
   }
 }
 
-// Tap to unmute
+// Tap to play/pause
 document.getElementById('videoWrapper').onclick=function(){
-  if(isMuted){
-    player.unMute();
-    isMuted=false;
+  if(isPlaying){
+    player.pauseVideo();
   }else{
-    player.mute();
-    isMuted=true;
+    player.playVideo();
   }
 };
 
 const t9DirectoryData=[
   {code:"456836926678837",name:"Ninajirachi · I Love My Computer",emoji:"🗼",color:"#b8d8ff",url:"https://4562.world",tone:128,youtube:"RKybAhTw8iE",note:"🗼 Dedicated to my computer and the Tower"},
   {code:"627462",name:"Marina · Immortal",emoji:"🦋",color:"#b8a3ff",url:"https://key.plnt.earth",tone:333,youtube:"dYGKxxTXqSs",note:"🦋 you are"},
-  {code:"744743",name:"Sigrid · A Driver Saved My Night",emoji:"🪼",color:"#e9e7ff",url:"https://youtu.be/sDEltzoEfZs",tone:128,youtube:"sDEltzoEfZs",note:"🪼 keep driving"},
+  {code:"744743",name:"Sigrid · A Driver Saved My Night",emoji:"🪼",color:"#e9e7ff",url:"https://garlic.plnt.earth",tone:128,youtube:"sDEltzoEfZs",note:"🪼 keep driving"},
   {code:"32469",name:"Dagny · Brightsider",emoji:"🌸",color:"#f2b6d8",url:"https://dagny.plnt.earth",tone:272,youtube:"BskeuUMp_lo",note:"🌸 Green light on strawberry dreams"},
   {code:"7227462",name:"Sabrina Carpenter",emoji:"🍯",color:"#f5cc6e",url:"https://honey.plnt.earth",tone:160},
   {code:"274262",name:"Ariana Grande",emoji:"💨",color:"#eaeaea",url:"https://air.plnt.earth",tone:288},
@@ -442,11 +451,11 @@ function updateBreadcrumb(){
 }
 
 function setVideo(videoId){
-  if(currentVideoId===videoId)return; // Don't change if already playing this video
+  if(currentVideoId===videoId)return;
   currentVideoId=videoId;
   ytplayer.classList.add('fading');
   setTimeout(()=>{
-    ytplayer.src=`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=${isMuted?1:0}&loop=1&playlist=${videoId}&enablejsapi=1`;
+    ytplayer.src=`https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&enablejsapi=1`;
     ytplayer.classList.remove('fading');
   },600);
 }
@@ -563,7 +572,6 @@ clearBtn.onclick=()=>{
   localStorage.removeItem('t9input');
   playDTMF('*');
   stopBackgroundTone();
-  // Don't reset video on clear
 };
 
 copyBtn.onclick=()=>{
@@ -586,6 +594,12 @@ function updateDirectory(found){
   renderDirectory();
 }
 
+function playVideoForEntry(entry){
+  if(entry.youtube){
+    setVideo(entry.youtube);
+  }
+}
+
 function renderDirectory(){
   const dir=JSON.parse(localStorage.getItem('t9directory')||'[]');
   const c=document.getElementById('directory');
@@ -598,6 +612,7 @@ function renderDirectory(){
     const card=document.createElement('div');
     card.className='entry';
     card.style.borderColor=e.color;
+    card.onclick=()=>playVideoForEntry(e);
     card.innerHTML=`<strong style="color:${e.color}">${e.emoji} ${e.name}</strong><br><span style="color:var(--accent2);font-size:13px;">${e.code}</span><br><a href="${e.url}" target="_blank">${e.url.replace('https://','')}</a><br><small style="color:var(--muted);">${e.tone} Hz</small>`;
     c.appendChild(card);
   }
