@@ -1,410 +1,314 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=yes">
-<title>Illumina Elevator · time.plnt.earth</title>
-<meta name="color-scheme" content="dark">
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T9 Signal Terminal · PLNT Earth</title>
+<meta name="theme-color" content="#00e0c6">
 <style>
 :root{
-  --lav:#C4B5FD;
-  --ink:#e9e7ff;
-  --bg0:#0c0912;
-  --g1:rgba(255,255,255,0.08);
-  --g2:rgba(255,255,255,0.06);
+  --bg:#001616;
+  --panel:#0a2020;
+  --accent:#00e0c6;
+  --accent2:#5af;
+  --ink:#a8fff0;
+  --muted:#66b3a9;
+  --font:"VT323",monospace;
 }
-
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+*{box-sizing:border-box;}
 body{
   margin:0;
-  background:var(--bg0);
+  background:var(--bg);
   color:var(--ink);
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  font-family:var(--font);
   display:flex;
+  flex-direction:column;
+  align-items:center;
+  min-height:100vh;
   overflow-x:hidden;
 }
-
-.left-panel{
-  width:70%;
-  padding:26px;
-  box-sizing:border-box;
-}
-
-.player{
-  position:sticky;
-  top:22px;
-  background:rgba(255,255,255,0.10);
-  border-radius:24px;
-  padding:20px;
-  backdrop-filter:blur(22px) saturate(180%);
-  border:1px solid rgba(255,255,255,0.22);
-  box-shadow:0 0 22px rgba(196,181,253,0.12),inset 0 0 0 1px rgba(255,255,255,0.08);
-}
-
-.player iframe{
-  width:100%;
-  border-radius:20px;
-  border:1px solid rgba(255,255,255,0.35);
-  aspect-ratio:16/9;
-  min-height:220px;
-}
-
-#label{
-  margin-top:12px;
-  font-size:15px;
-}
-
-.detail-panel{
-  margin-top:36px;
-  padding:22px;
-  border-radius:20px;
-  background:rgba(255,255,255,0.06);
-  border:1px solid rgba(255,255,255,0.12);
-  backdrop-filter:blur(20px) saturate(180%);
-  display:none;
-}
-
-.detail-panel h2{
-  margin:0 0 12px;
-  color:var(--lav);
-  font-size:20px;
-}
-
-.elevator-panel{
-  width:30%;
-  padding:28px;
-  background:var(--g1);
-  border-left:1px solid rgba(255,255,255,0.15);
-  backdrop-filter:blur(22px) saturate(180%);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,0.10);
-  position:sticky;
-  top:0;
-  height:100vh;
-  overflow-y:auto;
-  box-sizing:border-box;
-}
-
-h1{
+header{
   text-align:center;
-  margin:0 0 16px;
-  font-size:24px;
-  color:var(--lav);
-  font-weight:700;
+  padding:12px 8px 6px 8px;
+  color:var(--accent);
+  font-size:22px;
+  letter-spacing:1px;
+  text-shadow:0 0 6px var(--accent2);
+  transition:opacity .6s ease;
 }
-
-.core-nav{
-  display:flex;
-  justify-content:center;
-  flex-wrap:wrap;
-  gap:10px;
-  margin-bottom:26px;
-}
-
-.core-nav a{
-  padding:6px 14px;
-  font-size:13px;
-  font-weight:600;
-  border-radius:14px;
-  text-decoration:none;
-  color:var(--ink);
-  background:rgba(255,255,255,0.12);
-  border:1px solid rgba(255,255,255,0.22);
-}
-
-.direction-control{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:16px;
-  margin-bottom:20px;
-  padding:16px;
-  background:rgba(255,255,255,0.08);
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,0.12);
-}
-
-.direction-btn{
-  padding:10px 20px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.22);
-  background:rgba(255,255,255,0.10);
-  color:var(--ink);
-  font-size:14px;
-  font-weight:600;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
-
-.direction-btn.active{
-  background:var(--lav);
-  color:#1a0f3e;
-}
-
-.toggle-floors-btn{
-  width:100%;
+.window{
+  background:var(--panel);
+  border:2px solid var(--accent2);
+  box-shadow:inset -2px -2px #001a1a,inset 2px 2px var(--accent2);
   padding:14px;
-  margin-bottom:16px;
-  background:rgba(255,255,255,0.12);
-  border:1px solid rgba(255,255,255,0.22);
-  border-radius:14px;
-  color:var(--lav);
-  font-size:15px;
-  font-weight:600;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-}
-
-.toggle-arrow{
-  transition:transform 0.3s ease;
-  font-size:18px;
-}
-
-.toggle-arrow.open{
-  transform:rotate(180deg);
-}
-
-.floors-container{
-  display:none;
-  flex-direction:column;
-  gap:12px;
-  position:relative;
-}
-
-.floors-container::before{
-  content:"";
-  position:absolute;
-  top:0;
-  bottom:0;
-  left:50%;
-  width:2px;
-  background:linear-gradient(to bottom, rgba(196,181,253,0.25), transparent);
-  transform:translateX(-50%);
-  pointer-events:none;
-}
-
-.floor-13{
-  display:flex;
-  justify-content:center;
-  margin-bottom:8px;
-}
-
-.floors-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-
-.floor{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:20px 12px;
-  background:var(--g2);
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,0.12);
-  cursor:pointer;
-  font-size:13px;
-  text-align:center;
-  min-height:100px;
-  -webkit-tap-highlight-color:rgba(196,181,253,0.3);
-}
-
-.floor.playing{
-  background:rgba(196,181,253,0.15);
-  border-color:var(--lav);
-  box-shadow:0 0 20px rgba(196,181,253,0.3);
-}
-
-.btn{
-  width:64px;
-  height:64px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  margin-bottom:10px;
-  border:2px solid rgba(255,255,255,0.22);
-  font-weight:700;
-  font-size:20px;
-}
-
-.floor-text{
-  line-height:1.4;
-  font-weight:500;
-}
-
-@media(max-width:960px){
-  body{flex-direction:column;}
-  .left-panel,.elevator-panel{width:100%;}
-  .player{position:relative;top:auto;margin-bottom:16px;}
-  .left-panel{order:1;}
-  .elevator-panel{order:2;height:auto;}
-}
-
-.c1{background:#4ac0b4;}
-.c2{background:#e6c04d;}
-.c3{background:#a572cf;}
-.c4{background:#c64747;}
-.c5{background:#66c7e8;}
-.c6{background:#999999;}
-.c7{background:#e48ec9;}
-.c8{background:#6e88a8;}
-.c9{background:#f6f0d8;color:#1a0f3e;}
-.c10{background:#e7a840;color:#1a0f3e;}
-.c11{background:#9d1a2b;}
-.c12{background:#e3e6ed;color:#1a0f3e;}
-.c13{background:var(--lav);color:#1a0f3e;}
-
-#consentModal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.55);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:999;
-  backdrop-filter:blur(8px);
-}
-
-#consentBox{
-  width:86%;
+  margin:8px;
   max-width:420px;
-  padding:26px;
-  border-radius:22px;
-  background:rgba(255,255,255,0.10);
-  border:1px solid rgba(255,255,255,0.25);
-  backdrop-filter:blur(20px);
-  text-align:center;
+  width:calc(100% - 32px);
 }
-
-#consentButton{
-  margin-top:22px;
-  padding:10px 24px;
-  background:var(--lav);
-  border-radius:14px;
-  font-weight:600;
-  border:0;
-  color:#1a0f3e;
+.display{
+  background:#000;
+  color:var(--ink);
+  padding:8px;
+  border:2px inset var(--accent2);
+  font-size:20px;
+  text-align:center;
+  min-height:32px;
+  letter-spacing:2px;
+  overflow-x:auto;
+}
+#breadcrumb{
+  font-size:14px;
+  color:var(--accent2);
+  text-align:center;
+  margin:6px 0;
+}
+.keypad{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:6px;
+  margin-top:8px;
+}
+button.key{
+  background:#1b1f1f;
+  border:2px outset var(--accent2);
+  color:var(--ink);
+  font-family:var(--font);
+  font-size:18px;
+  padding:12px 0;
   cursor:pointer;
 }
+button.key:active{
+  border:2px inset var(--accent2);
+  background:#003;
+}
+#combos{
+  font-size:14px;
+  color:var(--accent2);
+  margin-top:8px;
+  text-align:center;
+  min-height:20px;
+}
+#note{
+  margin-top:12px;
+  text-align:center;
+  font-size:16px;
+  color:var(--accent2);
+  min-height:20px;
+}
+#videoWrapper{
+  position:relative;
+  width:100%;
+  max-width:420px;
+  aspect-ratio:16/9;
+  margin-top:12px;
+  border:2px solid var(--accent2);
+  box-shadow:0 0 10px #003 inset;
+}
+iframe{
+  width:100%;height:100%;
+  border:0;
+}
+footer{
+  text-align:center;
+  font-size:13px;
+  color:var(--muted);
+  margin:20px 0 10px 0;
+  opacity:0.7;
+}
+body::after{
+  content:"";
+  position:fixed;inset:0;
+  background:repeating-linear-gradient(transparent 0 1px,rgba(0,255,255,0.03) 1px 2px);
+  pointer-events:none;
+  animation:flicker 1.5s infinite;
+}
+@keyframes flicker{50%{opacity:0.95;}100%{opacity:1;}}
+.hints{
+  margin-top:18px;
+  text-align:center;
+  font-size:26px;
+  line-height:1.6;
+}
+.hint{margin:6px 0;transition:all 0.4s ease;}
+.hint .emoji{
+  opacity:0.3;filter:grayscale(100%);
+  transition:opacity .4s,filter .4s,text-shadow .4s;
+}
+.hint.unlocked .emoji{
+  opacity:1;filter:none;text-shadow:0 0 8px var(--accent2);
+}
+.details{
+  margin-top:4px;
+  font-size:14px;
+  color:var(--accent2);
+  animation:fadeIn .6s ease forwards;
+}
+.details .title{font-weight:bold;}
+.details a{
+  color:var(--accent2);
+  text-decoration:none;
+  font-size:12px;
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-3px);}to{opacity:1;transform:none;}}
 </style>
 </head>
-
 <body>
+<header id="header">T9 Signal Terminal · PLNT Earth</header>
 
-<div class="left-panel">
-  <div class="player">
-    <iframe id="yt" src="" allowfullscreen allow="autoplay"></iframe>
-    <div id="label">Choose a floor.</div>
-  </div>
-  <div id="details" class="detail-panel"></div>
+<div id="videoWrapper">
+  <iframe id="ytplayer" src="https://www.youtube.com/embed/p2ZdeIKJA8c?autoplay=1&mute=1&loop=1&playlist=p2ZdeIKJA8c"
+    allow="autoplay; encrypted-media" allowfullscreen></iframe>
 </div>
 
-<div class="elevator-panel">
-  <h1>Illumina Elevator</h1>
-
-  <div class="core-nav">
-    <a href="https://time.plnt.earth/time/">Φ Field</a>
-    <a href="https://time.plnt.earth/map">Anchor Map</a>
-    <a href="https://time.plnt.earth/interpretation">Interpretation</a>
-    <a href="https://time.plnt.earth/charter">Charter</a>
-    <a href="https://time.plnt.earth/">Time Index</a>
-  </div>
-
-  <div class="direction-control">
-    <span>Direction:</span>
-    <button class="direction-btn active" id="dirUp">⬆ Up</button>
-    <button class="direction-btn" id="dirDown">⬇ Down</button>
-  </div>
-
-  <button class="toggle-floors-btn" id="toggleBtn">
-    <span>Show Floor Buttons</span>
-    <span class="toggle-arrow">▼</span>
-  </button>
-
-  <div class="floors-container" id="floorsContainer">
-    <div class="floor-13">
-      <div class="floor" data-floor="13"><div class="btn c13">13</div><div class="floor-text">Vine</div></div>
-    </div>
-    <div class="floors-grid">
-      <div class="floor" data-floor="11"><div class="btn c11">11</div><div class="floor-text">Echo</div></div>
-      <div class="floor" data-floor="12"><div class="btn c12">12</div><div class="floor-text">Key</div></div>
-      <div class="floor" data-floor="9"><div class="btn c9">9</div><div class="floor-text">Glass</div></div>
-      <div class="floor" data-floor="10"><div class="btn c10">10</div><div class="floor-text">Pulse</div></div>
-      <div class="floor" data-floor="7"><div class="btn c7">7</div><div class="floor-text">Gate</div></div>
-      <div class="floor" data-floor="8"><div class="btn c8">8</div><div class="floor-text">Orbit</div></div>
-      <div class="floor" data-floor="5"><div class="btn c5">5</div><div class="floor-text">Crown</div></div>
-      <div class="floor" data-floor="6"><div class="btn c6">6</div><div class="floor-text">River</div></div>
-      <div class="floor" data-floor="3"><div class="btn c3">3</div><div class="floor-text">Knife</div></div>
-      <div class="floor" data-floor="4"><div class="btn c4">4</div><div class="floor-text">Fire</div></div>
-      <div class="floor" data-floor="1"><div class="btn c1">1</div><div class="floor-text">Seed</div></div>
-      <div class="floor" data-floor="2"><div class="btn c2">2</div><div class="floor-text">Breath</div></div>
-    </div>
-  </div>
-
-  <div style="margin-top:32px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.12);font-size:13px;text-align:center;">
-    <a href="https://earth.plnt.earth" style="color:var(--lav);text-decoration:none;font-weight:600;">Earth</a> is a grounding page.
-  </div>
+<div class="window">
+  <div class="display" id="display"></div>
+  <div id="breadcrumb"></div>
+  <div class="keypad" id="pad"></div>
+  <div id="combos"></div>
+  <div id="note"></div>
 </div>
 
-<div id="consentModal" style="display:none;">
-  <div id="consentBox">
-    <h2>Elevator Entry — Time · Illumina</h2>
-    <p>By entering the Elevator, you acknowledge that:</p>
-    <p>• floors auto-play audio/video<br>• tapping a button plays that floor's song<br>• your last played floor is stored locally</p>
-    <button id="consentButton">Enter Elevator</button>
-  </div>
-</div>
+<div id="hints" class="hints"></div>
+
+<footer>© PLNT Earth · earth.plnt.earth · This page returns to ground</footer>
 
 <script>
-const songs={1:{name:"Miss Monique — Concorde",link:"https://www.youtube-nocookie.com/embed/1ZjkfZ6v6v4?autoplay=1"},2:{name:"Sigrid — It Gets Dark",link:"https://www.youtube-nocookie.com/embed/4j7LGMc9ZGU?autoplay=1"},3:{name:"Dua Lipa — Houdini",link:"https://www.youtube-nocookie.com/embed/suAR1PYFNYA?autoplay=1"},4:{name:"Doechii — Crazy",link:"https://www.youtube-nocookie.com/embed/0aQ9Q0hRTwY?autoplay=1"},5:{name:"Marina — Venus Fly Trap",link:"https://www.youtube-nocookie.com/embed/F1JTlnHGa90?autoplay=1"},6:{name:"Ariana Grande — No Tears Left to Cry",link:"https://www.youtube-nocookie.com/embed/ffxKSjUwKdU?autoplay=1"},7:{name:"Dagny — Somebody",link:"https://www.youtube-nocookie.com/embed/qO-U2WlgroQ?autoplay=1"},8:{name:"Kim Petras — Coconuts",link:"https://www.youtube-nocookie.com/embed/ite2vY5qihc?autoplay=1"},9:{name:"Rosalía — SAOKO",link:"https://www.youtube-nocookie.com/embed/6o7bCAZSxsg?autoplay=1"},10:{name:"Sabrina Carpenter — Feather",link:"https://www.youtube-nocookie.com/embed/kLbn61Z4LDI?autoplay=1"},11:{name:"Tove Lo — No One Dies From Love",link:"https://www.youtube-nocookie.com/embed/CMWLX0KXwF4?autoplay=1"},12:{name:"AURORA — Runaway",link:"https://www.youtube-nocookie.com/embed/d_HlPboLRL8?autoplay=1"},13:{name:"Taylor Swift — Bejeweled",link:"https://www.youtube-nocookie.com/embed/b7QlX3yR2xs?autoplay=1"}};
+const pad=document.getElementById('pad');
+const display=document.getElementById('display');
+const combosBox=document.getElementById('combos');
+const breadcrumb=document.getElementById('breadcrumb');
+const noteBox=document.getElementById('note');
+const header=document.getElementById('header');
+const ytplayer=document.getElementById('ytplayer');
 
-const floorDetails={13:`<h2>Floor 13 — Vine</h2><p>Interconnection, fate-line, destiny, synthesis.</p><hr><p><strong>System role:</strong> Global linkage layer.</p>`,12:`<h2>Floor 12 — Key</h2><p>Unlocking, choice, opening hidden path.</p><hr><p><strong>System role:</strong> Access control.</p>`,11:`<h2>Floor 11 — Echo</h2><p>Repetition, myth rewriting, recursion.</p><hr><p><strong>System role:</strong> Recursive memory.</p>`,10:`<h2>Floor 10 — Pulse</h2><p>Rhythm, heart, energy, alignment.</p><hr><p><strong>System role:</strong> Synchronization.</p>`,9:`<h2>Floor 9 — Glass</h2><p>Transparency, reflection, honesty.</p><hr><p><strong>System role:</strong> Observation layer.</p>`,8:`<h2>Floor 8 — Orbit</h2><p>Movement, cycle, return, pattern.</p><hr><p><strong>System role:</strong> Stable recurrence.</p>`,7:`<h2>Floor 7 — Gate</h2><p>Threshold, test, crossing, decision.</p><hr><p><strong>System role:</strong> Threshold condition.</p>`,6:`<h2>Floor 6 — River</h2><p>Flow, adaptability, emotional course.</p><hr><p><strong>System role:</strong> Continuous flow.</p>`,5:`<h2>Floor 5 — Crown</h2><p>School, mastery, structure, identity.</p><hr><p><strong>System role:</strong> Structural authority.</p>`,4:`<h2>Floor 4 — Fire</h2><p>Heat, ignition, transformation, truth reveal.</p><hr><p><strong>System role:</strong> Transformation engine.</p>`,3:`<h2>Floor 3 — Knife</h2><p>Cut, choice, separation, clarity.</p><hr><p><strong>System role:</strong> Separation operator.</p>`,2:`<h2>Floor 2 — Breath</h2><p>Air, wind, voice ignition, first motion.</p><hr><p><strong>System role:</strong> Initial propagation.</p>`,1:`<h2>Floor 1 — Seed</h2><p>Origin, spark, beginning, birth.</p><hr><p><strong>System role:</strong> Initialization.</p>`};
+const t9map={2:"ABC",3:"DEF",4:"GHI",5:"JKL",6:"MNO",7:"PQRS",8:"TUV",9:"WXYZ",0:" "};
 
-let currentFloor=null;
+const directory=[
+ {code:"456836926678837",title:"Ninajirachi — 4562.world",emoji:"🗼",tone:128,
+  url:"https://4562.world",
+  youtube:"https://www.youtube.com/watch?v=RKybAhTw8iE",
+  note:"🗼 I Love My Computer",
+  header:"Dedicated to my computer and the Tower · Ninajirachi · infohazard"},
+ {code:"627462",title:"Marina — Immortal",emoji:"🦋",tone:160,
+  url:"https://mirrorhoney.plnt.earth",
+  youtube:"https://www.youtube.com/watch?v=dYGKxxTXqSs",
+  note:"🦋 you are"},
+ {code:"744743",title:"Sigrid — A Driver Saved My Night",emoji:"🪼",tone:140,
+  url:"https://youtu.be/sDEltzoEfZs",
+  youtube:"https://www.youtube.com/watch?v=sDEltzoEfZs",
+  note:"🪼 keep driving"},
+ {code:"32469",title:"Dagny — Brightsider",emoji:"🌸",tone:180,
+  url:"https://dagny.plnt.earth",
+  youtube:"https://www.youtube.com/watch?v=BskeuUMp_lo",
+  note:"👑 Green light on strawberry dreams — Lorde"}
+];
 
-function play(n){
-  yt.src=songs[n].link;
-  label.textContent=songs[n].name;
-  currentFloor=n;
-  localStorage.setItem("illumina_last_floor",n);
-  document.querySelectorAll(".floor").forEach(f=>f.classList.remove("playing"));
-  document.querySelector(`.floor[data-floor="${n}"]`).classList.add("playing");
-  details.innerHTML=floorDetails[n];
-  details.style.display="block";
+const hints = directory.map(d=>({emoji:d.emoji,code:d.code,title:d.title,note:d.note,url:d.url}));
+
+let input="",audioCtx=null;
+
+for(let i=1;i<=9;i++){
+  const b=document.createElement('button');
+  b.className='key';
+  if(t9map[i]) b.innerHTML=`${i}<br><small>${t9map[i]}</small>`;
+  else b.textContent=i;
+  b.onclick=()=>press(i);
+  pad.appendChild(b);
+}
+const b0=document.createElement('button');
+b0.className='key';b0.innerHTML='0<br><small>Space</small>';b0.onclick=()=>press(0);
+pad.appendChild(b0);
+const bClear=document.createElement('button');
+bClear.className='key';bClear.textContent='←';bClear.onclick=clearOne;
+pad.appendChild(bClear);
+
+function press(n){
+  input+=n;
+  display.textContent=input;
+  playTone(128);
+  showCombos();
+  checkDirectory();
+}
+function clearOne(){
+  input=input.slice(0,-1);
+  display.textContent=input;
+  combosBox.textContent='';
+  breadcrumb.textContent='';
+  noteBox.textContent='';
+  header.textContent='T9 Signal Terminal · PLNT Earth';
+  setVideo('p2ZdeIKJA8c'); // reset to default
+}
+function playTone(freq){
+  if(!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  const osc=audioCtx.createOscillator();
+  const gain=audioCtx.createGain();
+  osc.type='sine';osc.frequency.value=freq;
+  osc.connect(gain);gain.connect(audioCtx.destination);
+  osc.start();gain.gain.setValueAtTime(0.1,audioCtx.currentTime);
+  osc.stop(audioCtx.currentTime+0.1);
+}
+function t9Combos(digits){
+  if(!digits) return [];
+  let combos=[''];
+  for(let d of digits){
+    const letters=t9map[d]?t9map[d].split(''):[d];
+    let next=[];
+    for(let c of combos)for(let l of letters)next.push(c+l);
+    combos=next;
+  }
+  return combos;
+}
+function showCombos(){
+  const c=t9Combos(input);
+  combosBox.textContent=c.slice(0,8).join(' ');
 }
 
-document.querySelectorAll(".floor").forEach(f=>{
-  f.onclick=()=>play(parseInt(f.dataset.floor));
-});
-
-toggleBtn.onclick=()=>{
-  const open=floorsContainer.style.display==="flex";
-  floorsContainer.style.display=open?"none":"flex";
-  toggleBtn.querySelector("span").textContent=open?"Show Floor Buttons":"Hide Floor Buttons";
-  document.querySelector(".toggle-arrow").classList.toggle("open",!open);
-  localStorage.setItem("illumina_floors_open",String(!open));
-};
-
-consentButton.onclick=()=>{
-  consentModal.style.display="none";
-  const last=localStorage.getItem("illumina_last_floor");
-  if(last) play(parseInt(last));
-};
-
-window.onload=()=>{
-  consentModal.style.display="flex";
-  if(localStorage.getItem("illumina_floors_open")==="true"){
-    floorsContainer.style.display="flex";
-    toggleBtn.querySelector("span").textContent="Hide Floor Buttons";
-    document.querySelector(".toggle-arrow").classList.add("open");
+function setVideo(url){
+  const id=url.split("v=")[1]?.split("&")[0];
+  if(id){
+    ytplayer.src=`https://www.youtube.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}`;
   }
-};
-</script>
+}
 
+function checkDirectory(){
+  const match=directory.find(e=>e.code===input);
+  if(match){
+    breadcrumb.textContent=`✨ ${match.code} → ${match.title}`;
+    noteBox.style.color=match.emoji==='🦋'?'#ffb6c1':'var(--accent2)';
+    noteBox.textContent=match.note||'';
+    header.textContent=match.header||'T9 Signal Terminal · PLNT Earth';
+    setVideo(match.youtube);
+    setTimeout(()=>window.open(match.url,'_blank'),1000);
+    unlock(match.code);
+  }
+}
+function unlock(code){
+  let unlocked=JSON.parse(localStorage.getItem('unlockedCodes')||"[]");
+  if(!unlocked.includes(code)){
+    unlocked.push(code);
+    localStorage.setItem('unlockedCodes',JSON.stringify(unlocked));
+  }
+  renderHints();
+}
+
+function renderHints(){
+  const unlocked=JSON.parse(localStorage.getItem('unlockedCodes')||"[]");
+  const html=hints.map(h=>{
+    const open=unlocked.includes(h.code);
+    return `
+      <div class="hint ${open?'unlocked':''}">
+        <div class="emoji">${h.emoji}</div>
+        ${open?`<div class="details">
+          <div class="title">${h.title}</div>
+          <div class="note">${h.note}</div>
+          ${h.url?`<a href="${h.url}" target="_blank">↗ open</a>`:''}
+        </div>`:''}
+      </div>`;
+  }).join('');
+  document.getElementById('hints').innerHTML=html;
+}
+renderHints();
+</script>
 </body>
 </html>
