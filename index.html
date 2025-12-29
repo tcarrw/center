@@ -283,6 +283,7 @@ body::after{
 let player,audioCtx=null,loopEnabled=true,bgTone=null,currentToneFreq=null;
 let currentVideoId='p2ZdeIKJA8c';
 let isPlaying=false;
+let lastMatchedCode=null;
 
 function onYouTubeIframeAPIReady(){
   player=new YT.Player('ytplayer',{
@@ -395,6 +396,7 @@ bHash.onclick=()=>{playDTMF('#');display.value+='#';translate();};
 pad.appendChild(bHash);
 
 updateModeText();
+cleanupDirectory();
 translate();
 renderDirectory();
 renderHints();
@@ -460,12 +462,34 @@ function setVideo(videoId){
   },600);
 }
 
+// Check if stored entry matches current data
+function entryIsValid(entry){
+  const current=t9DirectoryData.find(x=>x.code===entry.code);
+  if(!current)return false;
+  return current.name===entry.name && current.url===entry.url && current.tone===entry.tone;
+}
+
+// Clean up directory to only show valid entries
+function cleanupDirectory(){
+  const dir=JSON.parse(localStorage.getItem('t9directory')||'[]');
+  const validDir=dir.filter(entryIsValid);
+  localStorage.setItem('t9directory',JSON.stringify(validDir));
+  
+  const unlocked=JSON.parse(localStorage.getItem('unlockedCodes')||"[]");
+  const validCodes=unlocked.filter(code=>{
+    const entry=t9DirectoryData.find(x=>x.code===code);
+    return entry!==undefined;
+  });
+  localStorage.setItem('unlockedCodes',JSON.stringify(validCodes));
+}
+
 function translate(){
   const val=display.value.toUpperCase();
   localStorage.setItem('t9input',display.value);
   
   const found=t9DirectoryData.find(x=>val===x.code);
   if(found){
+    lastMatchedCode=val;
     output.innerHTML=`<div style="color:${found.color};font-size:18px;font-weight:bold;">✨ ${found.code} → ${found.name}</div>`;
     breadcrumb.textContent=found.note||'';
     header.textContent=found.note||'T9 Signal Terminal · PLNT Earth';
@@ -482,7 +506,13 @@ function translate(){
     return;
   }
   
-  // If no match, stop tone but don't reset video
+  // If we had a match and now don't, reset to infohazard
+  if(lastMatchedCode!==null){
+    setVideo('p2ZdeIKJA8c');
+    lastMatchedCode=null;
+  }
+  
+  // If no match, stop tone
   stopBackgroundTone();
   if(val===''){
     header.textContent='T9 Signal Terminal · PLNT Earth';
@@ -572,6 +602,7 @@ clearBtn.onclick=()=>{
   localStorage.removeItem('t9input');
   playDTMF('*');
   stopBackgroundTone();
+  lastMatchedCode=null;
 };
 
 copyBtn.onclick=()=>{
@@ -587,10 +618,13 @@ copyBtn.onclick=()=>{
 
 function updateDirectory(found){
   const dir=JSON.parse(localStorage.getItem('t9directory')||'[]');
-  if(!dir.find(e=>e.code===found.code)){
+  const existingIndex=dir.findIndex(e=>e.code===found.code);
+  if(existingIndex>=0){
+    dir[existingIndex]=found;
+  }else{
     dir.push(found);
-    localStorage.setItem('t9directory',JSON.stringify(dir));
   }
+  localStorage.setItem('t9directory',JSON.stringify(dir));
   renderDirectory();
 }
 
@@ -613,7 +647,7 @@ function renderDirectory(){
     card.className='entry';
     card.style.borderColor=e.color;
     card.onclick=()=>playVideoForEntry(e);
-    card.innerHTML=`<strong style="color:${e.color}">${e.emoji} ${e.name}</strong><br><span style="color:var(--accent2);font-size:13px;">${e.code}</span><br><a href="${e.url}" target="_blank">${e.url.replace('https://','')}</a><br><small style="color:var(--muted);">${e.tone} Hz</small>`;
+    card.innerHTML=`<strong style="color:${e.color}">${e.emoji} ${e.name}</strong><br><span style="color:var(--accent2);font-size:13px;">${e.code}</span><br><a href="${e.url}" target="_blank" onclick="event.stopPropagation();">${e.url.replace('https://','')}</a><br><small style="color:var(--muted);">${e.tone} Hz</small>`;
     c.appendChild(card);
   }
 }
