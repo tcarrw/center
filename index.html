@@ -276,6 +276,7 @@ body::after{
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
 let player,audioCtx=null,loopEnabled=true,isMuted=true,bgTone=null,currentToneFreq=null;
+let currentVideoId='p2ZdeIKJA8c'; // Track current video
 
 function onYouTubeIframeAPIReady(){
   player=new YT.Player('ytplayer',{
@@ -441,6 +442,8 @@ function updateBreadcrumb(){
 }
 
 function setVideo(videoId){
+  if(currentVideoId===videoId)return; // Don't change if already playing this video
+  currentVideoId=videoId;
   ytplayer.classList.add('fading');
   setTimeout(()=>{
     ytplayer.src=`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=${isMuted?1:0}&loop=1&playlist=${videoId}&enablejsapi=1`;
@@ -470,10 +473,9 @@ function translate(){
     return;
   }
   
-  // If no match, stop tone and reset video
+  // If no match, stop tone but don't reset video
   stopBackgroundTone();
   if(val===''){
-    setVideo('p2ZdeIKJA8c');
     header.textContent='T9 Signal Terminal · PLNT Earth';
     breadcrumb.textContent='';
   }
@@ -561,7 +563,7 @@ clearBtn.onclick=()=>{
   localStorage.removeItem('t9input');
   playDTMF('*');
   stopBackgroundTone();
-  setVideo('p2ZdeIKJA8c');
+  // Don't reset video on clear
 };
 
 copyBtn.onclick=()=>{
