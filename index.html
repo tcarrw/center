@@ -341,7 +341,7 @@ const t9DirectoryData=[
   {code:"274262",name:"Ariana Grande · we can't be friends",emoji:"💨",color:"#eaeaea",url:"https://air.plnt.earth",tone:288,youtube:"KNtJGQkC-WI",note:"💨 you don't have to wait anymore"},
   {code:"3825472",name:"Dua Lipa · New Rules",emoji:"🔥",color:"#e74b3c",url:"https://wonder.plnt.earth",tone:216,youtube:"k2qgadSvNyU",note:"🔥 ready to hallucinate"},
   {code:"82956779438",name:"Taylor Swift · Blank Space",emoji:"📚",color:"#f6e7a5",url:"https://school.plnt.earth",tone:432,youtube:"e-ORhEE9VVg",note:"📚 your team your vibes, light it up"},
-  {code:"64776664783",name:"Miss Monique · Techno Code",emoji:"🌊",color:"#55f6e6",url:"https://fieldlab.plnt.earth",tone:512,youtube:"DdgyifI5k9o",start:2975},
+  {code:"64776664783",name:"Miss Monique · Techno Code",emoji:"🌊",color:"#55f6e6",url:"https://fieldlab.plnt.earth",tone:512,youtube:"DdgyifI5k9o",start:2975,noLoop:true},
   {code:"3632444",name:"Doechii · Crazy",emoji:"💥",color:"#ff4d8a",url:"https://fire.plnt.earth",tone:320,youtube:"0aQ9Q0hRTwY",note:"💥 let's fucking go"},
   {code:"287672",name:"AURORA · The Seed",emoji:"❄️",color:"#c3f0ff",url:"https://clarity.plnt.earth",tone:480,youtube:"_Mc_OM5oNA8",note:"❄️ feeding the world"},
   {code:"868356",name:"Tove Lo · Grapefruit",emoji:"💜",color:"#b03b6d",url:"https://dream.plnt.earth",tone:240,youtube:"K52kfSE4N5U",note:"💜 she hasn't seen herself yet"},
@@ -488,7 +488,7 @@ function updateBreadcrumb(){
   breadcrumb.textContent=lockedPaths.length?lockedPaths.join(' → '):'';
 }
 
-function setVideo(videoId, start){
+function setVideo(videoId, start, noLoop){
   currentVideoId=videoId;
   videoStartTime=null;
   
@@ -497,8 +497,8 @@ function setVideo(videoId, start){
     let url=`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
     if(start){
       url+=`&start=${start}`;
-      // Don't add loop when using start parameter - YouTube ignores start if loop is present
-    }else{
+      // Don't add loop when using start parameter or noLoop flag
+    }else if(!noLoop){
       url+=`&loop=1&playlist=${videoId}`;
     }
     ytplayer.src=url;
@@ -559,7 +559,7 @@ function translate(){
     unlock(found.code);
     
     if(found.youtube){
-      setVideo(found.youtube, found.start);
+      setVideo(found.youtube, found.start, found.noLoop);
     }
     
     if(found.tone){
@@ -693,7 +693,7 @@ function updateDirectory(found){
 
 function playVideoForEntry(entry){
   if(entry.youtube){
-    setVideo(entry.youtube, entry.start);
+    setVideo(entry.youtube, entry.start, entry.noLoop);
   }
 }
 
