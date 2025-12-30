@@ -498,10 +498,12 @@ function setVideo(videoId, startTime){
   
   ytplayer.classList.add('fading');
   setTimeout(()=>{
-    let url=`https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&enablejsapi=1&mute=${isMuted?1:0}`;
+    // Build URL with start time before other params if present
+    let url=`https://www.youtube.com/embed/${videoId}?`;
     if(startTime){
-      url+=`&start=${startTime}`;
+      url+=`start=${startTime}&`;
     }
+    url+=`autoplay=1&loop=1&playlist=${videoId}&enablejsapi=1&mute=${isMuted?1:0}`;
     ytplayer.src=url;
     ytplayer.classList.remove('fading');
   },600);
