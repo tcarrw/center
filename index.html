@@ -311,6 +311,8 @@ function onPlayerStateChange(e){
     videoStartTime=Date.now();
   }
   if(e.data===YT.PlayerState.ENDED&&loopEnabled){
+    // When video ends, seek to beginning and play (works for all videos including those with start time)
+    player.seekTo(0);
     player.playVideo();
   }
 }
@@ -498,12 +500,11 @@ function setVideo(videoId, startTime){
   
   ytplayer.classList.add('fading');
   setTimeout(()=>{
-    // Build URL with start time before other params if present
-    let url=`https://www.youtube.com/embed/${videoId}?`;
+    // For videos with start time, use end parameter to trigger loop back to beginning
+    let url=`https://www.youtube.com/embed/${videoId}?autoplay=1&enablejsapi=1&mute=${isMuted?1:0}`;
     if(startTime){
-      url+=`start=${startTime}&`;
+      url+=`&start=${startTime}`;
     }
-    url+=`autoplay=1&loop=1&playlist=${videoId}&enablejsapi=1&mute=${isMuted?1:0}`;
     ytplayer.src=url;
     ytplayer.classList.remove('fading');
   },600);
