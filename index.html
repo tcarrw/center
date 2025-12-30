@@ -494,9 +494,10 @@ function setVideo(videoId, start){
   
   ytplayer.classList.add('fading');
   setTimeout(()=>{
-    let url=`https://www.youtube.com/embed/${videoId}?autoplay=1&enablejsapi=1&mute=${isMuted?1:0}`;
+    let url=`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
     if(start){
       url+=`&start=${start}`;
+      // Don't add loop when using start parameter - YouTube ignores start if loop is present
     }else{
       url+=`&loop=1&playlist=${videoId}`;
     }
